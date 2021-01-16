@@ -1,0 +1,8 @@
+.jsbeau*
+/tmp/
+Docs/*.pdf
+node_modules*
+package-lock.json
+snippet*
+*.swp
+*.code-workspace
