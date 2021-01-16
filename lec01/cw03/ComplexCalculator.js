@@ -127,3 +127,23 @@ function calcComplexExpr(expr) {
 // console.log('result = ', operation.operand1);
 console.log('result = ', calcComplexExpr( '4+5 -4* 2'));
 // console.log( 'expr ', exprNormalized.split(' ') );
+
+/*
+
+// TODO:  level 1 :highest priority
+var power = {
+  index: 3, // replace in iteration from index 2 util 4( 3 items ) 
+  operand1: 5,
+  operand2: 2,
+  operator: '^'
+}
+// TODO:  level 2 : middle priority
+var multiplication = { // or division
+  index: 3, // replace in iteration from index 2 util 4( 3 items ) 
+  operand1: 5,
+  operand2: 2,
+  operator: '^'
+}
+// TODO:  level 3 : lowest priority
+
+*/
