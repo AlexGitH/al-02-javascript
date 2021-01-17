@@ -14,6 +14,16 @@ var OPERATORS = {
   POW: '^'
 }
 
+// PARSING CONSTANTS
+var RE_DEL_SPACES = /\s+/g;
+var RE_ADD_SPACE = /(((?!\d+\.\d+)\d+)|(\d+(?:\.\d+)+)|[+\-\/*^])/g;
+
+// VALIDATION CONSTANTS
+var RE_ALLOWED_CHARACTERS = /^[\d\.\s+\-\/*^=]+$/;
+var RE_MINIMAL_REQUIREMENTS = /(\d+ *[*+\-\/*^] *\d+)( *[*+\-\/*^] *\d+)*/;
+var RE_FIRST_OR_LAST_OPERATOR = /^\s*[.+\-\/*^=]|[.+\-\/*^]\s*$/;
+var RE_SUBSEQUENT_OPERATORS = /[.+\-\/*^=]{2}/;
+
 function sum(a, b) {
   return a + b;
 }
@@ -54,15 +64,12 @@ function calculate(operator, operand1, operand2) {
   return action(parseFloat(operand1), parseFloat(operand2));
 }
 
-var reDelSpaces = /\s+/g;
-var reAddSpace = /(((?!\d+\.\d+)\d+)|(\d+(?:\.\d+)+)|[+\-\/*^])/g;
-
 function removeMultSpaces(str) {
-  return str.replace(reDelSpaces, ' ').trim();
+  return str.replace(RE_DEL_SPACES, ' ').trim();
 }
 
 function addSpaceAfterCharacter(str) {
-  return str.replace(reAddSpace, '$1 ').trim();
+  return str.replace(RE_ADD_SPACE, '$1 ').trim();
 }
 
 function calcCommonOrder(expr) {
@@ -102,6 +109,7 @@ function calcCommonOrder(expr) {
   return operation.operand1;
 }
 
+// TODO: think about refactoring
 function simplifyPowers( mathSequence ) {
   var o = OPERATORS;
   var config = {};
@@ -117,7 +125,7 @@ function simplifyMultDiv( mathSequence ) {
   return simplifyExpr( mathSequence, config );
 }
 
-function simplifyExpr( mathSequence, config ) {
+function createSimplifiedMetadata( mathSequence, config ) {
   var expressions = {};
   var operator;
   mathSequence.forEach( function( item, idx ) {
@@ -128,7 +136,10 @@ function simplifyExpr( mathSequence, config ) {
       expressions[startIndex] = calculate( operator, mathSequence[startIndex], mathSequence[endIndex] );
     }
   });
-  
+  return expressions;
+}
+
+function createSimplifiedExpression( mathSequence, expressions ) {
   var simplifiedExpr = [];
   var skipCount = 0;
   mathSequence.forEach( function( item, idx ) {
@@ -145,29 +156,26 @@ function simplifyExpr( mathSequence, config ) {
     else {
       simplifiedExpr.push( item );
     }
-
   });
-
   return simplifiedExpr;
-  
+}
+
+function simplifyExpr( mathSequence, config ) {
+  var expressions = createSimplifiedMetadata( mathSequence, config );
+  return createSimplifiedExpression( mathSequence, expressions );
 }
 
 function validate( str ) {
-  var reAllowedCharacters = /^[\d\.\s+\-\/*^=]+$/;
-  var reMinimalRequirements = /(\d+ *[*+\-\/*^] *\d+)( *[*+\-\/*^] *\d+)*/;
-  var reFirstOrLastOperator = /^\s*[.+\-\/*^=]|[.+\-\/*^]\s*$/;
-  var reSubsequentOperators = /[.+\-\/*^=]{2}/;
-
-  if ( !reAllowedCharacters.test( str ) ) {
+  if ( !RE_ALLOWED_CHARACTERS.test( str ) ) {
     return 'Allowed characters: " 0-9.+-*/^="';
   }
-  if ( !reMinimalRequirements.test( str ) ) {
+  if ( !RE_MINIMAL_REQUIREMENTS.test( str ) ) {
     return 'Complete operation i.e. "3 + 2"';
   }
-  if ( reFirstOrLastOperator.test( str ) ) {
-    return 'Operator in the beginning or in the end of line';
+  if ( RE_FIRST_OR_LAST_OPERATOR.test( str ) ) {
+    return 'Leading or trailing operators are not allowed';
   }
-  if ( reSubsequentOperators.test( str ) ) {
+  if ( RE_SUBSEQUENT_OPERATORS.test( str ) ) {
     return 'Missing number between operators';
   }
 }
