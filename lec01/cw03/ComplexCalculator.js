@@ -19,10 +19,10 @@ var RE_DEL_SPACES = /\s+/g;
 var RE_ADD_SPACE = /(((?!\d+\.\d+)\d+)|(\d+(?:\.\d+)+)|[+\-\/*^])/g;
 
 // VALIDATION CONSTANTS
-var RE_ALLOWED_CHARACTERS = /^[\d\.\s+\-\/*^=]+$/;
+var RE_ALLOWED_CHARACTERS = /^[\d\.\s+\-\/*^]+$/;
 var RE_MINIMAL_REQUIREMENTS = /(\d+ *[*+\-\/*^] *\d+)( *[*+\-\/*^] *\d+)*/;
-var RE_FIRST_OR_LAST_OPERATOR = /^\s*[.+\-\/*^=]|[.+\-\/*^]\s*$/;
-var RE_SUBSEQUENT_OPERATORS = /[.+\-\/*^=]{2}/;
+var RE_FIRST_OR_LAST_OPERATOR = /^\s*[.+\-\/*^]|[.+\-\/*^]\s*$/;
+var RE_SUBSEQUENT_OPERATORS = /[.+\-\/*^]{2}/;
 
 function sum(a, b) {
   return a + b;
