@@ -87,7 +87,7 @@ function addSpaceAfterCharacter(str) {
 
 var expr = '3 +4 - 5+3';
 
-function calcComplexExpr(expr) {
+function calcCommonOrder(expr) {
   var exprWithSpaces = addSpaceAfterCharacter(expr);
   var exprNormalized = removeMultSpaces(exprWithSpaces);
   var operation = {
@@ -124,10 +124,47 @@ function calcComplexExpr(expr) {
   });
   return operation.operand1;
 }
+
 // console.log('result = ', operation.operand1);
-console.log('result = ', calcComplexExpr( '4+5 -4* 2'));
+console.log('result = ', calcCommonOrder( '4+5 -4* 2'));
 // console.log( 'expr ', exprNormalized.split(' ') );
 
+
+function simplifyPowers( mathSequence ) {
+  var expressions = {};
+  var o = OPERATORS;
+  mathSequence.forEach( function( item, idx ) {
+    if ( item === o.POW ) {
+      var startIndex = idx - 1;
+      var endIndex = idx + 1;
+      expressions[startIndex] = calculate( o.POW, mathSequence[startIndex], mathSequence[endIndex] );
+    }
+  });
+  
+  var simplifiedExpr = [];
+  var skipCount = 0;
+  mathSequence.forEach( function( item, idx ) {
+    if ( skipCount > 0 ) {
+      skipCount--;
+      return;
+    }
+
+    var value = expressions[idx];
+    if ( value != null ) {
+      simplifiedExpr.push( value );
+      skipCount = 2;
+    }
+    else {
+      simplifiedExpr.push( item );
+    }
+  });
+
+  return simplifiedExpr;
+  
+}
+
+
+console.log( 'simplification test:', simplifyPowers( [2, "+", 3, '^', 2 , '-',2,'^',2 ]) );
 /*
 
 // TODO:  level 1 :highest priority
