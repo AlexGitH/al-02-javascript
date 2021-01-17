@@ -59,11 +59,13 @@ function calculate(operator, operand1, operand2) {
   }
   return action(parseFloat(operand1), parseFloat(operand2));
 }
-console.log(' 2 + 3:', calculate('+', 3, 2));
-console.log(' 3 - 2:', calculate('-', 3, 2));
-console.log(' 3 * 2:', calculate('*', 3, 2));
-console.log(' 10 / 2:', calculate('/', 10, 2));
-console.log(' 5 ^ 2:', calculate('^', 5, 2));
+
+
+// console.log(' 2 + 3:', calculate('+', 3, 2));
+// console.log(' 3 - 2:', calculate('-', 3, 2));
+// console.log(' 3 * 2:', calculate('*', 3, 2));
+// console.log(' 10 / 2:', calculate('/', 10, 2));
+// console.log(' 5 ^ 2:', calculate('^', 5, 2));
 
 // ((?!\d+\.\d+)\d+)|(\d+(?:\.\d+)+)
 // TEST:
@@ -88,14 +90,17 @@ function addSpaceAfterCharacter(str) {
 var expr = '3 +4 - 5+3';
 
 function calcCommonOrder(expr) {
-  var exprWithSpaces = addSpaceAfterCharacter(expr);
-  var exprNormalized = removeMultSpaces(exprWithSpaces);
+  // var exprWithSpaces = addSpaceAfterCharacter(expr);
+  // var exprNormalized = removeMultSpaces(exprWithSpaces);
+
+
   var operation = {
     operator: null,
     operand1: null,
     operand2: null
   };
-  exprNormalized.split(' ').forEach(function (el) {
+  // exprNormalized.split(' ').forEach(function (el) {
+  expr.forEach(function (el) {
     var o = operation;
 
     var item = parseFloat(el);
@@ -126,18 +131,34 @@ function calcCommonOrder(expr) {
 }
 
 // console.log('result = ', operation.operand1);
-console.log('result = ', calcCommonOrder( '4+5 -4* 2'));
 // console.log( 'expr ', exprNormalized.split(' ') );
 
+// console.log('result = ', calcCommonOrder( '4+5 -4* 2'));
 
 function simplifyPowers( mathSequence ) {
-  var expressions = {};
   var o = OPERATORS;
+  var config = {};
+  config[o.POW] = true;
+  return simplifyExpr( mathSequence, config );
+}
+
+function simplifyMultDiv( mathSequence ) {
+  var o = OPERATORS;
+  var config = {};
+  config[o.MUL] = true;
+  config[o.DIV] = true;
+  return simplifyExpr( mathSequence, config );
+}
+
+function simplifyExpr( mathSequence, config ) {
+  var expressions = {};
+  var operator;
   mathSequence.forEach( function( item, idx ) {
-    if ( item === o.POW ) {
+    if ( config[item] === true ) {
+      operator = item;
       var startIndex = idx - 1;
       var endIndex = idx + 1;
-      expressions[startIndex] = calculate( o.POW, mathSequence[startIndex], mathSequence[endIndex] );
+      expressions[startIndex] = calculate( operator, mathSequence[startIndex], mathSequence[endIndex] );
     }
   });
   
@@ -165,7 +186,20 @@ function simplifyPowers( mathSequence ) {
 }
 
 
-console.log( 'simplification test:', simplifyPowers( [2, "+", 3, '^', 2 , '-',2,'^',2 ]) );
+// console.log( 'simplification test:', simplifyPowers( [2, "+", 3, '^', 2 , '-',2,'^',2 ]) );
+
+
+function calcComplexExpr( str ) {
+  var exprWithSpaces = addSpaceAfterCharacter(str);
+  var exprNormalized = removeMultSpaces(exprWithSpaces).split( ' ' );
+
+  var exprCalcPowers = simplifyPowers( exprNormalized );
+  var expr = simplifyMultDiv( exprCalcPowers );
+  return calcCommonOrder( expr );
+}
+
+// console.log( 'calculate Simplified values test:', calcComplexExpr( [2, "+", 3, '^', 2 , '-',2,'^',2 ]) );
+console.log( 'calculate Simplified values test:', calcComplexExpr(' 2 + 3^2 -2^2') );
 /*
 
 // TODO:  level 1 :highest priority
