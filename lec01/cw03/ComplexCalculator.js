@@ -37,18 +37,12 @@ function pow(a, b) {
 function findAction(operator) {
   var op = OPERATORS;
   switch (operator) {
-  case op.SUM:
-    return sum;
-  case op.SUB:
-    return sub;
-  case op.MUL:
-    return mul;
-  case op.DIV:
-    return div;
-  case op.POW:
-    return pow;
-  default:
-    return 'Incorrect operator';
+    case op.SUM: return sum;
+    case op.SUB: return sub;
+    case op.MUL: return mul;
+    case op.DIV: return div;
+    case op.POW: return pow;
+    default: return 'Incorrect operator';
   }
 }
 
@@ -60,23 +54,7 @@ function calculate(operator, operand1, operand2) {
   return action(parseFloat(operand1), parseFloat(operand2));
 }
 
-
-// console.log(' 2 + 3:', calculate('+', 3, 2));
-// console.log(' 3 - 2:', calculate('-', 3, 2));
-// console.log(' 3 * 2:', calculate('*', 3, 2));
-// console.log(' 10 / 2:', calculate('/', 10, 2));
-// console.log(' 5 ^ 2:', calculate('^', 5, 2));
-
-// ((?!\d+\.\d+)\d+)|(\d+(?:\.\d+)+)
-// TEST:
-// 13
-// 1.4
-//  123.4562
-// 12344 323.325 23455.6994.34 234
-
 var reDelSpaces = /\s+/g;
-// var reAddSpace = /(\d+|[+\-*\/^=])/g;
-// var reAddSpace = /((?!\d+\.\d+)\d+)|(\d+(?:\.\d+)+)|[+\-*\/^=]/g;
 var reAddSpace = /(((?!\d+\.\d+)\d+)|(\d+(?:\.\d+)+)|[+\-\/*^])/g;
 
 function removeMultSpaces(str) {
@@ -84,25 +62,19 @@ function removeMultSpaces(str) {
 }
 
 function addSpaceAfterCharacter(str) {
-  return str.replace(reAddSpace, '$1 ');
+  return str.replace(reAddSpace, '$1 ').trim();
 }
 
-var expr = '3 +4 - 5+3';
-
 function calcCommonOrder(expr) {
-  // var exprWithSpaces = addSpaceAfterCharacter(expr);
-  // var exprNormalized = removeMultSpaces(exprWithSpaces);
-
-
+  // TODO: check expr is array
   var operation = {
     operator: null,
     operand1: null,
     operand2: null
   };
-  // exprNormalized.split(' ').forEach(function (el) {
+
   expr.forEach(function (el) {
     var o = operation;
-
     var item = parseFloat(el);
     if(!isNaN(item)) {
       if(o.operand1 == null) {
@@ -121,7 +93,7 @@ function calcCommonOrder(expr) {
     }
 
     if( o.operator != null && o.operand1 != null && o.operand2 != null ) {
-      o.operand1 = calculate(o.operator, o.operand1, o.operand2);
+      o.operand1 = calculate( o.operator, o.operand1, o.operand2 );
       o.operator = null;
       o.operand2 = null;
     }
@@ -129,11 +101,6 @@ function calcCommonOrder(expr) {
   });
   return operation.operand1;
 }
-
-// console.log('result = ', operation.operand1);
-// console.log( 'expr ', exprNormalized.split(' ') );
-
-// console.log('result = ', calcCommonOrder( '4+5 -4* 2'));
 
 function simplifyPowers( mathSequence ) {
   var o = OPERATORS;
@@ -185,11 +152,31 @@ function simplifyExpr( mathSequence, config ) {
   
 }
 
+function validate( str ) {
+  var reAllowedCharacters = /^[\d\.\s+\-\/*^=]+$/;
+  var reMinimalRequirements = /(\d+ *[*+\-\/*^] *\d+)( *[*+\-\/*^] *\d+)*/;
+  var reFirstOrLastOperator = /^\s*[.+\-\/*^=]|[.+\-\/*^]\s*$/;
+  var reSubsequentOperators = /[.+\-\/*^=]{2}/;
 
-// console.log( 'simplification test:', simplifyPowers( [2, "+", 3, '^', 2 , '-',2,'^',2 ]) );
-
+  if ( !reAllowedCharacters.test( str ) ) {
+    return 'Allowed characters: " 0-9.+-*/^="';
+  }
+  if ( !reMinimalRequirements.test( str ) ) {
+    return 'Complete operation i.e. "3 + 2"';
+  }
+  if ( reFirstOrLastOperator.test( str ) ) {
+    return 'Operator in the beginning or in the end of line';
+  }
+  if ( reSubsequentOperators.test( str ) ) {
+    return 'Missing number between operators';
+  }
+}
 
 function calcComplexExpr( str ) {
+  var error = validate( str );
+  if ( error != null ) {
+    return error;
+  }
   var exprWithSpaces = addSpaceAfterCharacter(str);
   var exprNormalized = removeMultSpaces(exprWithSpaces).split( ' ' );
 
@@ -198,24 +185,4 @@ function calcComplexExpr( str ) {
   return calcCommonOrder( expr );
 }
 
-// console.log( 'calculate Simplified values test:', calcComplexExpr( [2, "+", 3, '^', 2 , '-',2,'^',2 ]) );
 console.log( 'calculate Simplified values test:', calcComplexExpr(' 2 + 3^2 -2^2') );
-/*
-
-// TODO:  level 1 :highest priority
-var power = {
-  index: 3, // replace in iteration from index 2 util 4( 3 items ) 
-  operand1: 5,
-  operand2: 2,
-  operator: '^'
-}
-// TODO:  level 2 : middle priority
-var multiplication = { // or division
-  index: 3, // replace in iteration from index 2 util 4( 3 items ) 
-  operand1: 5,
-  operand2: 2,
-  operator: '^'
-}
-// TODO:  level 3 : lowest priority
-
-*/
