@@ -157,6 +157,7 @@ function simplifyPowers( mathSequence ) {
     else {
       simplifiedExpr.push( item );
     }
+
   });
 
   return simplifiedExpr;
