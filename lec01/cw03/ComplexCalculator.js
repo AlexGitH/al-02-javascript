@@ -1,11 +1,4 @@
-/** /
-1. must be only numbers (with dot as decimal separator) and operators
-2. remove all spaces ???
-3. minus or plus in the beginning allowed;
-4. multiple operators between 2 numbers are not allowed
-5. braces "()" and mathematical order must work appropriately
-6. // IDEA: use folding function;
-/**/
+
 var OPERATORS = {
   SUM: '+',
   SUB: '-',
@@ -21,7 +14,8 @@ var RE_ADD_SPACE = /(((?!\d+\.\d+)\d+)|(\d+(?:\.\d+)+)|[+\-\/*^])/g;
 // VALIDATION CONSTANTS
 var RE_ALLOWED_CHARACTERS = /^[\d\.\s+\-\/*^]+$/;
 var RE_MINIMAL_REQUIREMENTS = /(\d+ *[*+\-\/*^] *\d+)( *[*+\-\/*^] *\d+)*/;
-var RE_FIRST_OR_LAST_OPERATOR = /^\s*[.+\-\/*^]|[.+\-\/*^]\s*$/;
+var RE_FIRST_OR_LAST_OPERATOR = /^\s*[\.+\-\/*^]|[\.+\-\/*^]\s*$/;
+var RE_INCORRECT_DEC_SEPARATOR = /(\d* *\.\d+)(\.\d+){1}|\D\.|\.(\D|$)/;
 var RE_SUBSEQUENT_OPERATORS = /[.+\-\/*^]{2}/;
 
 function sum(a, b) {
@@ -109,20 +103,25 @@ function calcCommonOrder(expr) {
   return operation.operand1;
 }
 
-// TODO: think about refactoring
-function simplifyPowers( mathSequence ) {
+function simplify( mathSequence, isPower ) {
   var o = OPERATORS;
   var config = {};
-  config[o.POW] = true;
+  if( isPower === true ) {
+    config[o.POW] = true;
+  }
+  else {
+    config[o.MUL] = true;
+    config[o.DIV] = true;
+  }
   return simplifyExpr( mathSequence, config );
 }
 
+function simplifyPowers( mathSequence ) {
+  return simplify( mathSequence, true );
+}
+
 function simplifyMultDiv( mathSequence ) {
-  var o = OPERATORS;
-  var config = {};
-  config[o.MUL] = true;
-  config[o.DIV] = true;
-  return simplifyExpr( mathSequence, config );
+  return simplify( mathSequence, false );
 }
 
 function createSimplifiedMetadata( mathSequence, config ) {
@@ -167,13 +166,16 @@ function simplifyExpr( mathSequence, config ) {
 
 function validate( str ) {
   if ( !RE_ALLOWED_CHARACTERS.test( str ) ) {
-    return 'Allowed characters: " 0-9.+-*/^="';
+    return 'Allowed characters: " 0-9.+-*/^"';
   }
   if ( !RE_MINIMAL_REQUIREMENTS.test( str ) ) {
     return 'Complete operation i.e. "3 + 2"';
   }
+  if ( RE_INCORRECT_DEC_SEPARATOR.test( str ) ) {
+    return 'Incorrect number. Examples: 1, 30, 0.4, 1.531';
+  }
   if ( RE_FIRST_OR_LAST_OPERATOR.test( str ) ) {
-    return 'Leading or trailing operators are not allowed';
+    return 'Leading or trailing operators or decimal separator are not allowed';
   }
   if ( RE_SUBSEQUENT_OPERATORS.test( str ) ) {
     return 'Missing number between operators';
@@ -193,4 +195,4 @@ function calcComplexExpr( str ) {
   return calcCommonOrder( expr );
 }
 
-console.log( 'calculate Simplified values test:', calcComplexExpr(' 2 + 3^2 -2^2') );
+// console.log( 'calculate Simplified values test:', calcComplexExpr(' 2 + 6*  3^2 -2^2') );
