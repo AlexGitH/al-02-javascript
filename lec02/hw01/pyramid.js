@@ -13,7 +13,7 @@ function buildBlocks( number ){
 function createPyramid( medianNumber ) {
   const maxLength = getStageMedian( medianNumber );
   let count = 0;
-  result = [];
+  let result = [];
   while ( count++ < medianNumber ) {
     let stageMedian = getStageMedian( count );
     let airLength = ( maxLength - stageMedian ) / 2;
