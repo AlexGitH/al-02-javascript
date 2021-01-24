@@ -1,7 +1,5 @@
 // RECEPT :https://povar.ru/recipes/sup-solyanka_klassicheskii_recept-54159.html
 
-prepareSolyanka();
-
 function wash( ingredient ) {
   return //washed ingredient;
 }
@@ -68,46 +66,36 @@ const ingredients = {
   "лавровый лист"         : MEASURE_POINTS.PIECE // any positive integer
 };
 
-const ingredients_values = {
-  "курица" : 0,
-  "говядина" : 0,
-  "свинина" : 0,
-  "мясо" : 450, // свинина, говядина, курица
 
-  "ветчина" : 0,
-  "колбаса" : 0,
-  "копчености" : 0,
-  "мясные изделия": 300, // колбаса, ветчина, копчености: 
+// call example;
+makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
-  "растительное масло" : "2 ст. лож.",
-  "чеснок": "2-4 зуб.",
-  "луковица" : "1 шт.",
-  "томатная паста" : "1 ст. лож.",
-  "маринованные огурчики" : "2-4 шт.",
-  "маслины": 2 , // any positive integer
-  "cоль": 2 , // any positive integer
-  "перец": 2 , // any positive integer
-  "специи": 2 , // any positive integer
-  "зелень": 2 , // any positive integer
-  "сметана" : "1 ст. лож.", // any positive integer
-  "лимон": "1 долька" , // any positive integer
-  "лавровый лист": 1 , // any positive integer
-};
+makeSo
 
+/**
+ * 
+ * @returns {Object} solyanka
+ * @param {number} meat - in grams
+ * @param {number} smokedMeat - in grams
+ * @param {number} water - in grams
+ * @param {number} otherMeat - in grams
+ * @param {number} pickles - in pieces
+ * @param {number} olives - in pieces
+ * @param {number} onion - in pieces
+ * @param {number} garlic - in cloves
+ * @param {number} tomatoPaste - in spoons
+ * @param {number} vegetableOil - in spoons
+ * @param {number} salt - in grams
+ * @param {number} pepper - in grams
+ * @param {number} sugar - in grams
+ * @param {number} lemon - in slices
+ * @param {number} sourCream - in spoons
+ */
+function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, sugar, lemon, sourCream ) {
+  //1.
 
-
-function makeSolyanka() {
-  //1. Мясо вымойте, выложите в кастрюлю и залейте водой. 
-  //   Туда же отправьте копчености. 
-  //   Можно также добавить лавровый лист и овощи для аромата.
-  //   Варите бульон на медленном огне пару часов до готовности мяса. 
-
-  let meat = {};
-
-  let meatInfo = prompt( "Выберите мясо для солянки: формат ");
-
-  let meatWithWeight = getMeatWeight();//prompt
-  let washedMeat = wash( meatWithWeight );
+  let meat = getMeatWeight();//prompt
+  let washedMeat = wash( meat );
   let water = getWater(); //prompt  2 liters == 2000grm
   let smokedMeat = getSmokedMeat(); //prompt,
   let pan = new Pan(); // constructor; 
@@ -117,10 +105,7 @@ function makeSolyanka() {
   let powerToBoilMeat = getPowerToBoilMeat(); //prompt;
   pan.boil( minutesToBoilMeat, powerToBoilMeat );
 
-  //2. Когда мясо сварилось, аккуратно достаньте его из бульона,
-  //   остудите немного и измельчите.
-  //   Бульон процедите и снова отправьте на огонь.
-  //   Выложите туда нарезанное мясо.
+  //2. 
   
   pan.stopBoil();
   let hotBoiledMeat = extractMeat( pan );
@@ -134,18 +119,14 @@ function makeSolyanka() {
   powerToBoilMeat = getPowerToBoilMeat(); //prompt;
   pan.boil( minutesToBoilMeat, powerToBoilMeat );
 
-  //3. Следом отправьте мясные деликатесы.
-  //   В данном случае это ветчина и салями. 
+  //3. 
 
   let otherMeat = getOtherMeatWeight();//prompt
   let blendedOtherMeat = blend( otherMeat );
   pan.putIngredientsToPan( blendedOtherMeat );
 
    
-  //4. Нарежьте огурчики. Маслины можно добавлять перед подачей в тарелку
-  //   или сразу отправить в бульон.
-  //   Я предпочитаю второй вариант.
-  //   Кроме того, я советую добавить горсть каперсов. 
+  //4. 
 
   let pickles = getPickles(); //prompt
   let blendedPickles = blend( pickles );
@@ -153,14 +134,11 @@ function makeSolyanka() {
   let blendedOlives = blend( olives );
 
 
-  //5. Выложите все в бульон, доведите до кипения и варите на медленном огне.
-  //   Посолите по вкусу. 
+  //5.
 
   pan.putIngredientsToPan( blendedOlives, blendedPickles );
 
-  //6. Параллельно очистите и измельчите лук с чесноком.
-  //   Выложите на сковороду с растительным маслом и обжарьте.
-  //   Добавьте томатную пасту и влейте немного бульона или рассола от огурцов. 
+  //6.
   let onion = getOnion();  //prompt
   let garlic = getGarlic(); //prompt
   let cleanedOnion = clean( onion );
@@ -179,39 +157,28 @@ function makeSolyanka() {
   otherPan.boil( minutesToFryGarlicOnion, powerToFryGarlicOnion );
   otherPan.putIngredientsToPan( tomatoPaste );
 
-  //7. Посолите, добавьте перец и специи по вкусу.
-  //   Также я советую добавить чайную ложку сахара.
-  //   Томите соус минут 5, помешивая. 
-
+  //7.
 
   let salt = getSalt();//prompt
   let pepper = getPepper(); //prompt
-  let suggar = getSuggar(); // prompt; OPTIONAL
+  let sugar = getSugar(); // prompt; OPTIONAL
 
+  let minutesToMakeSauce = 5;
+  let powerToMakeSauce = 'low';
 
-  //  let minutesToMakeSause = getSauseFryMinutes(); // prompt
-  //  let powerToMakeSause = getSauseFryPower(); // prompt
-  let minutesToMakeSause = 5;
-  let powerToMakeSause = 'low';
+  otherPan.putIngredientsToPan( salt, pepper, sugar );
+  otherPan.boil( minutesToMakeSauce, powerToMakeSauce );
 
-  otherPan.putIngredientsToPan( salt, pepper, suggar );
-  otherPan.boil( minutesToMakeSause, powerToMakeSause );
+  //8.
 
-  //8. Выложите его в бульон,
-  //   аккуратно перемешайте и варите солянку еще минут 5-7. 
-
-  let sause = getSauseFrom( otherPan ); 
-  pan.putIngredientsToPan( sause );
+  let sauce = getSauceFromPan( otherPan ); 
+  pan.putIngredientsToPan( sauce );
 
   let minutesToCompleteSolyanka = randBetween( 5, 7 ); 
   let powerToCompleteSolyanka = 'low'; 
   pan.boil( minutesToCompleteSolyanka, powerToCompleteSolyanka );
 
-
-
-  //9. Выключите огонь, накройте кастрюлю крышкой и оставьте на полчасика, чтобы солянка настоялась. 
-  //   Подавайте к столу горячей, дополнив лимоном и сметаной по желанию. 
-  //   Приятного аппетита!
+  //9. 
 
   pan.stopBoil();
   pan.close();
