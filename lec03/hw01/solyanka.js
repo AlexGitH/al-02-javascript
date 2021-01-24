@@ -38,6 +38,10 @@ const LIMITS = {
   MEAT_PROD : { min: 300, max:300 },
   GARLIC : { min: 2, max: 4 },
   PICKLES : { min: 2, max: 4 }, //oгурцы
+  OLIVES : { min: 4, max: 15 },
+  TOMATO_PASTE : { min: 1, max: 1 },
+  ONION : { min: 1, max: 1 },
+  VEGETABLE_OIL : { min: 2, max: 2 },
 }
 
 const ingredients = {
@@ -70,27 +74,168 @@ const ingredients = {
 // call example;
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
+// HELPERS 
+function isValidStr( value ) {
+  return typeof value === 'string' && value.trim() !== '';
+}
+
+function isValidNum( value ) {
+  return typeof value === 'number' && !isNaN( value );
+}
 
 /**
  * Returns Solyanka;
- * @param {number} meat - in grams
- * @param {number} smokedMeat - in grams
- * @param {number} water - in grams
- * @param {number} otherMeat - in grams
- * @param {number} pickles - in pieces
- * @param {number} olives - in pieces
- * @param {number} onion - in pieces
- * @param {number} garlic - in cloves
- * @param {number} tomatoPaste - in spoons
- * @param {number} vegetableOil - in spoons
- * @param {number} salt - in grams
- * @param {number} pepper - in grams
- * @param {number} sugar - in grams
- * @param {number} lemon - in slices
- * @param {number} sourCream - in spoons
+ * @param {number} meat - мясо (grams)
+ * @param {number} smokedMeat - копчености (grams)
+ * @param {number} water - вода (grams)
+ * @param {number} otherMeat - мясные деликатесы (grams)
+ * @param {number} pickles - маринованные огурчики (pieces)
+ * @param {number} olives - маслины (pieces)
+ * @param {number} onion - луковица (pieces)
+ * @param {number} garlic - чеснок (cloves)
+ * @param {number} tomatoPaste - томатная паста (spoons)
+ * @param {number} vegetableOil - растительное масло (spoons)
+ * @param {number} [salt_] - соль (grams)
+ * @param {number} [pepper_] - перец (grams)
+ * @param {number} [herbs_] - зелень (grams)
+ * @param {number} [sugar_] - сахар (grams)
+ * @param {number} [lemon_] - лимон (slices)
+ * @param {number} [sourCream_] - сметана (spoons)
  * @returns {object} solyanka
  */
-function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, sugar, lemon, sourCream ) {
+function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ ) {
+
+  let errors = [];
+  // CHECK PARAMETERS
+  if ( !isValidNum( meat ) ) {
+    errors.push( 'Количество мяса должно быть числом в граммах' );
+  }
+  if ( meat > LIMITS.MEAT.max ){
+    errors.push( 'Мяса слишком много!' );
+  }
+  if ( meat < LIMITS.MEAT.min ) {
+    errors.push( 'Мяса слишком мало!' );
+  }
+  if ( !isValidNum( smokedMeat ) ) {
+    errors.push( 'Количество копченого мяса должно быть числом в граммах' );
+  }
+  if ( !isValidNum( otherMeat ) ) {
+    errors.push( 'Количество мясных деликатесов должно быть числом в граммах' );
+  }
+  let meatProduct = smokedMeat + otherMeat;
+  if ( meatProduct > LIMITS.MEAT_PROD.max ){
+    errors.push( 'Мясных изделий слишком много!' );
+  }
+  if ( meatProduct < LIMITS.MEAT_PROD.min ) {
+    errors.push( 'Мясных изделий слишком мало!' );
+  }
+
+  if ( !isValidNum( water ) ) {
+    errors.push( 'Количество воды должно быть числом в граммах' );
+  }
+  if ( water > LIMITS.WATER.max ){
+    errors.push( 'Воды слишком много!' );
+  }
+  if ( water < LIMITS.WATER.min ) {
+    errors.push( 'Воды слишком мало!' );
+  }
+
+  if ( !isValidNum( pickles ) ) {
+    errors.push( 'Количество маринованных огурчиков должно быть числом в штуках' );
+  }
+  if ( pickles > LIMITS.PICKLES.max ){
+    errors.push( 'Маринованных огурчиков слишком много!' );
+  }
+  if ( pickles < LIMITS.PICKLES.min ) {
+    errors.push( 'Маринованных огурчиков слишком мало!' );
+  }
+
+  if ( !isValidNum( olives ) ) {
+    errors.push( 'Количество маслин должно быть числом в штуках' );
+  }
+  if ( olives > LIMITS.OLIVES.max ){
+    errors.push( 'Маслин слишком много!' );
+  }
+  if ( olives < LIMITS.OLIVES.min ) {
+    errors.push( 'Маслин слишком мало!' );
+  }
+
+  if ( !isValidNum( onion ) ) {
+    errors.push( 'Количество луковиц должно быть числом в штуках' );
+  }
+  if ( onion > LIMITS.ONION.max ){
+    errors.push( 'Луковиц слишком много!' );
+  }
+  if ( onion < LIMITS.ONION.min ) {
+    errors.push( 'Луковиц слишком мало!' );
+  }
+
+  if ( !isValidNum( garlic ) ) {
+    errors.push( 'Количество чеснока должно быть числом в зубках' );
+  }
+  if ( garlic > LIMITS.GARLIC.max ){
+    errors.push( 'Чеснока слишком много!' );
+  }
+  if ( garlic < LIMITS.GARLIC.min ) {
+    errors.push( 'Чеснока слишком мало!' );
+  }
+
+  if ( !isValidNum( tomatoPaste ) ) {
+    errors.push( 'Количество томатной пасты должно быть числом в ложках' );
+  }
+  if ( tomatoPaste > LIMITS.TOMATO_PASTE.max ){
+    errors.push( 'Томатной пасты слишком много!' );
+  }
+  if ( tomatoPaste < LIMITS.TOMATO_PASTE.min ) {
+    errors.push( 'Томатной пасты слишком мало!' );
+  }
+
+  if ( !isValidNum( vegetableOil ) ) {
+    errors.push( 'Количество растительного масла должно быть числом в ложках' );
+  }
+  if ( vegetableOil > LIMITS.VEGETABLE_OIL.max ){
+    errors.push( 'Растительного масла слишком много!' );
+  }
+  if ( vegetableOil < LIMITS.VEGETABLE_OIL.min ) {
+    errors.push( 'Растительного масла слишком мало!' );
+  }
+
+  if ( !( isValidNum( salt_ ) && salt_ >=0 ) ) {
+    errors.push( 'Количество соли должно быть числом в граммах' );
+  }
+
+  if ( !( isValidNum( pepper_ ) && pepper_ >=0 ) ) {
+    errors.push( 'Количество перца должно быть числом в граммах' );
+  }
+
+  if ( !( isValidNum( herbs_ ) && herbs_ >=0 ) ) {
+    errors.push( 'Количество зелени и должно быть числом в граммах' );
+  }
+
+  if ( !( isValidNum( sugar_ ) && sugar_ >=0 ) ) {
+    errors.push( 'Количество сахара должно быть числом в граммах' );
+  }
+
+  if ( !( isValidNum( lemon_ ) && lemon_ >=0 ) ) {
+    errors.push( 'Количество лимона должно быть числом в дольках' );
+  }
+
+  if ( !( isValidNum( sourCream_ ) && sourCream_ >=0 ) ) {
+    errors.push( 'Количество сметаны должно быть числом в ложках' );
+  }
+
+  if ( errors.length > 0 ) {
+    console.warn( errors.join( '\n'));
+    return ;
+  }
+
+  let salt = salt_ || 0;
+  let pepper = pepper_ || 0;
+  let herbs = herbs_ || 0;
+  let sugar = suggar || 0;
+  let lemon = lemon_ || 0;
+  let sourCream = sourCream_ || 0;
+
   //1.
 
   let meat = getMeatWeight();//prompt
@@ -165,7 +310,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let minutesToMakeSauce = 5;
   let powerToMakeSauce = 'low';
 
-  otherPan.putIngredientsToPan( salt, pepper, sugar );
+  otherPan.putIngredientsToPan( salt_, pepper_, sugar_ );
   otherPan.boil( minutesToMakeSauce, powerToMakeSauce );
 
   //8.
@@ -186,7 +331,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let solyanka = pan.extractPortion();
   let lemon = getLemonSlices(); //prompt
   let sourCream = getSourCream(); //prompt 
-  solyanka.put( lemon, sourCream );
+  solyanka.put( lemon_, sourCream_ );
   //SOLYANKA IS READY!!!
   return solyanka;
 }
