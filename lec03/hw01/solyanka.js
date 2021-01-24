@@ -68,13 +68,11 @@ const ingredients = {
 
 
 // call example;
-makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
+// makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
-makeSo
 
 /**
- * 
- * @returns {Object} solyanka
+ * Returns Solyanka;
  * @param {number} meat - in grams
  * @param {number} smokedMeat - in grams
  * @param {number} water - in grams
@@ -90,6 +88,7 @@ makeSo
  * @param {number} sugar - in grams
  * @param {number} lemon - in slices
  * @param {number} sourCream - in spoons
+ * @returns {object} solyanka
  */
 function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, sugar, lemon, sourCream ) {
   //1.
