@@ -21,6 +21,11 @@ function fry( time, power, pan ) {  // жарить
   return // fried ingredients;
 }
 
+
+function randBetween( min, max ) {
+  return Math.floor( Math.random() * ( max - min ) + min );
+}
+
 const MEASURE_POINTS = {
   SPOON : "ст. лож.",
   PIECE : "шт.",
@@ -30,6 +35,7 @@ const MEASURE_POINTS = {
 };
 
 const LIMITS = {
+  WATER : { min: 1700, max:2000 },
   MEAT : { min: 450, max:450 },
   MEAT_PROD : { min: 300, max:300 },
   GARLIC : { min: 2, max: 4 },
@@ -90,71 +96,131 @@ const ingredients_values = {
 
 
 
-function prepareSolyanka() {
-   //1. Мясо вымойте, выложите в кастрюлю и залейте водой. 
-   //   Туда же отправьте копчености. 
-   //   Можно также добавить лавровый лист и овощи для аромата.
-   //   Варите бульон на медленном огне пару часов до готовности мяса. 
+function makeSolyanka() {
+  //1. Мясо вымойте, выложите в кастрюлю и залейте водой. 
+  //   Туда же отправьте копчености. 
+  //   Можно также добавить лавровый лист и овощи для аромата.
+  //   Варите бульон на медленном огне пару часов до готовности мяса. 
 
-   let meat = {};
+  let meat = {};
 
-   let meatInfo = prompt( "Выберите мясо для солянки: формат ");
+  let meatInfo = prompt( "Выберите мясо для солянки: формат ");
 
-   let meatWithWeight = getMeatWeight();//prompt
-   let washedMeat = wash( meatWithWeight );
-   let water = getWater(); //prompt
-   let smokedMeat = getSmokedMeat(); //prompt,
-   let pan = new Pan(); // constructor; 
-   pan.putIngredientsToPan( washedMeat, water, smokedMeat );
+  let meatWithWeight = getMeatWeight();//prompt
+  let washedMeat = wash( meatWithWeight );
+  let water = getWater(); //prompt  2 liters == 2000grm
+  let smokedMeat = getSmokedMeat(); //prompt,
+  let pan = new Pan(); // constructor; 
+  pan.putIngredientsToPan( washedMeat, water, smokedMeat );
 
-   let minutesToBoilMeat = getMinutesToBoilMeat(); //prompt;
-   let powerToBoilMeat = getPowerToBoilMeat(); //prompt;
-   pan.boil( minutesToBoilMeat, powerToBoilMeat );
+  let minutesToBoilMeat = getMinutesToBoilMeat(); //prompt;
+  let powerToBoilMeat = getPowerToBoilMeat(); //prompt;
+  pan.boil( minutesToBoilMeat, powerToBoilMeat );
 
-   //2. Когда мясо сварилось, аккуратно достаньте его из бульона,
-   //   остудите немного и измельчите.
-   //   Бульон процедите и снова отправьте на огонь.
-   //   Выложите туда нарезанное мясо.
+  //2. Когда мясо сварилось, аккуратно достаньте его из бульона,
+  //   остудите немного и измельчите.
+  //   Бульон процедите и снова отправьте на огонь.
+  //   Выложите туда нарезанное мясо.
   
-   pan.stopBoil();
-   let hotBoiledMeat = extractMeat( pan );
-   let cooledBoiledMeat = coolMeat( hotBoiledMeat ); // time 
-   let bouillon = extractBoulion( pan );
-   let refinedBouillon = refineBoulion( bouillon );
-   let blendedMeat = blendMeat( cooledBoiledMeat );
-   pan.putIngredientsToPan( washedMeat, water, smokedMeat );
+  pan.stopBoil();
+  let hotBoiledMeat = extractMeat( pan );
+  let cooledBoiledMeat = coolMeat( hotBoiledMeat ); // time 
+  let bouillon = extractBoulion( pan );
+  let refinedBouillon = refineBoulion( bouillon );
+  let blendedMeat = blend( cooledBoiledMeat );
+  pan.putIngredientsToPan( blendedMeat, refinedBouillon );
 
-   minutesToBoilMeat = getMinutesToBoilMeat(); //prompt;
-   powerToBoilMeat = getPowerToBoilMeat(); //prompt;
-   pan.boil( minutesToBoilMeat, powerToBoilMeat );
+  minutesToBoilMeat = getMinutesToBoilMeat(); //prompt;
+  powerToBoilMeat = getPowerToBoilMeat(); //prompt;
+  pan.boil( minutesToBoilMeat, powerToBoilMeat );
 
-   //3. Следом отправьте мясные деликатесы.
-   //   В данном случае это ветчина и салями. 
+  //3. Следом отправьте мясные деликатесы.
+  //   В данном случае это ветчина и салями. 
 
-   let otherMeat = getOtherMeatWeight();//prompt
-   pan.putIngredientsToPan( washedMeat, water, smokedMeat );
+  let otherMeat = getOtherMeatWeight();//prompt
+  let blendedOtherMeat = blend( otherMeat );
+  pan.putIngredientsToPan( blendedOtherMeat );
 
    
-   //4. Нарежьте огурчики. Маслины можно добавлять перед подачей в тарелку
-   //   или сразу отправить в бульон.
-   //   Я предпочитаю второй вариант.
-   //   Кроме того, я советую добавить горсть каперсов. 
+  //4. Нарежьте огурчики. Маслины можно добавлять перед подачей в тарелку
+  //   или сразу отправить в бульон.
+  //   Я предпочитаю второй вариант.
+  //   Кроме того, я советую добавить горсть каперсов. 
 
-   //5. Выложите все в бульон, доведите до кипения и варите на медленном огне.
-   //   Посолите по вкусу. 
+  let pickles = getPickles(); //prompt
+  let blendedPickles = blend( pickles );
+  let olives = getOlives(); //prompt
+  let blendedOlives = blend( olives );
 
-   //6. Параллельно очистите и измельчите лук с чесноком.
-   //   Выложите на сковороду с растительным маслом и обжарьте.
-   //   Добавьте томатную пасту и влейте немного бульона или рассола от огурцов. 
 
-   //7. Посолите, добавьте перец и специи по вкусу.
-   //   Также я советую добавить чайную ложку сахара.
-   //   Томите соус минут 5, помешивая. 
+  //5. Выложите все в бульон, доведите до кипения и варите на медленном огне.
+  //   Посолите по вкусу. 
 
-   //8. Выложите его в бульон,
-   //   аккуратно перемешайте и варите солянку еще минут 5-7. 
+  pan.putIngredientsToPan( blendedOlives, blendedPickles );
 
-   //9. Выключите огонь, накройте кастрюлю крышкой и оставьте на полчасика, чтобы солянка настоялась. 
-   //   Подавайте к столу горячей, дополнив лимоном и сметаной по желанию. 
-   //   Приятного аппетита!
+  //6. Параллельно очистите и измельчите лук с чесноком.
+  //   Выложите на сковороду с растительным маслом и обжарьте.
+  //   Добавьте томатную пасту и влейте немного бульона или рассола от огурцов. 
+  let onion = getOnion();  //prompt
+  let garlic = getGarlic(); //prompt
+  let cleanedOnion = clean( onion );
+  let cleanedGarlic = clean( garlic );
+  let blendedOnion = blend( cleanedOnion );
+  let blendedGarlic = blend( cleanedGarlic );
+  let tomatoPaste = getTomatoPaster(); //prompt;
+  let vegetableOil = getVegetableOil(); //prompt;
+
+  let otherPan = new Pan();
+
+
+  otherPan.putIngredientsToPan( blendedGarlic, blendedOnion, vegetableOil );
+  let minutesToFryGarlicOnion = 3;
+  let powerToFryGarlicOnion = 'high';
+  otherPan.boil( minutesToFryGarlicOnion, powerToFryGarlicOnion );
+  otherPan.putIngredientsToPan( tomatoPaste );
+
+  //7. Посолите, добавьте перец и специи по вкусу.
+  //   Также я советую добавить чайную ложку сахара.
+  //   Томите соус минут 5, помешивая. 
+
+
+  let salt = getSalt();//prompt
+  let pepper = getPepper(); //prompt
+  let suggar = getSuggar(); // prompt; OPTIONAL
+
+
+  //  let minutesToMakeSause = getSauseFryMinutes(); // prompt
+  //  let powerToMakeSause = getSauseFryPower(); // prompt
+  let minutesToMakeSause = 5;
+  let powerToMakeSause = 'low';
+
+  otherPan.putIngredientsToPan( salt, pepper, suggar );
+  otherPan.boil( minutesToMakeSause, powerToMakeSause );
+
+  //8. Выложите его в бульон,
+  //   аккуратно перемешайте и варите солянку еще минут 5-7. 
+
+  let sause = getSauseFrom( otherPan ); 
+  pan.putIngredientsToPan( sause );
+
+  let minutesToCompleteSolyanka = randBetween( 5, 7 ); 
+  let powerToCompleteSolyanka = 'low'; 
+  pan.boil( minutesToCompleteSolyanka, powerToCompleteSolyanka );
+
+
+
+  //9. Выключите огонь, накройте кастрюлю крышкой и оставьте на полчасика, чтобы солянка настоялась. 
+  //   Подавайте к столу горячей, дополнив лимоном и сметаной по желанию. 
+  //   Приятного аппетита!
+
+  pan.stopBoil();
+  pan.close();
+  wait( 30 );
+
+  let solyanka = pan.extractPortion();
+  let lemon = getLemonSlices(); //prompt
+  let sourCream = getSourCream(); //prompt 
+  solyanka.put( lemon, sourCream );
+  //SOLYANKA IS READY!!!
+  return solyanka;
 }
