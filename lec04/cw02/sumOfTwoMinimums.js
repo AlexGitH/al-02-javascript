@@ -4,7 +4,7 @@
 
 function sumOfTwoMin( numbers ) {
   if ( numbers.length < 4 ) {
-    throw new Error( 'incorrect number ' );
+    throw new Error( 'Expected at least 4 items in the array' );
   }
   
   let minOne = numbers.reduce( (acc , n) => {
