@@ -1,8 +1,24 @@
 // RECEPT :https://povar.ru/recipes/sup-solyanka_klassicheskii_recept-54159.html
 
 function wash( ingredient ) {
-  return //washed ingredient;
+  checkObject( ingredient );
+  ingredient.attr.isWashed = true;
+  return ingredient;
 }
+
+function clean( ingredient ) {
+  checkObject( ingredient );
+  ingredient.attr.isCleaned = true;
+  return ingredient;
+}
+
+function cool( ingredient ) {
+  checkObject( ingredient );
+  ingredient.attr.isCold = true;
+  return ingredient;
+}
+
+
 
 /**
  * 
@@ -24,7 +40,7 @@ function randBetween( min, max ) {
   return Math.floor( Math.random() * ( max - min ) + min );
 }
 
-const MEASURE_POINTS = {
+const UNITS = {
   SPOON : "ст. лож.",
   PIECE : "шт.",
   SLICE : "долька",
@@ -44,35 +60,90 @@ const LIMITS = {
   VEGETABLE_OIL : { min: 2, max: 2 },
 }
 
-const ingredients = {
-  "курица"                : MEASURE_POINTS.GRAM,
-  "говядина"              : MEASURE_POINTS.GRAM,
-  "свинина"               : MEASURE_POINTS.GRAM,
-  "мясо"                  : MEASURE_POINTS.GRAM, // свинина, говядина, курица
+const INGR_UNIT_MAP = {
+  "курица"                : UNITS.GRAM,
+  "говядина"              : UNITS.GRAM,
+  "свинина"               : UNITS.GRAM,
+  "мясо"                  : UNITS.GRAM, // свинина, говядина, курица
 
-  "ветчина"               : MEASURE_POINTS.GRAM,
-  "колбаса"               : MEASURE_POINTS.GRAM,
-  "копчености"            : MEASURE_POINTS.GRAM,
-  "мясные изделия"        : MEASURE_POINTS.GRAM, // колбаса, ветчина, копчености: 
+  "ветчина"               : UNITS.GRAM,
+  "колбаса"               : UNITS.GRAM,
+  "копчености"            : UNITS.GRAM,
+  "мясные изделия"        : UNITS.GRAM, // колбаса, ветчина, копчености: 
 
-  "растительное масло"    : MEASURE_POINTS.SPOON,
-  "чеснок"                : MEASURE_POINTS.CLOVE,
-  "луковица"              : MEASURE_POINTS.PIECE,
-  "томатная паста"        : MEASURE_POINTS.SPOON,
-  "маринованные огурчики" : MEASURE_POINTS.PIECE,
-  "маслины"               : MEASURE_POINTS.PIECE , // any positive integer
-  "cоль"                  : MEASURE_POINTS.GRAM, // any positive integer
-  "перец"                 : MEASURE_POINTS.GRAM , // any positive integer
-  "специи"                : MEASURE_POINTS.GRAM , // any positive integer
-  "зелень"                : MEASURE_POINTS.GRAM , // any positive integer
-  "сметана"               : MEASURE_POINTS.SPOON, // any positive integer
-  "лимон"                 : MEASURE_POINTS.SLICE, // any positive integer
-  "лавровый лист"         : MEASURE_POINTS.PIECE // any positive integer
+  "растительное масло"    : UNITS.SPOON,
+  "чеснок"                : UNITS.CLOVE,
+  "луковица"              : UNITS.PIECE,
+  "томатная паста"        : UNITS.SPOON,
+  "маринованные огурчики" : UNITS.PIECE,
+  "маслины"               : UNITS.PIECE , // any positive integer
+  "cоль"                  : UNITS.GRAM, // any positive integer
+  "перец"                 : UNITS.GRAM , // any positive integer
+  "специи"                : UNITS.GRAM , // any positive integer
+  "зелень"                : UNITS.GRAM , // any positive integer
+  "сметана"               : UNITS.SPOON, // any positive integer
+  "лимон"                 : UNITS.SLICE, // any positive integer
+  "лавровый лист"         : UNITS.PIECE // any positive integer
 };
+
+const INGREDIENTS = {
+  PORK          : "свинина", //свинина
+  BEEF          : "говядина", //говядина
+  CHICKEN       : "курица",
+  MEAT          : "мясо",
+  HAM           : "ветчина",
+  SALAMI        : "колбаса",
+  SMOKED_MEAT   : "копчености",
+  MEAT_PROD     : "мясные изделия",
+  PICKLES       : "маринованные огурчики", // Маринованные огурцы
+  TOMATO_PASTE  : "томатная паста",
+  GARLIC        : "чеснок",  //чеснок
+  ONION         : "луковица",
+  VEGETABLE_OIL : "растительное масло",
+  OLIVES        : "маслины",  //маслины
+  SALT          : "cоль",
+  PEPPER        : "перец",
+  SPICE         : "специи",
+  HERBS         : "зелень",
+  LEMON         : "лимон",
+  SOUR_CREAM    : "сметана", // сметана
+  BAY_LEAF      : "лавровый лист"  // лавровый лист
+}
+
+function createIngredient( type_, value ) {
+  // checks
+  if ( !isValidStr( type_ ) ) {
+    throw new Error( 'Expect string as 1st parameter')
+  }
+  if ( isNaN( value ) ) {
+    throw new Error( 'Expect number as 2nd parameter' );
+  }
+  let type = type_.trim().toUpperCase(); 
+  let name = INGREDIENTS[type];
+  if ( name == null ) {
+    throw new Error( 'No such ingredient type' );
+  }
+  // result
+  return {
+    name : name,
+    type : type,  //to check limits;
+    unit : INGR_UNIT_MAP[name],
+    attr : {},
+    value: value
+  }
+}
 
 
 // call example;
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
+
+// CHECKS
+function isObject( item ) {
+  if ( !( typeof item === 'object' && item != null ) ) {
+    throw new Error( 'Value must be an object' );
+  }
+}
+
 
 // HELPERS 
 function isValidStr( value ) {
@@ -228,8 +299,8 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     console.warn( errors.join( '\n')); //print to document???
     return ;
   }
-  console.log( 'errors',errors)
-  return ; ///temporary
+  console.log( '+++ errors',errors)
+  // return ; ///temporary
 
 
   let salt = salt_ || 0;
@@ -240,9 +311,9 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let sourCream = sourCream_ || 0;
 
   //1.
-
+  let myMeat = createIngredient( 'MEAT', meat );
   // let meat = getMeatWeight();//prompt
-  let washedMeat = wash( meat );
+  let washedMeat = wash( myMeat );
   // let water = getWater(); //prompt  2 liters == 2000grm
   // let smokedMeat = getSmokedMeat(); //prompt,
   // let pan = new Pan(); // constructor; 
