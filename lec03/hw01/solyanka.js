@@ -200,34 +200,37 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     errors.push( 'Растительного масла слишком мало!' );
   }
 
-  if ( !( isValidNum( salt_ ) && salt_ >=0 ) ) {
+  if ( salt_ != null && !( isValidNum( salt_ ) && salt_ >=0 ) ) {
     errors.push( 'Количество соли должно быть числом в граммах' );
   }
 
-  if ( !( isValidNum( pepper_ ) && pepper_ >=0 ) ) {
+  if ( pepper_ != null && !( isValidNum( pepper_ ) && pepper_ >=0 ) ) {
     errors.push( 'Количество перца должно быть числом в граммах' );
   }
 
-  if ( !( isValidNum( herbs_ ) && herbs_ >=0 ) ) {
+  if ( herbs_ != null && !( isValidNum( herbs_ ) && herbs_ >=0 ) ) {
     errors.push( 'Количество зелени и должно быть числом в граммах' );
   }
 
-  if ( !( isValidNum( sugar_ ) && sugar_ >=0 ) ) {
+  if ( sugar_ != null && !( isValidNum( sugar_ ) && sugar_ >=0 ) ) {
     errors.push( 'Количество сахара должно быть числом в граммах' );
   }
 
-  if ( !( isValidNum( lemon_ ) && lemon_ >=0 ) ) {
+  if ( lemon_ != null && !( isValidNum( lemon_ ) && lemon_ >=0 ) ) {
     errors.push( 'Количество лимона должно быть числом в дольках' );
   }
 
-  if ( !( isValidNum( sourCream_ ) && sourCream_ >=0 ) ) {
+  if ( sourCream_ != null && !( isValidNum( sourCream_ ) && sourCream_ >=0 ) ) {
     errors.push( 'Количество сметаны должно быть числом в ложках' );
   }
 
   if ( errors.length > 0 ) {
-    console.warn( errors.join( '\n'));
+    console.warn( errors.join( '\n')); //print to document???
     return ;
   }
+  console.log( 'errors',errors)
+  return ; ///temporary
+
 
   let salt = salt_ || 0;
   let pepper = pepper_ || 0;
@@ -238,12 +241,13 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   //1.
 
-  let meat = getMeatWeight();//prompt
+  // let meat = getMeatWeight();//prompt
   let washedMeat = wash( meat );
-  let water = getWater(); //prompt  2 liters == 2000grm
-  let smokedMeat = getSmokedMeat(); //prompt,
-  let pan = new Pan(); // constructor; 
-  pan.putIngredientsToPan( washedMeat, water, smokedMeat );
+  // let water = getWater(); //prompt  2 liters == 2000grm
+  // let smokedMeat = getSmokedMeat(); //prompt,
+  // let pan = new Pan(); // constructor; 
+  let pan = createPan(); // constructor; 
+  pan.put( washedMeat, water, smokedMeat );
 
   let minutesToBoilMeat = getMinutesToBoilMeat(); //prompt;
   let powerToBoilMeat = getPowerToBoilMeat(); //prompt;
@@ -251,13 +255,13 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   //2. 
   
-  pan.stopBoil();
+  pan.stopBoil(); //?? 
   let hotBoiledMeat = extractMeat( pan );
   let cooledBoiledMeat = coolMeat( hotBoiledMeat ); // time 
   let bouillon = extractBoulion( pan );
   let refinedBouillon = refineBoulion( bouillon );
   let blendedMeat = blend( cooledBoiledMeat );
-  pan.putIngredientsToPan( blendedMeat, refinedBouillon );
+  pan.put( blendedMeat, refinedBouillon );
 
   minutesToBoilMeat = getMinutesToBoilMeat(); //prompt;
   powerToBoilMeat = getPowerToBoilMeat(); //prompt;
@@ -265,58 +269,59 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   //3. 
 
-  let otherMeat = getOtherMeatWeight();//prompt
+  // let otherMeat = getOtherMeatWeight();//prompt
   let blendedOtherMeat = blend( otherMeat );
-  pan.putIngredientsToPan( blendedOtherMeat );
+  pan.put( blendedOtherMeat );
 
    
   //4. 
 
-  let pickles = getPickles(); //prompt
+  // let pickles = getPickles(); //prompt
   let blendedPickles = blend( pickles );
-  let olives = getOlives(); //prompt
+  // let olives = getOlives(); //prompt
   let blendedOlives = blend( olives );
 
 
   //5.
 
-  pan.putIngredientsToPan( blendedOlives, blendedPickles );
+  pan.put( blendedOlives, blendedPickles );
 
   //6.
-  let onion = getOnion();  //prompt
-  let garlic = getGarlic(); //prompt
+  // let onion = getOnion();  //prompt
+  // let garlic = getGarlic(); //prompt
   let cleanedOnion = clean( onion );
   let cleanedGarlic = clean( garlic );
   let blendedOnion = blend( cleanedOnion );
   let blendedGarlic = blend( cleanedGarlic );
-  let tomatoPaste = getTomatoPaster(); //prompt;
-  let vegetableOil = getVegetableOil(); //prompt;
+  // let tomatoPaste = getTomatoPaster(); //prompt;
+  // let vegetableOil = getVegetableOil(); //prompt;
 
-  let otherPan = new Pan();
+  // let otherPan = new Pan();
+  let otherPan = createPan();
 
 
-  otherPan.putIngredientsToPan( blendedGarlic, blendedOnion, vegetableOil );
+  otherPan.put( blendedGarlic, blendedOnion, vegetableOil );
   let minutesToFryGarlicOnion = 3;
   let powerToFryGarlicOnion = 'high';
   otherPan.boil( minutesToFryGarlicOnion, powerToFryGarlicOnion );
-  otherPan.putIngredientsToPan( tomatoPaste );
+  otherPan.put( tomatoPaste );
 
   //7.
 
-  let salt = getSalt();//prompt
-  let pepper = getPepper(); //prompt
-  let sugar = getSugar(); // prompt; OPTIONAL
+  // let salt = getSalt();//prompt
+  // let pepper = getPepper(); //prompt
+  // let sugar = getSugar(); // prompt; OPTIONAL
 
   let minutesToMakeSauce = 5;
   let powerToMakeSauce = 'low';
 
-  otherPan.putIngredientsToPan( salt_, pepper_, sugar_ );
+  otherPan.put( salt, pepper, sugar, herbs );
   otherPan.boil( minutesToMakeSauce, powerToMakeSauce );
 
   //8.
 
   let sauce = getSauceFromPan( otherPan ); 
-  pan.putIngredientsToPan( sauce );
+  pan.put( sauce );
 
   let minutesToCompleteSolyanka = randBetween( 5, 7 ); 
   let powerToCompleteSolyanka = 'low'; 
@@ -326,12 +331,100 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   pan.stopBoil();
   pan.close();
-  wait( 30 );
+  wait( 30 ); //minutes
 
-  let solyanka = pan.extractPortion();
-  let lemon = getLemonSlices(); //prompt
-  let sourCream = getSourCream(); //prompt 
-  solyanka.put( lemon_, sourCream_ );
+  let solyanka = createSolyanka();
+  solyanka.put( pan.getAll() );
+
+  solyanka.put( lemon, sourCream );
+
   //SOLYANKA IS READY!!!
   return solyanka;
+}
+
+function createSolyanka() {
+  let items = [];
+  return {
+    put: function(...args) {
+      items.push( ...args );
+    },
+
+    getAll : function() {
+      let result = items;
+      items = [];
+      return result;
+    }
+  };
+}
+
+function createPan() {
+  let items = [];
+  let isBoiling = false;
+  let isClosed = false;
+  let boilingId = null;
+
+  const eachItem = function( fn, scope ) {
+    items.forEach( fn.call( scope ) )
+  }
+
+  return {
+    put : function( ...args ) {
+      items.push( ...args );
+    },
+   
+    get : function( name ){
+      let newItems = [];
+      let result = [];
+      if( name == null || !isValidStr( name ) ) {
+        return result;
+      }
+
+      items.forEach( (item) => {
+        if ( item.name === name ) {
+          result.push( item );
+        }
+        else {
+          newItems.push( item );
+        }
+      });
+
+      if ( result.length > 0 ) {
+        items = newItems;
+      }
+      return result;
+    },
+
+    getAll : function() {
+      let result = items;
+      items = [];
+      return result;
+    },
+
+    boil: function( minutes, power ) {
+      if ( isBoiling === true ) {
+        console.log( 'Pan is allready boiling' );
+        return;
+      }
+      boilingId = setTimeout( () => {
+        boilingId = null;
+        isBoiling = false;
+        eachItem( function( item, idx_ ) {
+          item.isBoiled = true;
+        })
+      })
+    },
+    
+    stopBoil : function() {
+      clearTimeout( boilingId );
+      boilingId = null;
+    },
+    close : function() {
+      isClosed = true;
+      console.log( 'Pan is closed' );
+    },
+    open : function() {
+      isClosed = false;
+      console.log( 'Pan is opened' );
+    }
+  }
 }
