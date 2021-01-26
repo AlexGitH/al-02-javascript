@@ -11,17 +11,16 @@ function getPodjezdOfFlat( etaznost, podjezdy, kvarNaPlosch, targetFlat ) {
 
   var kvarNaPodjezd = etaznost * kvarNaPlosch;
 
-  var minFlatNum = 1;
+  var minFlatNumber = 1;
   var maxFlatNumber =  kvarNaPodjezd * podjezdy;
 
-  if ( targetFlat < minFlatNum || targetFlat > maxFlatNumber ) {
+  if ( targetFlat < minFlatNumber || targetFlat > maxFlatNumber ) {
     return 'no such flat in the house';
   }
 
   for( let currentPodjezd = 1; currentPodjezd <= podjezdy; currentPodjezd++ ) {
-    let min = minFlatNum + kvarNaPodjezd * (currentPodjezd - 1);
     let max = kvarNaPodjezd * currentPodjezd;
-    if ( targetFlat <= max && targetFlat >= min ) {
+    if ( targetFlat <= max ) {
       return currentPodjezd;
     }
   }
