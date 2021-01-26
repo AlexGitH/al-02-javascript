@@ -11,30 +11,19 @@ function getPodjezdOfFlat( etaznost, podjezdy, kvarNaPlosch, targetFlat ) {
 
   var kvarNaPodjezd = etaznost * kvarNaPlosch;
 
-  var flatNum = 1;
-  var result = {};
-  // TODO: find flat in 1st for loop!!!
-  for( let i = 1; i <= podjezdy; i++ ) {
-    result[i] = {
-      min : flatNum,
-      max : kvarNaPodjezd * i
-    };
-    flatNum += kvarNaPodjezd;
+  var minFlatNum = 1;
+  var maxFlatNumber =  kvarNaPodjezd * podjezdy;
+
+  if ( targetFlat < minFlatNum || targetFlat > maxFlatNumber ) {
+    return 'no such flat in the house';
   }
-  // TODO: check when flat is out of the house
 
-  var targetPodjezd;
-  Object.keys( result ).some( podjNum => {
-    let { min, max } = result[podjNum];
+  for( let currentPodjezd = 1; currentPodjezd <= podjezdy; currentPodjezd++ ) {
+    let min = minFlatNum + kvarNaPodjezd * (currentPodjezd - 1);
+    let max = kvarNaPodjezd * currentPodjezd;
     if ( targetFlat <= max && targetFlat >= min ) {
-      targetPodjezd = podjNum;
-      return true;
+      return currentPodjezd;
     }
-    return false;
-  });
-
-  return targetPodjezd;
+  }
+  throw new Error( 'Unexpected error' );
 }
-
-
-console.log( 'result', getPodjezdOfFlat( 5, 3, 4 , 31 ) );
