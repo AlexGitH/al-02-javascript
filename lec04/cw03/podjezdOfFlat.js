@@ -9,13 +9,13 @@
 
 const RE_INTEGER = /^\d+$/;
 
-function askNumericQuestion( text, min, max ) {
+function askNumberInRange( text, min, max ) {
   const toStr = Object.prototype.toString;
   let message = text.trim();
   if( !( toStr.call( message ) === '[object String]' ) || message === '' ) {
     throw new Error( 'Expected non-empty string as "text" parameter.' );
   }
-  if( isNaN( min ) || min < 1 ) {
+  if( isNaN( min ) || min < 0 ) {
     throw new Error( 'Expected positive integer as "min" parameter.' );
   }
   if( isNaN( max ) || max < 1 ) {
@@ -54,28 +54,46 @@ function askNumericQuestion( text, min, max ) {
 
 function createConfig() {
   return {
-    storeysNum       : askNumericQuestion( 'введите количество этажей(1-25)', 1, 25 ),
-    entranceNum      : askNumericQuestion( 'введите количество подъездов(1-10)', 1, 10 ),
-    vestibuleFlatNum : askNumericQuestion( 'введите количество квартир на лесничной площадке(1-20)', 1, 20 )
-  }
+    storeysNum       : askNumberInRange( 'введите количество этажей(1-25)', 1, 25 ),
+    entranceNum      : askNumberInRange( 'введите количество подъездов(1-10)', 1, 10 ),
+    vestibuleFlatNum : askNumberInRange( 'введите количество квартир на лесничной площадке(1-20)', 1, 20 )
+  };
 }
 
-function getPodjezdOfFlat( storeysNum, entranceNum, vestibuleFlatNum, targetFlat ) {
+function askTargetFlat() {
+  return askNumberInRange( 'введите номер квартиры, чтобы узнать ее подъезд', 0, Number.MAX_SAFE_INTEGER )
+}
 
-  const min = 1;
-  const flatsPerEntrance = storeysNum * vestibuleFlatNum;
 
-  var maxFlatNumber =  flatsPerEntrance * entranceNum;
+( function( config, flat ) {
 
-  if ( targetFlat < min || targetFlat > maxFlatNumber ) {
-    return 'Нет такой квартиры в доме';
-  }
+  function getEntranceOfFlat( {storeysNum, entranceNum, vestibuleFlatNum}, targetFlat ) {
 
-  for( let currentEntrance = min; currentEntrance <= entranceNum; currentEntrance++ ) {
-    let max = flatsPerEntrance * currentEntrance;
-    if ( targetFlat <= max ) {
-      return currentEntrance;
+    const min = 1;
+    const flatsPerEntrance = storeysNum * vestibuleFlatNum;
+
+    var maxFlatNumber =  flatsPerEntrance * entranceNum;
+
+    if ( targetFlat < min || targetFlat > maxFlatNumber ) {
+      // return 'Нет такой квартиры в доме';
+      return null;
     }
+
+    for( let currentEntrance = min; currentEntrance <= entranceNum; currentEntrance++ ) {
+      let max = flatsPerEntrance * currentEntrance;
+      if ( targetFlat <= max ) {
+        return currentEntrance;
+      }
+    }
+    throw new Error( 'Unexpected error' );
   }
-  throw new Error( 'Unexpected error' );
-}
+  
+  const entrance = getEntranceOfFlat( config, flat );
+  if ( entrance == null ) {
+    alert( `В доме нет квартиры №${flat}` );
+  }
+  else {
+    alert( `Квартира №${flat} находится в подъезде № ${entrance}` );
+  }
+
+})( createConfig(), askTargetFlat() );
