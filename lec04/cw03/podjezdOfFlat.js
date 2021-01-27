@@ -13,13 +13,13 @@ function askNumericQuestion( text, min, max ) {
   const toStr = Object.prototype.toString;
   let message = text.trim();
   if( !( toStr.call( message ) === '[object String]' ) || message === '' ) {
-    throw new Error( 'Expected non-empty string as "text" parameter.' )
+    throw new Error( 'Expected non-empty string as "text" parameter.' );
   }
   if( isNaN( min ) || min < 1 ) {
-    throw new Error( 'Expected positive integer as "min" parameter.' )
+    throw new Error( 'Expected positive integer as "min" parameter.' );
   }
   if( isNaN( max ) || max < 1 ) {
-    throw new Error( 'Expected positive integer as "max" parameter.' )
+    throw new Error( 'Expected positive integer as "max" parameter.' );
   }
 
   let number;
@@ -33,18 +33,18 @@ function askNumericQuestion( text, min, max ) {
     let result = prompt ( message ).trim();
 
     if ( !RE_INTEGER.test( result ) ) {
-      error = 'Expected positive integer number.';
+      error = 'Ожидается положительное целое число.';
       continue;
     }
     number = parseInt( result );
     if ( isNaN( number ) ) {
-      error = 'Cannot parse new number';
+      error = 'Нельзя преобразовать в число';
     }
     else if ( number > max ) {
-      error = 'Number is to big.';
+      error = 'Число слишком большое.';
     }
     else if ( number < min ) {
-      error = 'Number is to small.';
+      error = 'Число слишком маленькое.';
     }
   } while ( error != '' ) 
 
@@ -54,27 +54,27 @@ function askNumericQuestion( text, min, max ) {
 
 function createConfig() {
   return {
-    etaznost     : askNumericQuestion( 'введите количество этажей(1-25)', 1, 25 ),
-    podjezdy     : askNumericQuestion( 'введите количество подъездов(1-10)', 1, 10 ),
-    kvarNaPlosch : askNumericQuestion( 'введите количество квартир на лесничной площадке(1-20)', 1, 20 )
+    storeysNum       : askNumericQuestion( 'введите количество этажей(1-25)', 1, 25 ),
+    entranceNum      : askNumericQuestion( 'введите количество подъездов(1-10)', 1, 10 ),
+    vestibuleFlatNum : askNumericQuestion( 'введите количество квартир на лесничной площадке(1-20)', 1, 20 )
   }
 }
 
-function getPodjezdOfFlat( etaznost, podjezdy, kvarNaPlosch, targetFlat ) {
+function getPodjezdOfFlat( storeysNum, entranceNum, vestibuleFlatNum, targetFlat ) {
 
-  var kvarNaPodjezd = etaznost * kvarNaPlosch;
+  const min = 1;
+  const flatsPerEntrance = storeysNum * vestibuleFlatNum;
 
-  var minFlatNumber = 1;
-  var maxFlatNumber =  kvarNaPodjezd * podjezdy;
+  var maxFlatNumber =  flatsPerEntrance * entranceNum;
 
-  if ( targetFlat < minFlatNumber || targetFlat > maxFlatNumber ) {
-    return 'no such flat in the house';
+  if ( targetFlat < min || targetFlat > maxFlatNumber ) {
+    return 'Нет такой квартиры в доме';
   }
 
-  for( let currentPodjezd = 1; currentPodjezd <= podjezdy; currentPodjezd++ ) {
-    let max = kvarNaPodjezd * currentPodjezd;
+  for( let currentEntrance = min; currentEntrance <= entranceNum; currentEntrance++ ) {
+    let max = flatsPerEntrance * currentEntrance;
     if ( targetFlat <= max ) {
-      return currentPodjezd;
+      return currentEntrance;
     }
   }
   throw new Error( 'Unexpected error' );
