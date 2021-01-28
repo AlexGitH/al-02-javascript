@@ -16,21 +16,20 @@ function main() {
     let isAnotherSearch = true;
     const findEntrance = createEntranceFinder();
     if ( findEntrance == null ) {
-      return;    }
+      return;
+    }
     while( isAnotherSearch ) {
       const flat = askNumberInRange( 'введите номер квартиры, чтобы узнать ее подъезд', 0, Number.MAX_SAFE_INTEGER );
       if ( flat == null ){
         return;
       }
       const entrance = findEntrance( flat );
-
       if ( entrance == null ) {
         alert( `В доме нет квартиры №${flat}` );
       }
       else {
         alert( `Квартира №${flat} находится в подъезде № ${entrance}` );
       }
-
       isAnotherSearch = confirm( 'Найти подъезд для другой квартиры?' );
     }
     isCreateNewBuilding = confirm( 'Поискать подъезды по квартире в другом доме?' );
