@@ -28,6 +28,14 @@ function randBetween( min, max ) {
   return Math.floor( Math.random() * ( max - min ) + min );
 }
 
+function delaySync( minutes, delayText ) {
+  let i = minutes * 1e2;
+  i = i > 5e3 ? 5e3 : i;
+  while( i-- ) {
+    console.log( delayText );
+  }
+}
+
 const UNITS = {
   SPOON : "ст. лож.",
   PIECE : "шт.",
@@ -363,6 +371,8 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     let solyanka = createSolyanka();
     solyanka.put( ...pan.getAll() );
 
+    delaySync( 30, 'Оставить настояться на 30 мин.' );
+
     let myLemon = createIngredient( 'LEMON', lemon );
     let mySourCream = createIngredient( 'SOUR_CREAM', sourCream );
     solyanka.put( myLemon, mySourCream );
@@ -370,7 +380,9 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   }
 
   //SOLYANKA IS READY!!!
-  return completeSolyanka( pan, lemon, sourCream );
+  let result = completeSolyanka( pan, lemon, sourCream );
+  console.log( 'СОЛЯНКА ГОТОВА!');
+  return result;
 }
 
 
@@ -463,11 +475,7 @@ function createPan() {
     },
 
     boil: function( minutes, power ) {
-      
-      let i = minutes * 1e2;
-      while( i-- ) {
-        console.log( 'boiling' );
-      }
+      delaySync( minutes, 'boiling' );
       items.forEach( function( item ) {
         item.attr.isBoiled = true;
         item.attr.boilDetails.push( { [power] : minutes } );
