@@ -1,25 +1,19 @@
 // RECEPT :https://povar.ru/recipes/sup-solyanka_klassicheskii_recept-54159.html
 
 function wash( ingredient ) {
-  CHECK.isObject( ingredient );
+  Check.isObject( ingredient );
   ingredient.attr.isWashed = true;
   return ingredient;
 }
 
 function clean( ingredient ) {
-  CHECK.isObject( ingredient );
+  Check.isObject( ingredient );
   ingredient.attr.isCleaned = true;
   return ingredient;
 }
 
-function cool( ingredient ) {
-  CHECK.isObject( ingredient );
-  ingredient.attr.isCooled = true;
-  return ingredient;
-}
-
 function blend( ingredient ) {
-  CHECK.isObject( ingredient );
+  Check.isObject( ingredient );
   ingredient.attr.isBlended = true;
   return ingredient;
 }
@@ -114,15 +108,24 @@ const INGREDIENTS = {
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
 // CHECKS
-const CHECK =  {
-  
-  isObject: function( item ) {
-    const toStr = Object.prototype.toString;
-    if ( !toStr.call( item ) === toStr.call( {} ) ) {
-      throw new Error( 'Value must be an object' );
+const Check = (function() {
+  const toStr = Object.prototype.toString;
+  const STRING = toStr.call( '' );
+  const OBJECT = toStr.call( {} );
+
+  const createCheckPrimitive = function( expectedType, errorText ) {
+    return function( item ) {
+      if ( !toStr.call( item ) === expectedType ) {
+        throw new Error( errorText );
+      }
     }
-  }
-};
+  };
+
+  return {
+    isString: createCheckPrimitive( STRING, 'Value must be a string' ),
+    isObject: createCheckPrimitive( OBJECT, 'Value must be an object' )
+  };
+})();
 
 
 // HELPERS 
@@ -259,6 +262,9 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   //2. 
   
   function extractSingleItem( pan, itemName ) {
+    Check.isObject( pan );
+    Check.isString( itemName );
+
     let extractedItems = pan.get( itemName );
     if( extractedItems.length !== 1 ) {
       throw new Error( 'Expected to get only one item from Solyanka');
@@ -278,7 +284,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   }
 
   function refineBoulion( boulion ) {
-    CHECK.isObject( boulion );
+    Check.isObject( boulion );
     if ( INGREDIENTS[boulion.type] !== INGREDIENTS.WATER ) {
       throw new Error( 'Expected water ingredient' );
     }
@@ -286,14 +292,12 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     return boulion;
   }
 
-  let hotMeat = extractMeat( pan );
-  let hotSmokedMeat = extractSmokedMeat( pan );
-  let cooledMeat = cool( hotMeat ); // time 
-  let cooledSmokedMeat = cool( hotSmokedMeat ); // time 
+  let boiledMeat = extractMeat( pan );
+  let boiledSmokedMeat = extractSmokedMeat( pan );
   let boulion = extractBoulion( pan );
   let refinedBouillon = refineBoulion( boulion );
-  let blendedMeat = blend( cooledMeat );
-  let blendedSmokedMeat = blend( cooledSmokedMeat );
+  let blendedMeat = blend( boiledMeat );
+  let blendedSmokedMeat = blend( boiledSmokedMeat );
   pan.put( blendedMeat, blendedSmokedMeat, refinedBouillon );
 
   //3. 
@@ -301,7 +305,6 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let myOtherMeat = createIngredient( 'MEAT_PROD', otherMeat );
   let blendedOtherMeat = blend( myOtherMeat );
   pan.put( blendedOtherMeat );
-
    
   //4. 
 
@@ -309,7 +312,6 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let blendedPickles = blend( myPickles );
   let myOlives = createIngredient( 'OLIVES', olives );
   let blendedOlives = blend( myOlives );
-
 
   //5.
 
