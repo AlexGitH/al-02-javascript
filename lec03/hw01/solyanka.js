@@ -28,8 +28,6 @@ function randBetween( min, max ) {
   return Math.floor( Math.random() * ( max - min ) + min );
 }
 
-const TIME_MULTIPLIER = 50;
-
 const UNITS = {
   SPOON : "ст. лож.",
   PIECE : "шт.",
@@ -150,17 +148,36 @@ function isValidNum( value ) {
  */
 function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ ) {
 
-  let errors = [];
+  function validateParameter( type, value, vName ) {
+    let errors = [];
+    const capName = vName[0].toUpperCase() + vName.slice(1);
+    const name = INGREDIENTS[type];
+    if ( !isValidNum( value ) ) {
+      errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
+    }
+    if ( value > LIMITS[type].max ){
+      errors.push( `${capName} слишком много!` );
+    }
+    if ( value < LIMITS[type].min ) {
+      errors.push( `${capName} слишком мало!` );
+    }
+    return errors;
+  }
+  
   // CHECK PARAMETERS
-  if ( !isValidNum( meat ) ) {
-    errors.push( 'Количество мяса должно быть числом в граммах' );
-  }
-  if ( meat > LIMITS.MEAT.max ){
-    errors.push( 'Мяса слишком много!' );
-  }
-  if ( meat < LIMITS.MEAT.min ) {
-    errors.push( 'Мяса слишком мало!' );
-  }
+
+  let errors = [];
+
+  errors.push( ...validateParameter( 'MEAT', meat, "мяса" ) );
+  errors.push( ...validateParameter( 'WATER', water, "воды" ) );
+  errors.push( ...validateParameter( 'PICKLES', pickles, "маринованных огурчиков" ) );
+  errors.push( ...validateParameter( 'OLIVES', olives, "маслин" ) );
+  errors.push( ...validateParameter( 'ONION', onion, "луковиц" ) );
+  errors.push( ...validateParameter( 'GARLIC', garlic, "чеснока" ) );
+  errors.push( ...validateParameter( 'TOMATO_PASTE', tomatoPaste, "томатной пасты" ) );
+  errors.push( ...validateParameter( 'VEGETABLE_OIL', vegetableOil, "растительного масла" ) );
+
+
   if ( !isValidNum( smokedMeat ) ) {
     errors.push( 'Количество копченого мяса должно быть числом в граммах' );
   }
@@ -175,75 +192,6 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     errors.push( 'Мясных изделий слишком мало!' );
   }
 
-  if ( !isValidNum( water ) ) {
-    errors.push( 'Количество воды должно быть числом в граммах' );
-  }
-  if ( water > LIMITS.WATER.max ){
-    errors.push( 'Воды слишком много!' );
-  }
-  if ( water < LIMITS.WATER.min ) {
-    errors.push( 'Воды слишком мало!' );
-  }
-
-  if ( !isValidNum( pickles ) ) {
-    errors.push( 'Количество маринованных огурчиков должно быть числом в штуках' );
-  }
-  if ( pickles > LIMITS.PICKLES.max ){
-    errors.push( 'Маринованных огурчиков слишком много!' );
-  }
-  if ( pickles < LIMITS.PICKLES.min ) {
-    errors.push( 'Маринованных огурчиков слишком мало!' );
-  }
-
-  if ( !isValidNum( olives ) ) {
-    errors.push( 'Количество маслин должно быть числом в штуках' );
-  }
-  if ( olives > LIMITS.OLIVES.max ){
-    errors.push( 'Маслин слишком много!' );
-  }
-  if ( olives < LIMITS.OLIVES.min ) {
-    errors.push( 'Маслин слишком мало!' );
-  }
-
-  if ( !isValidNum( onion ) ) {
-    errors.push( 'Количество луковиц должно быть числом в штуках' );
-  }
-  if ( onion > LIMITS.ONION.max ){
-    errors.push( 'Луковиц слишком много!' );
-  }
-  if ( onion < LIMITS.ONION.min ) {
-    errors.push( 'Луковиц слишком мало!' );
-  }
-
-  if ( !isValidNum( garlic ) ) {
-    errors.push( 'Количество чеснока должно быть числом в зубках' );
-  }
-  if ( garlic > LIMITS.GARLIC.max ){
-    errors.push( 'Чеснока слишком много!' );
-  }
-  if ( garlic < LIMITS.GARLIC.min ) {
-    errors.push( 'Чеснока слишком мало!' );
-  }
-
-  if ( !isValidNum( tomatoPaste ) ) {
-    errors.push( 'Количество томатной пасты должно быть числом в ложках' );
-  }
-  if ( tomatoPaste > LIMITS.TOMATO_PASTE.max ){
-    errors.push( 'Томатной пасты слишком много!' );
-  }
-  if ( tomatoPaste < LIMITS.TOMATO_PASTE.min ) {
-    errors.push( 'Томатной пасты слишком мало!' );
-  }
-
-  if ( !isValidNum( vegetableOil ) ) {
-    errors.push( 'Количество растительного масла должно быть числом в ложках' );
-  }
-  if ( vegetableOil > LIMITS.VEGETABLE_OIL.max ){
-    errors.push( 'Растительного масла слишком много!' );
-  }
-  if ( vegetableOil < LIMITS.VEGETABLE_OIL.min ) {
-    errors.push( 'Растительного масла слишком мало!' );
-  }
 
   if ( salt_ != null && !( isValidNum( salt_ ) && salt_ >=0 ) ) {
     errors.push( 'Количество соли должно быть числом в граммах' );
@@ -273,7 +221,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     console.warn( errors.join( '\n')); //print to document???
     return ;
   }
-  console.log( '+++ errors',errors)
+  // console.log( '+++ errors',errors)
   // return ; ///temporary
 
 
