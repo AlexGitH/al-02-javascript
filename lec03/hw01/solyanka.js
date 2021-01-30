@@ -23,10 +23,11 @@ function randBetween( min, max ) {
 }
 
 function delaySync( minutes, delayText ) {
-  let i = minutes * 1e2;
-  i = i > 5e3 ? 5e3 : i;
+  let i = minutes * 1e7;
+  console.log( delayText );
+  let j = 0;
   while( i-- ) {
-    console.log( delayText );
+    j++;
   }
 }
 
@@ -214,7 +215,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     const name = INGREDIENTS[type];
     if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
       errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
-  }
+    }
     return errors;
   }
 
