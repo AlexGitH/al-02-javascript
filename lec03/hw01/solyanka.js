@@ -107,34 +107,40 @@ const INGREDIENTS = {
 // call example;
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
-// CHECKS
-const Check = (function() {
-  const toStr = Object.prototype.toString;
-  const STRING = toStr.call( '' );
-  const OBJECT = toStr.call( {} );
+function getType( item ) {
+  return Object.prototype.toString.call( item );
+}
 
+const TYPES = {
+  STRING : getType( '' ),
+  NUMBER : getType( 0 ),
+  OBJECT : getType( {} )
+};
+
+// CHECKS
+const Check = (function( typeOf, types ) {
   const createCheckPrimitive = function( expectedType, errorText ) {
     return function( item ) {
-      if ( !toStr.call( item ) === expectedType ) {
+      if ( !typeOf( item ) === expectedType ) {
         throw new Error( errorText );
       }
     }
   };
 
   return {
-    isString: createCheckPrimitive( STRING, 'Value must be a string' ),
-    isObject: createCheckPrimitive( OBJECT, 'Value must be an object' )
+    isString: createCheckPrimitive( types.STRING, 'Value must be a string' ),
+    isObject: createCheckPrimitive( types.OBJECT, 'Value must be an object' )
   };
-})();
+})( getType, TYPES );
 
 
 // HELPERS 
 function isValidStr( value ) {
-  return typeof value === 'string' && value.trim() !== '';
+  return getType( value ) === TYPES.STRING && value.trim() !== '';
 }
 
 function isValidNum( value ) {
-  return typeof value === 'number' && !isNaN( value );
+  return getType( value ) === TYPES.NUMBER;
 }
 
 /**
