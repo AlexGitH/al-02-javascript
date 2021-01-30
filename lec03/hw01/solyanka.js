@@ -203,30 +203,21 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     errors.push( 'Мясных изделий слишком мало!' );
   }
 
-
-  if ( salt_ != null && !( isValidNum( salt_ ) && salt_ >=0 ) ) {
-    errors.push( 'Количество соли должно быть числом в граммах' );
+  function validateOptionalParam( type, value, vName ) {
+    let errors = [];
+    const name = INGREDIENTS[type];
+    if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
+      errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
+  }
+    return errors;
   }
 
-  if ( pepper_ != null && !( isValidNum( pepper_ ) && pepper_ >=0 ) ) {
-    errors.push( 'Количество перца должно быть числом в граммах' );
-  }
-
-  if ( herbs_ != null && !( isValidNum( herbs_ ) && herbs_ >=0 ) ) {
-    errors.push( 'Количество зелени и должно быть числом в граммах' );
-  }
-
-  if ( sugar_ != null && !( isValidNum( sugar_ ) && sugar_ >=0 ) ) {
-    errors.push( 'Количество сахара должно быть числом в граммах' );
-  }
-
-  if ( lemon_ != null && !( isValidNum( lemon_ ) && lemon_ >=0 ) ) {
-    errors.push( 'Количество лимона должно быть числом в дольках' );
-  }
-
-  if ( sourCream_ != null && !( isValidNum( sourCream_ ) && sourCream_ >=0 ) ) {
-    errors.push( 'Количество сметаны должно быть числом в ложках' );
-  }
+  errors.push( ...validateOptionalParam( 'SALT', salt_, 'соли' ) );
+  errors.push( ...validateOptionalParam( 'PEPPER', pepper_, 'перца' ) );
+  errors.push( ...validateOptionalParam( 'HERBS', herbs_, 'зелени' ) );
+  errors.push( ...validateOptionalParam( 'SUGAR', sugar_, 'сахара' ) );
+  errors.push( ...validateOptionalParam( 'LEMON', lemon_, 'лимона' ) );
+  errors.push( ...validateOptionalParam( 'SOUR_CREAM', sourCream_, 'сметаны' ) );
 
   if ( errors.length > 0 ) {
     console.warn( errors.join( '\n')); //print to document???
