@@ -168,21 +168,53 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   function validateParameter( type, value, vName ) {
     let errors = [];
-    const capName = vName[0].toUpperCase() + vName.slice(1);
-    const name = INGREDIENTS[type];
-    if ( !isValidNum( value ) ) {
-      errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
-    }
-    if ( value > LIMITS[type].max ){
-      errors.push( `${capName} слишком много!` );
-    }
-    if ( value < LIMITS[type].min ) {
-      errors.push( `${capName} слишком мало!` );
-    }
+    validateQuantity( type, value, vName );
+    validateMinLimit( type, value, vName );
+    validateMaxLimit( type, value, vName );
     return errors;
   }
   
   // CHECK PARAMETERS
+  function validateQuantity( type, value, vName ) {
+    let errors = [];
+    const name = INGREDIENTS[type];
+    if ( !isValidNum( value ) ) {
+      errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
+    }
+    return errors;
+  }
+
+  function validateOptionalNumber( type, value, vName ) {
+    let errors = [];
+    const name = INGREDIENTS[type];
+    if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
+      errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
+    }
+    return errors;
+  }
+
+  function capitalize( str ) {
+    Check.isString( str );
+    return str[0].toUpperCase() + str.slice(1);
+  }
+
+  function validateMinLimit( type, value, vName ) {
+    let errors = [];
+    const capName = capitalize( vName );
+    if ( value < LIMITS[type].max ){
+      errors.push( `${capName} слишком мало!` );
+    }
+    return errors;
+  }
+
+  function validateMaxLimit( type, value, vName ) {
+    let errors = [];
+    const capName = capitalize( vName );
+    if ( value > LIMITS[type].max ){
+      errors.push( `${capName} слишком много!` );
+    }
+    return errors;
+  }
 
   let errors = [];
 
@@ -195,20 +227,13 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   errors.push( ...validateParameter( 'TOMATO_PASTE', tomatoPaste, "томатной пасты" ) );
   errors.push( ...validateParameter( 'VEGETABLE_OIL', vegetableOil, "растительного масла" ) );
 
-
-  if ( !isValidNum( smokedMeat ) ) {
-    errors.push( 'Количество копченого мяса должно быть числом в граммах' );
-  }
-  if ( !isValidNum( otherMeat ) ) {
-    errors.push( 'Количество мясных деликатесов должно быть числом в граммах' );
-  }
+  
+  errors.push( ...validateQuantity( 'SMOKED_MEAT', smokedMeat, "копченого мяса" ) );
+  errors.push( ...validateQuantity( 'OTHER_MEAT', otherMeat, "мясных деликатесов" ) );
   let meatProduct = smokedMeat + otherMeat;
-  if ( meatProduct > LIMITS.MEAT_PROD.max ){
-    errors.push( 'Мясных изделий слишком много!' );
-  }
-  if ( meatProduct < LIMITS.MEAT_PROD.min ) {
-    errors.push( 'Мясных изделий слишком мало!' );
-  }
+
+  errors.push( ...validateMaxLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
+  errors.push( ...validateMinLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
 
   function validateOptionalParam( type, value, vName ) {
     let errors = [];
