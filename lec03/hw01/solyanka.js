@@ -144,6 +144,12 @@ function isValidNum( value ) {
   return getType( value ) === TYPES.NUMBER;
 }
 
+function capitalize( str ) {
+  Check.isString( str );
+  return str[0].toUpperCase() + str.slice(1);
+}
+
+
 /**
  * Returns Solyanka;
  * @param {number} meat - мясо (grams)
@@ -191,11 +197,6 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
       errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
     }
     return errors;
-  }
-
-  function capitalize( str ) {
-    Check.isString( str );
-    return str[0].toUpperCase() + str.slice(1);
   }
 
   function validateMinLimit( type, value, vName ) {
