@@ -120,7 +120,7 @@ const TYPES = {
 
 // CHECKS
 const Check = (function( typeOf, types ) {
-  const createCheckPrimitive = function( expectedType, errorText ) {
+  const createCheck = function( expectedType, errorText ) {
     return function( item ) {
       if ( !typeOf( item ) === expectedType ) {
         throw new Error( errorText );
@@ -129,8 +129,8 @@ const Check = (function( typeOf, types ) {
   };
 
   return {
-    isString: createCheckPrimitive( types.STRING, 'Value must be a string' ),
-    isObject: createCheckPrimitive( types.OBJECT, 'Value must be an object' )
+    isString: createCheck( types.STRING, 'Value must be a string' ),
+    isObject: createCheck( types.OBJECT, 'Value must be an object' )
   };
 })( getType, TYPES );
 
