@@ -115,6 +115,7 @@ function getType( item ) {
 const TYPES = {
   STRING : getType( '' ),
   NUMBER : getType( 0 ),
+  ARRAY  : getType( [] ),
   OBJECT : getType( {} )
 };
 
@@ -129,7 +130,9 @@ const Check = (function( typeOf, types ) {
   };
 
   return {
+    isNumber: createCheck( types.STRING, 'Value must be a number' ),
     isString: createCheck( types.STRING, 'Value must be a string' ),
+    isArray : createCheck( types.ARRAY, 'Value must be an array' ),
     isObject: createCheck( types.OBJECT, 'Value must be an object' )
   };
 })( getType, TYPES );
@@ -261,19 +264,37 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let lemon = lemon_ || 0;
   let sourCream = sourCream_ || 0;
 
-  //1.
   let myMeat = createIngredient( 'MEAT', meat );
-
-  let washedMeat = wash( myMeat );
-
-  let myWater = createIngredient( 'WATER', water );
   let mySmokedMeat = createIngredient( 'SMOKED_MEAT', smokedMeat );
-  let pan = createPan( 'кастрюля' );
-  pan.put( washedMeat, myWater, mySmokedMeat );
+  let myWater = createIngredient( 'WATER', water );
+  let myMeatProd = createIngredient( 'MEAT_PROD', otherMeat );
+  let myPickles = createIngredient( 'PICKLES', pickles );
+  let myOlives = createIngredient( 'OLIVES', olives );
+  let myOnion = createIngredient( 'ONION', onion );
+  let myGarlic = createIngredient( 'GARLIC', garlic );
+  let myTomatoPaste = createIngredient( 'TOMATO_PASTE', tomatoPaste );
+  let myVegetableOil = createIngredient( 'VEGETABLE_OIL', vegetableOil );
 
-  let minutesToBoilMeat = 120; //prompt;
-  let powerToBoilMeat = 'low'; //prompt;
-  pan.boil( minutesToBoilMeat, powerToBoilMeat );
+
+
+  //1.
+  let pan = createPan( 'кастрюля' );
+
+  function washAndBoilMeat( pan, meat, smokedMeat, water ) {
+    Check.isObject( pan );
+    Check.isObject( meat );
+    Check.isObject( smokedMeat );
+    Check.isObject( water );
+
+    let washedMeat = wash( myMeat );
+    pan.put( washedMeat, myWater, mySmokedMeat );
+    let minutesToBoilMeat = 120;
+    let powerToBoilMeat = 'low';
+    pan.boil( minutesToBoilMeat, powerToBoilMeat );
+    return pan;
+  }
+
+  pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
 
   // waitBoilStop( pan ); //minutes
   //2. 
@@ -309,97 +330,159 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     return boulion;
   }
 
-  let boiledMeat = extractMeat( pan );
-  let boiledSmokedMeat = extractSmokedMeat( pan );
-  let boulion = extractBoulion( pan );
-  let refinedBouillon = refineBoulion( boulion );
-  let blendedMeat = blend( boiledMeat );
-  let blendedSmokedMeat = blend( boiledSmokedMeat );
-  pan.put( blendedMeat, blendedSmokedMeat, refinedBouillon );
-
+  function refineBoulionAndBlendBoiledMeat( pan ) {
+    Check.isObject( pan );
+    let boiledMeat = extractMeat( pan );
+    let boiledSmokedMeat = extractSmokedMeat( pan );
+    let boulion = extractBoulion( pan );
+    let refinedBouillon = refineBoulion( boulion );
+    let blendedMeat = blend( boiledMeat );
+    let blendedSmokedMeat = blend( boiledSmokedMeat );
+    pan.put( blendedMeat, blendedSmokedMeat, refinedBouillon );
+    return pan;
+  }
   //3. 
+  pan = refineBoulionAndBlendBoiledMeat( pan );
 
-  let myOtherMeat = createIngredient( 'MEAT_PROD', otherMeat );
-  let blendedOtherMeat = blend( myOtherMeat );
-  pan.put( blendedOtherMeat );
+  function addBlendedMeatProds( pan, meatProduct ) {
+    Check.isObject( pan );
+    Check.isObject( meatProduct );
+    let blendedOtherMeat = blend( meatProduct );
+    pan.put( blendedOtherMeat );
+    return pan;
+  }
+  pan = addBlendedMeatProds( pan, myMeatProd );
    
   //4. 
 
-  let myPickles = createIngredient( 'PICKLES', pickles );
-  let blendedPickles = blend( myPickles );
-  let myOlives = createIngredient( 'OLIVES', olives );
-  let blendedOlives = blend( myOlives );
-
   //5.
+  pan = addBlendedPiclesAndOlives( pan, myPickles, myOlives )
+  function addBlendedPiclesAndOlives( pan, pickles, olives ) {
+    Check.isObject( pan );
+    Check.isObject( pickles );
+    Check.isObject( olives );
+    let blendedPickles = blend( myPickles );
+    let blendedOlives = blend( olives );
 
-  pan.put( blendedOlives, blendedPickles );
+    pan.put( blendedOlives, blendedPickles );
+    return pan;
+  }
+
+  function makeSauce( pan, onion, garlic, tomatoPaste, vegetableOil) {
+    Check.isObject( pan );
+    Check.isObject( onion );
+    Check.isObject( garlic );
+    Check.isObject( tomatoPaste );
+    Check.isObject( vegetableOil );
+    let cleanedOnion = clean( onion );
+    let cleanedGarlic = clean( garlic );
+    let blendedOnion = blend( cleanedOnion );
+    let blendedGarlic = blend( cleanedGarlic );
+
+    pan.put( blendedGarlic, blendedOnion, vegetableOil );
+    let minutesToFryGarlicOnion = 3;
+    let powerToFryGarlicOnion = 'high';
+    pan.fry( minutesToFryGarlicOnion, powerToFryGarlicOnion );
+  
+    // waitBoilStop( otherPan ); //minutes
+
+    pan.put( tomatoPaste );
+    return pan;
+  }
 
   //6.
-  let myOnion = createIngredient( 'ONION', onion );
-  let myGarlic = createIngredient( 'GARLIC', garlic );
-  let cleanedOnion = clean( myOnion );
-  let cleanedGarlic = clean( myGarlic );
-  let blendedOnion = blend( cleanedOnion );
-  let blendedGarlic = blend( cleanedGarlic );
-
-  let myTomatoPaste = createIngredient( 'TOMATO_PASTE', tomatoPaste );
-  let myVegetableOil = createIngredient( 'VEGETABLE_OIL', vegetableOil );
   let otherPan = createPan( 'сковорода' );
 
-
-  otherPan.put( blendedGarlic, blendedOnion, myVegetableOil );
-  let minutesToFryGarlicOnion = 3;
-  let powerToFryGarlicOnion = 'high';
-  otherPan.fry( minutesToFryGarlicOnion, powerToFryGarlicOnion );
-  
-  // waitBoilStop( otherPan ); //minutes
-
-  otherPan.put( myTomatoPaste );
+  otherPan = makeSauce( pan, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
 
   //7.
 
-  let mySalt = createIngredient( 'SALT', salt );
-  let myPepper = createIngredient( 'PEPPER', pepper );
-  let mySugar = createIngredient( 'SUGAR', sugar );
-  let myHerbs = createIngredient( 'HERBS', herbs );
+  function correctSauceTaste( pan, tasteItems ) {
+    Check.isObject( pan );
+    Check.isArray( tasteItems );
+    pan.put( ...tasteItems );
+    let minutesToMakeSauce = 5;
+    let powerToMakeSauce = 'low';
+    pan.fry( minutesToMakeSauce, powerToMakeSauce );
+    return pan;
+  }
 
-  otherPan.put( mySalt, myPepper, mySugar, myHerbs );
+  function createSauceTasteItems( salt, pepper, sugar, herbs ) {
+    Check.isNumber( salt );
+    Check.isNumber( pepper );
+    Check.isNumber( sugar );
+    Check.isNumber( herbs );
+    let items = [];
+    if( salt > 0 ) {
+      items.push( createIngredient( 'SALT', salt ) ); 
+    }
+    if( pepper > 0 ) {
+      items.push( createIngredient( 'PEPPER', pepper ) ); 
+    }
+    if( sugar > 0 ) {
+      items.push( createIngredient( 'SUGAR', sugar ) ); 
+    }
+    if( herbs > 0 ) {
+      items.push( createIngredient( 'HERBS', herbs ) ); 
+    }
+    return items;
+  }
 
-  let minutesToMakeSauce = 5;
-  let powerToMakeSauce = 'low';
-  otherPan.fry( minutesToMakeSauce, powerToMakeSauce );
+  const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
+  otherPan = correctSauceTaste( otherPan, tasteItems );
+
 
   // waitBoilStop( otherPan ); //minutes
 
-  // function completeSolyanka( pan, lemon, sourCream ) {
+  function mixSauceWithSolyanka( pan, items ) {
     //8.
+    Check.isObject( pan );
+    Check.isArray( items );
 
-    let sauceItems = otherPan.getAll();
-    pan.put( ...sauceItems );
+    // let sauceItems = otherPan.getAll();
+    // pan.put( ...sauceItems );
+    pan.put( ...items );
 
     let minutesToCompleteSolyanka = randBetween( 5, 7 ); 
     let powerToCompleteSolyanka = 'low'; 
     pan.boil( minutesToCompleteSolyanka, powerToCompleteSolyanka );
-    // return pan;
-  // }
+    return pan;
+  }
+
+  let sauceItems = otherPan.getAll();
+  mixSauceWithSolyanka( pan, sauceItems );
 
   // waitBoilStop( pan ); //minutes
 
-  function completeSolyanka( pan, lemon, sourCream ) {
+  function createFinalItems( lemon, sourCream ) {
+    Check.isNumber( lemon );
+    Check.isNumber( sourCream );
+    let items = [];
+    if( lemon > 0 ) {
+      items.push( createIngredient( 'LEMON', lemon ) ); 
+    }
+    if ( sourCream > 0 ) {
+      items.push( createIngredient( 'SOUR_CREAM', sourCream ) );
+    }
+    return items;
+  }
+
+  function completeSolyanka( pan, items ) {
+    Check.isObject( pan );
+    Check.isArray( items );
     //9. 
     let solyanka = createSolyanka();
     solyanka.put( ...pan.getAll() );
 
     delaySync( 30, 'Оставляем настоятся 30 мин.' );
 
-    let myLemon = createIngredient( 'LEMON', lemon );
-    let mySourCream = createIngredient( 'SOUR_CREAM', sourCream );
-    solyanka.put( myLemon, mySourCream );
+    solyanka.put( ...items );
     return solyanka;
   }
 
   //SOLYANKA IS READY!!!
-  let result = completeSolyanka( pan, lemon, sourCream );
+  const finalItems = createFinalItems( lemon, sourCream );
+  let result = completeSolyanka( pan, finalItems );
   console.log( 'СОЛЯНКА ГОТОВА!');
   return result;
 }
