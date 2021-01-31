@@ -150,27 +150,7 @@ function capitalize( str ) {
 }
 
 
-/**
- * Returns Solyanka;
- * @param {number} meat - мясо (grams)
- * @param {number} smokedMeat - копчености (grams)
- * @param {number} water - вода (grams)
- * @param {number} otherMeat - мясные деликатесы (grams)
- * @param {number} pickles - маринованные огурчики (pieces)
- * @param {number} olives - маслины (pieces)
- * @param {number} onion - луковица (pieces)
- * @param {number} garlic - чеснок (cloves)
- * @param {number} tomatoPaste - томатная паста (spoons)
- * @param {number} vegetableOil - растительное масло (spoons)
- * @param {number} [salt_] - соль (grams)
- * @param {number} [pepper_] - перец (grams)
- * @param {number} [herbs_] - зелень (grams)
- * @param {number} [sugar_] - сахар (grams)
- * @param {number} [lemon_] - лимон (slices)
- * @param {number} [sourCream_] - сметана (spoons)
- * @returns {object} solyanka
- */
-function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ ) {
+// VALIDATION
 
   function validateParameter( type, value, vName ) {
     let errors = [];
@@ -189,7 +169,6 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     return errors;
   }
 
-  // CHECK PARAMETERS
   function validateQuantity( type, value, vName ) {
     let errors = [];
     const name = INGREDIENTS[type];
@@ -217,6 +196,29 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     return errors;
   }
 
+/**
+ * Returns Solyanka;
+ * @param {number} meat - мясо (grams)
+ * @param {number} smokedMeat - копчености (grams)
+ * @param {number} water - вода (grams)
+ * @param {number} otherMeat - мясные деликатесы (grams)
+ * @param {number} pickles - маринованные огурчики (pieces)
+ * @param {number} olives - маслины (pieces)
+ * @param {number} onion - луковица (pieces)
+ * @param {number} garlic - чеснок (cloves)
+ * @param {number} tomatoPaste - томатная паста (spoons)
+ * @param {number} vegetableOil - растительное масло (spoons)
+ * @param {number} [salt_] - соль (grams)
+ * @param {number} [pepper_] - перец (grams)
+ * @param {number} [herbs_] - зелень (grams)
+ * @param {number} [sugar_] - сахар (grams)
+ * @param {number} [lemon_] - лимон (slices)
+ * @param {number} [sourCream_] - сметана (spoons)
+ * @returns {object} solyanka
+ */
+function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ ) {
+
+  // CHECK PARAMETERS
   let errors = [];
 
   errors.push( ...validateParameter( 'MEAT', meat, "мяса" ) );
