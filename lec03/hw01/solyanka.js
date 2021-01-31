@@ -371,7 +371,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     let solyanka = createSolyanka();
     solyanka.put( ...pan.getAll() );
 
-    delaySync( 30, 'Оставить настояться на 30 мин.' );
+    delaySync( 30, 'Оставляем настоятся 30 мин.' );
 
     let myLemon = createIngredient( 'LEMON', lemon );
     let mySourCream = createIngredient( 'SOUR_CREAM', sourCream );
