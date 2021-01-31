@@ -173,21 +173,21 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     validateMaxLimit( type, value, vName );
     return errors;
   }
-  
-  // CHECK PARAMETERS
-  function validateQuantity( type, value, vName ) {
+
+  function validateOptionalParam( type, value, vName ) {
     let errors = [];
     const name = INGREDIENTS[type];
-    if ( !isValidNum( value ) ) {
+    if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
       errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
     }
     return errors;
   }
 
-  function validateOptionalNumber( type, value, vName ) {
+  // CHECK PARAMETERS
+  function validateQuantity( type, value, vName ) {
     let errors = [];
     const name = INGREDIENTS[type];
-    if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
+    if ( !isValidNum( value ) ) {
       errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
     }
     return errors;
@@ -234,15 +234,6 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   errors.push( ...validateMaxLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
   errors.push( ...validateMinLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
-
-  function validateOptionalParam( type, value, vName ) {
-    let errors = [];
-    const name = INGREDIENTS[type];
-    if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
-      errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
-    }
-    return errors;
-  }
 
   errors.push( ...validateOptionalParam( 'SALT', salt_, 'соли' ) );
   errors.push( ...validateOptionalParam( 'PEPPER', pepper_, 'перца' ) );
