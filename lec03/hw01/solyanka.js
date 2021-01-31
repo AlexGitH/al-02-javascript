@@ -152,49 +152,49 @@ function capitalize( str ) {
 
 // VALIDATION
 
-  function validateParameter( type, value, vName ) {
-    let errors = [];
-    validateQuantity( type, value, vName );
-    validateMinLimit( type, value, vName );
-    validateMaxLimit( type, value, vName );
-    return errors;
-  }
+function validateParameter( type, value, vName ) {
+  let errors = [];
+  validateQuantity( type, value, vName );
+  validateMinLimit( type, value, vName );
+  validateMaxLimit( type, value, vName );
+  return errors;
+}
 
-  function validateOptionalParam( type, value, vName ) {
-    let errors = [];
-    const name = INGREDIENTS[type];
-    if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
-      errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
-    }
-    return errors;
+function validateOptionalParam( type, value, vName ) {
+  let errors = [];
+  const name = INGREDIENTS[type];
+  if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
+    errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
   }
+  return errors;
+}
 
-  function validateQuantity( type, value, vName ) {
-    let errors = [];
-    const name = INGREDIENTS[type];
-    if ( !isValidNum( value ) ) {
-      errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
-    }
-    return errors;
+function validateQuantity( type, value, vName ) {
+  let errors = [];
+  const name = INGREDIENTS[type];
+  if ( !isValidNum( value ) ) {
+    errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
   }
+  return errors;
+}
 
-  function validateMinLimit( type, value, vName ) {
-    let errors = [];
-    const capName = capitalize( vName );
-    if ( value < LIMITS[type].max ){
-      errors.push( `${capName} слишком мало!` );
-    }
-    return errors;
+function validateMinLimit( type, value, vName ) {
+  let errors = [];
+  const capName = capitalize( vName );
+  if ( value < LIMITS[type].max ){
+    errors.push( `${capName} слишком мало!` );
   }
+  return errors;
+}
 
-  function validateMaxLimit( type, value, vName ) {
-    let errors = [];
-    const capName = capitalize( vName );
-    if ( value > LIMITS[type].max ){
-      errors.push( `${capName} слишком много!` );
-    }
-    return errors;
+function validateMaxLimit( type, value, vName ) {
+  let errors = [];
+  const capName = capitalize( vName );
+  if ( value > LIMITS[type].max ){
+    errors.push( `${capName} слишком много!` );
   }
+  return errors;
+}
 
 /**
  * Returns Solyanka;
@@ -268,7 +268,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   let myWater = createIngredient( 'WATER', water );
   let mySmokedMeat = createIngredient( 'SMOKED_MEAT', smokedMeat );
-  let pan = createPan();
+  let pan = createPan( 'кастрюля' );
   pan.put( washedMeat, myWater, mySmokedMeat );
 
   let minutesToBoilMeat = 120; //prompt;
@@ -344,13 +344,13 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   let myTomatoPaste = createIngredient( 'TOMATO_PASTE', tomatoPaste );
   let myVegetableOil = createIngredient( 'VEGETABLE_OIL', vegetableOil );
-  let otherPan = createPan();
+  let otherPan = createPan( 'сковорода' );
 
 
   otherPan.put( blendedGarlic, blendedOnion, myVegetableOil );
   let minutesToFryGarlicOnion = 3;
   let powerToFryGarlicOnion = 'high';
-  otherPan.boil( minutesToFryGarlicOnion, powerToFryGarlicOnion );
+  otherPan.fry( minutesToFryGarlicOnion, powerToFryGarlicOnion );
   
   // waitBoilStop( otherPan ); //minutes
 
@@ -367,7 +367,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   let minutesToMakeSauce = 5;
   let powerToMakeSauce = 'low';
-  otherPan.boil( minutesToMakeSauce, powerToMakeSauce );
+  otherPan.fry( minutesToMakeSauce, powerToMakeSauce );
 
   // waitBoilStop( otherPan ); //minutes
 
@@ -426,10 +426,11 @@ function createIngredient( type_, value ) {
     type : type,  //to check limits;
     unit : INGR_UNIT_MAP[name],
     attr : {
+      fryDetails: [],
       boilDetails: []
     },
     value: value
-  }
+  };
 }
 
 
@@ -454,9 +455,18 @@ function createSolyanka() {
   };
 }
 
-function createPan() {
+function createPan( panName ) {
+  if ( !isValidStr( panName ) ) {
+    throw new Error( 'Pan must have a name.');
+  }
+
   let items = [];
+
   return {
+    getName: function() {
+      return panName;
+    },
+
     put : function( ...args ) {
       items.push( ...args );
     },
@@ -493,13 +503,22 @@ function createPan() {
       return items.map( x => `${x.name}:${x.value} ${x.unit}` );
     },
 
+    fry: function( minutes, power ) {
+      delaySync( minutes, `${panName} жарит...`);
+      items.forEach( function( item ) {
+        item.attr.isFried = true;
+        item.attr.fryDetails.push( { [power] : minutes } );
+      });
+      console.log( `${panName} перестала жарить спустя ${minutes} минут` );
+    },
+
     boil: function( minutes, power ) {
-      delaySync( minutes, 'boiling' );
+      delaySync( minutes, `${panName} варит...`);
       items.forEach( function( item ) {
         item.attr.isBoiled = true;
         item.attr.boilDetails.push( { [power] : minutes } );
       });
-      console.log( `Pan stopped boiling after ${minutes} minutes` );
+      console.log( `${panName} перестала варить спустя ${minutes} минут` );
     }
-  }
+  };
 }
