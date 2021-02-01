@@ -70,7 +70,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   otherPan = correctSauceTaste( otherPan, minutesToCorrectSauceTaste, tasteItems );
 
   const elapsedMinutes = minutesToMakeSauce + minutesToCorrectSauceTaste;
-  pan.stopBoil( elapsedMinutes, 'low' );
+  pan.stopBoil( elapsedMinutes, POWER_GRADE.LOW );
 
   
   let sauceItems = otherPan.getAll();
@@ -82,6 +82,12 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   console.log( 'СОЛЯНКА ГОТОВА!');
   return result;
 }
+
+const POWER_GRADE = {
+  LOW : 'low',
+  MED : 'medium',
+  HIG : 'high'
+};
 
 const UNITS = {
   SPOON : "ст. лож.",
@@ -451,7 +457,7 @@ function createPan( panName ) {
     let washedMeat = wash( meat );
     pan.put( washedMeat, water, smokedMeat );
     let minutesToBoilMeat = 120;
-    let powerToBoilMeat = 'low';
+    let powerToBoilMeat = POWER_GRADE.LOW;
     pan.boil( minutesToBoilMeat, powerToBoilMeat );
     return pan;
   }
@@ -543,7 +549,7 @@ function createPan( panName ) {
     Check.isNumber( minutesToMakeSauce );
     Check.isArray( tasteItems );
     pan.put( ...tasteItems );
-    let powerToMakeSauce = 'low';
+    let powerToMakeSauce = POWER_GRADE.LOW;
     pan.fry( minutesToMakeSauce, powerToMakeSauce );
     return pan;
   }
@@ -575,7 +581,7 @@ function createPan( panName ) {
     Check.isArray( items );
 
     let minutesToCompleteSolyanka = randBetween( 5, 7 ); 
-    let powerToCompleteSolyanka = 'low'; 
+    let powerToCompleteSolyanka = POWER_GRADE.LOW; 
     pan.put( ...items );
     pan.boil( minutesToCompleteSolyanka, powerToCompleteSolyanka );
     return pan;
