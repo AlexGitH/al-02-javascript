@@ -3,6 +3,19 @@
 // usage example;
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
+function pushMessage( text ) {
+  const elem = document.querySelectorAll( 'body>pre' )[0];
+  const node = document.createTextNode( text + '\n' );
+  elem.appendChild(node);
+}
+
+function cleanMessages() {
+  const elem = document.querySelectorAll( 'body>pre' )[0];
+  while( elem.hasChildNodes() ){
+    elem.removeChild(elem.firstChild);
+  }
+}
+
 /**
  * ENTRY POINT
  * Returns Solyanka;
@@ -53,28 +66,29 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let myTomatoPaste = createIngredient( 'TOMATO_PASTE', tomatoPaste );
   let myVegetableOil = createIngredient( 'VEGETABLE_OIL', vegetableOil );
 
+  cleanMessages( 'Берем кастрюлю ' );
   // START COOKING
-  console.log( 'Берем кастрюлю ' );
+  pushMessage( 'Берем кастрюлю ' );
   let pan = createPan( 'кастрюля' );
-  console.log( 'Моем мясо и складываем с копченостями в кастрюлю с водой. Варим на медленном огне...' );
+  pushMessage( 'Моем мясо и складываем с копченостями в кастрюлю с водой. Варим на медленном огне...' );
   pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
-  console.log( 'Вылавливаем все мясо и измельчаем. Отцеживаем бульйон и заливаем в кастрюлю с измельченым мясом...' );
+  pushMessage( 'Вылавливаем все мясо и измельчаем. Отцеживаем бульйон и заливаем в кастрюлю с измельченым мясом...' );
   pan = refineBouillonAndBlendBoiledMeat( pan );
-  console.log( 'Измельчаем мясные деликатесы и складываем в кастрюлю...' );
+  pushMessage( 'Измельчаем мясные деликатесы и складываем в кастрюлю...' );
   pan = addBlendedMeatProds( pan, myMeatProd );
-  console.log( 'Измельчаем маслины и маринованные огурчики и складываем в кастрюлю...' );
+  pushMessage( 'Измельчаем маслины и маринованные огурчики и складываем в кастрюлю...' );
   pan = addBlendedPicklesAndOlives( pan, myPickles, myOlives )
 
-  console.log( 'Ставим кастрюльку на медленный огонь и параллельно приступаем к заправке...' );
+  pushMessage( 'Ставим кастрюльку на медленный огонь и параллельно приступаем к заправке...' );
   pan.startBoil();
 
-  console.log( 'Берем сковороду...' );
+  pushMessage( 'Берем сковороду...' );
   let otherPan = createPan( 'сковорода' );
   const minutesToMakeSauce = 3;
-  console.log( 'Чистим лук и чеснок, измельчаем, добавляем растительного масла и обжариваем на большом огне...')
+  pushMessage( 'Чистим лук и чеснок, измельчаем, добавляем растительного масла и обжариваем на большом огне...')
   otherPan = makeSauce( otherPan, minutesToMakeSauce, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
 
-  console.log( 'Добавляем томатную пасту. Также добавляем соли, сахара, перца и зелени по вкусу' );
+  pushMessage( 'Добавляем томатную пасту. Также добавляем соли, сахара, перца и зелени по вкусу' );
   const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
   const minutesToCorrectSauceTaste = 5;
   otherPan = correctSauceTaste( otherPan, minutesToCorrectSauceTaste, tasteItems );
@@ -82,17 +96,17 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   const elapsedMinutes = minutesToMakeSauce + minutesToCorrectSauceTaste;
   pan.stopBoil( elapsedMinutes, POWER_GRADE.LOW );
   
-  console.log( 'Пересыпаем заправку со сковородки в кастрюлю и варим еще 5-7 минут' );
+  pushMessage( 'Пересыпаем заправку со сковородки в кастрюлю и варим еще 5-7 минут' );
   let sauceItems = otherPan.getAll();
   mixSauceWithSolyanka( pan, sauceItems );
 
   //SOLYANKA IS READY!!!
   const finalItems = createFinalItems( lemon, sourCream );
   
-  console.log( 'Оставляем настояться 30 минут...');
+  pushMessage( 'Оставляем настояться 30 минут...');
   
   let result = completeSolyanka( pan, finalItems );
-  console.log( 'СОЛЯНКА ГОТОВА!');
+  pushMessage( 'СОЛЯНКА ГОТОВА!');
   return result;
 }
 
@@ -245,7 +259,7 @@ function blend( ingredient ) {
 
 function delaySync( minutes, delayText ) {
   let i = minutes * 1e7;
-  console.log( delayText );
+  pushMessage( delayText );
   let j = 0;
   while( i-- ) {
     j++;
@@ -430,7 +444,7 @@ function createPan( panName ) {
     },
 
     startBoil: function() {
-      console.log( `${panName} варит...` );
+      pushMessage( `${panName} варит...` );
     },
 
     stopBoil: function( minutes, power ) {
@@ -438,7 +452,7 @@ function createPan( panName ) {
         item.attr.isBoiled = true;
         item.attr.boilDetails.push( { [power] : minutes } );
       });
-      console.log( `${panName} перестала варить спустя ${minutes} минут` );
+      pushMessage( `${panName} перестала варить спустя ${minutes} минут` );
     },
 
     fry: function( minutes, power ) {
@@ -447,7 +461,7 @@ function createPan( panName ) {
         item.attr.isFried = true;
         item.attr.fryDetails.push( { [power] : minutes } );
       });
-      console.log( `${panName} перестала жарить спустя ${minutes} минут` );
+      pushMessage( `${panName} перестала жарить спустя ${minutes} минут` );
     },
 
     boil: function( minutes, power ) {
@@ -621,7 +635,7 @@ function completeSolyanka( pan, items ) {
   solyanka.put( ...pan.getAll() );
 
   delaySync( 30, 'Ожидаем...' );
-  console.log( 'Добавляем лимон и сметану по вкусу...' );
+  pushMessage( 'Добавляем лимон и сметану по вкусу...' );
   solyanka.put( ...items );
   return solyanka;
 }
