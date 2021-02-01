@@ -6,14 +6,12 @@ function sumOfTwoMin( numbers ) {
   if ( numbers.length < 4 ) {
     throw new Error( 'Expected at least 4 items in the array' );
   }
-  
-  let minOne = numbers.reduce( (acc , n) => {
-		return n < acc ? n : acc;
-  }, Number.POSITIVE_INFINITY );
-  
-  let minTwo = numbers.reduce( (acc , n) => {
-		return ( n > minOne && n < acc ) ? n : acc;
-  }, Number.POSITIVE_INFINITY );
+  const maxNum = Number.POSITIVE_INFINITY;
+  let { minOne, minTwo } = numbers.reduce( ( acc , n ) => {
+    return n < acc.minOne
+      ? { minOne: n,          minTwo: acc.minOne } : n < acc.minTwo
+      ? { minOne: acc.minOne, minTwo: n }          : acc;
+  }, { minOne: maxNum, minTwo: maxNum } );
   
   return minOne + minTwo;
 }
