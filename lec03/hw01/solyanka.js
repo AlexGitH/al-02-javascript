@@ -1,5 +1,8 @@
 // RECEPT :https://povar.ru/recipes/sup-solyanka_klassicheskii_recept-54159.html
 
+// usage example;
+// makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
+
 /**
  * ENTRY POINT
  * Returns Solyanka;
@@ -50,31 +53,15 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let myTomatoPaste = createIngredient( 'TOMATO_PASTE', tomatoPaste );
   let myVegetableOil = createIngredient( 'VEGETABLE_OIL', vegetableOil );
 
-
-
-  //1.
+  // START COOKING
   let pan = createPan( 'кастрюля' );
-
   pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
-
-  //2. 
-
-  //3. 
   pan = refineBoulionAndBlendBoiledMeat( pan );
-
-  //4. 
   pan = addBlendedMeatProds( pan, myMeatProd );
-   
-  //5.
   pan = addBlendedPiclesAndOlives( pan, myPickles, myOlives )
 
-  //6.
   let otherPan = createPan( 'сковорода' );
-
-  otherPan = makeSauce( pan, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
-
-  //7.
-
+  otherPan = makeSauce( otherPan, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
   const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
   otherPan = correctSauceTaste( otherPan, tasteItems );
 
@@ -161,9 +148,6 @@ const INGREDIENTS = {
   SOUR_CREAM    : "сметана", // сметана
   BAY_LEAF      : "лавровый лист"  // лавровый лист
 }
-
-// call example;
-// makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
 const TYPES = {
   STRING : getType( '' ),
