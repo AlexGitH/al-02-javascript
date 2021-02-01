@@ -56,9 +56,9 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   // START COOKING
   let pan = createPan( 'кастрюля' );
   pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
-  pan = refineBoulionAndBlendBoiledMeat( pan );
+  pan = refineBouillonAndBlendBoiledMeat( pan );
   pan = addBlendedMeatProds( pan, myMeatProd );
-  pan = addBlendedPiclesAndOlives( pan, myPickles, myOlives )
+  pan = addBlendedPicklesAndOlives( pan, myPickles, myOlives )
 
   let otherPan = createPan( 'сковорода' );
   otherPan = makeSauce( otherPan, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
@@ -402,6 +402,18 @@ function createPan( panName ) {
       return items.map( x => `${x.name}:${x.value} ${x.unit}` );
     },
 
+    startBoil: function() {
+      console.log( `${panName} варит...` );
+    },
+
+    stopBoil: function( minutes, power ) {
+      items.forEach( function( item ) {
+        item.attr.isBoiled = true;
+        item.attr.boilDetails.push( { [power] : minutes } );
+      });
+      console.log( `${panName} перестала варить спустя ${minutes} минут` );
+    },
+
     fry: function( minutes, power ) {
       delaySync( minutes, `${panName} жарит...`);
       items.forEach( function( item ) {
@@ -413,11 +425,7 @@ function createPan( panName ) {
 
     boil: function( minutes, power ) {
       delaySync( minutes, `${panName} варит...`);
-      items.forEach( function( item ) {
-        item.attr.isBoiled = true;
-        item.attr.boilDetails.push( { [power] : minutes } );
-      });
-      console.log( `${panName} перестала варить спустя ${minutes} минут` );
+      this.stopBoil( minutes, power );
     }
   };
 }
@@ -471,7 +479,7 @@ function createPan( panName ) {
     return boulion;
   }
 
-  function refineBoulionAndBlendBoiledMeat( pan ) {
+  function refineBouillonAndBlendBoiledMeat( pan ) {
     Check.isObject( pan );
     let boiledMeat = extractMeat( pan );
     let boiledSmokedMeat = extractSmokedMeat( pan );
@@ -491,7 +499,7 @@ function createPan( panName ) {
     return pan;
   }
 
-  function addBlendedPiclesAndOlives( pan, pickles, olives ) {
+  function addBlendedPicklesAndOlives( pan, pickles, olives ) {
     Check.isObject( pan );
     Check.isObject( pickles );
     Check.isObject( olives );
