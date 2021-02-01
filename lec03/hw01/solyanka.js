@@ -60,11 +60,19 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   pan = addBlendedMeatProds( pan, myMeatProd );
   pan = addBlendedPicklesAndOlives( pan, myPickles, myOlives )
 
-  let otherPan = createPan( 'сковорода' );
-  otherPan = makeSauce( otherPan, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
-  const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
-  otherPan = correctSauceTaste( otherPan, tasteItems );
+  pan.startBoil();
 
+  let otherPan = createPan( 'сковорода' );
+  const minutesToMakeSauce = 3;
+  otherPan = makeSauce( otherPan, minutesToMakeSauce, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
+  const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
+  const minutesToCorrectSauceTaste = 5;
+  otherPan = correctSauceTaste( otherPan, minutesToCorrectSauceTaste, tasteItems );
+
+  const elapsedMinutes = minutesToMakeSauce + minutesToCorrectSauceTaste;
+  pan.stopBoil( elapsedMinutes, 'low' );
+
+  
   let sauceItems = otherPan.getAll();
   mixSauceWithSolyanka( pan, sauceItems );
 
@@ -510,8 +518,9 @@ function createPan( panName ) {
     return pan;
   }
 
-  function makeSauce( pan, onion, garlic, tomatoPaste, vegetableOil) {
+  function makeSauce( pan, minutesToFryGarlicOnion, onion, garlic, tomatoPaste, vegetableOil) {
     Check.isObject( pan );
+    Check.isNumber( minutesToFryGarlicOnion );
     Check.isObject( onion );
     Check.isObject( garlic );
     Check.isObject( tomatoPaste );
@@ -522,19 +531,18 @@ function createPan( panName ) {
     let blendedGarlic = blend( cleanedGarlic );
 
     pan.put( blendedGarlic, blendedOnion, vegetableOil );
-    let minutesToFryGarlicOnion = 3;
-    let powerToFryGarlicOnion = 'high';
+    const powerToFryGarlicOnion = 'high';
     pan.fry( minutesToFryGarlicOnion, powerToFryGarlicOnion );
   
     pan.put( tomatoPaste );
     return pan;
   }
 
-  function correctSauceTaste( pan, tasteItems ) {
+  function correctSauceTaste( pan, minutesToMakeSauce, tasteItems ) {
     Check.isObject( pan );
+    Check.isNumber( minutesToMakeSauce );
     Check.isArray( tasteItems );
     pan.put( ...tasteItems );
-    let minutesToMakeSauce = 5;
     let powerToMakeSauce = 'low';
     pan.fry( minutesToMakeSauce, powerToMakeSauce );
     return pan;
