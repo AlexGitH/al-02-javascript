@@ -1,235 +1,7 @@
 // RECEPT :https://povar.ru/recipes/sup-solyanka_klassicheskii_recept-54159.html
 
-function wash( ingredient ) {
-  Check.isObject( ingredient );
-  ingredient.attr.isWashed = true;
-  return ingredient;
-}
-
-function clean( ingredient ) {
-  Check.isObject( ingredient );
-  ingredient.attr.isCleaned = true;
-  return ingredient;
-}
-
-function blend( ingredient ) {
-  Check.isObject( ingredient );
-  ingredient.attr.isBlended = true;
-  return ingredient;
-}
-
-function randBetween( min, max ) {
-  return Math.floor( Math.random() * ( max - min ) + min );
-}
-
-function delaySync( minutes, delayText ) {
-  let i = minutes * 1e7;
-  console.log( delayText );
-  let j = 0;
-  while( i-- ) {
-    j++;
-  }
-}
-
-const UNITS = {
-  SPOON : "ст. лож.",
-  PIECE : "шт.",
-  SLICE : "дол.",
-  GRAM  : "гр.",
-  CLOVE : "зуб."
-};
-
-const LIMITS = {
-  WATER : { min: 1700, max:2000 },
-  MEAT : { min: 450, max:450 },
-  MEAT_PROD : { min: 300, max:300 },
-  GARLIC : { min: 2, max: 4 },
-  PICKLES : { min: 2, max: 4 }, //oгурцы
-  OLIVES : { min: 4, max: 15 },
-  TOMATO_PASTE : { min: 1, max: 1 },
-  ONION : { min: 1, max: 1 },
-  VEGETABLE_OIL : { min: 2, max: 2 },
-}
-
-const INGR_UNIT_MAP = {
-  "вода"                  : UNITS.GRAM,
-  "курица"                : UNITS.GRAM,
-  "говядина"              : UNITS.GRAM,
-  "свинина"               : UNITS.GRAM,
-  "мясо"                  : UNITS.GRAM, // свинина, говядина, курица
-
-  "ветчина"               : UNITS.GRAM,
-  "колбаса"               : UNITS.GRAM,
-  "копчености"            : UNITS.GRAM,
-  "мясные изделия"        : UNITS.GRAM, // колбаса, ветчина, копчености: 
-
-  "растительное масло"    : UNITS.SPOON,
-  "чеснок"                : UNITS.CLOVE,
-  "луковица"              : UNITS.PIECE,
-  "томатная паста"        : UNITS.SPOON,
-  "маринованные огурчики" : UNITS.PIECE,
-  "маслины"               : UNITS.PIECE , // any positive integer
-  "cоль"                  : UNITS.GRAM, // any positive integer
-  "сахар"                 : UNITS.GRAM, // any positive integer
-  "перец"                 : UNITS.GRAM , // any positive integer
-  "специи"                : UNITS.GRAM , // any positive integer
-  "зелень"                : UNITS.GRAM , // any positive integer
-  "сметана"               : UNITS.SPOON, // any positive integer
-  "лимон"                 : UNITS.SLICE, // any positive integer
-  "лавровый лист"         : UNITS.PIECE // any positive integer
-};
-
-const INGREDIENTS = {
-  WATER         : "вода",
-  PORK          : "свинина", //свинина
-  BEEF          : "говядина", //говядина
-  CHICKEN       : "курица",
-  MEAT          : "мясо",
-  HAM           : "ветчина",
-  SALAMI        : "колбаса",
-  SMOKED_MEAT   : "копчености",
-  MEAT_PROD     : "мясные изделия",
-  PICKLES       : "маринованные огурчики", // Маринованные огурцы
-  TOMATO_PASTE  : "томатная паста",
-  GARLIC        : "чеснок",  //чеснок
-  ONION         : "луковица",
-  VEGETABLE_OIL : "растительное масло",
-  OLIVES        : "маслины",  //маслины
-  SALT          : "cоль",
-  PEPPER        : "перец",
-  SUGAR         : "сахар",
-  SPICE         : "специи",
-  HERBS         : "зелень",
-  LEMON         : "лимон",
-  SOUR_CREAM    : "сметана", // сметана
-  BAY_LEAF      : "лавровый лист"  // лавровый лист
-}
-
-// call example;
-// makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
-
-function getType( item ) {
-  return Object.prototype.toString.call( item );
-}
-
-const TYPES = {
-  STRING : getType( '' ),
-  NUMBER : getType( 0 ),
-  ARRAY  : getType( [] ),
-  OBJECT : getType( {} )
-};
-
-// CHECKS
-const Check = (function( typeOf, types ) {
-  const createCheck = function( expectedType, errorText ) {
-    return function( item ) {
-      if ( !typeOf( item ) === expectedType ) {
-        throw new Error( errorText );
-      }
-    }
-  };
-
-  return {
-    isNumber: createCheck( types.STRING, 'Value must be a number' ),
-    isString: createCheck( types.STRING, 'Value must be a string' ),
-    isArray : createCheck( types.ARRAY, 'Value must be an array' ),
-    isObject: createCheck( types.OBJECT, 'Value must be an object' )
-  };
-})( getType, TYPES );
-
-
-// HELPERS 
-function isValidStr( value ) {
-  return getType( value ) === TYPES.STRING && value.trim() !== '';
-}
-
-function isValidNum( value ) {
-  return getType( value ) === TYPES.NUMBER;
-}
-
-function capitalize( str ) {
-  Check.isString( str );
-  return str[0].toUpperCase() + str.slice(1);
-}
-
-
-// VALIDATION
-
-function validateParameter( type, value, vName ) {
-  let errors = [];
-  validateQuantity( type, value, vName );
-  validateMinLimit( type, value, vName );
-  validateMaxLimit( type, value, vName );
-  return errors;
-}
-
-function validateOptionalParam( type, value, vName ) {
-  let errors = [];
-  const name = INGREDIENTS[type];
-  if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
-    errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
-  }
-  return errors;
-}
-
-function validateQuantity( type, value, vName ) {
-  let errors = [];
-  const name = INGREDIENTS[type];
-  if ( !isValidNum( value ) ) {
-    errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
-  }
-  return errors;
-}
-
-function validateMinLimit( type, value, vName ) {
-  let errors = [];
-  const capName = capitalize( vName );
-  if ( value < LIMITS[type].max ){
-    errors.push( `${capName} слишком мало!` );
-  }
-  return errors;
-}
-
-function validateMaxLimit( type, value, vName ) {
-  let errors = [];
-  const capName = capitalize( vName );
-  if ( value > LIMITS[type].max ){
-    errors.push( `${capName} слишком много!` );
-  }
-  return errors;
-}
-
-function validate( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ ) {
-  let errors = [];
-
-  errors.push( ...validateParameter( 'MEAT', meat, "мяса" ) );
-  errors.push( ...validateParameter( 'WATER', water, "воды" ) );
-  errors.push( ...validateParameter( 'PICKLES', pickles, "маринованных огурчиков" ) );
-  errors.push( ...validateParameter( 'OLIVES', olives, "маслин" ) );
-  errors.push( ...validateParameter( 'ONION', onion, "луковиц" ) );
-  errors.push( ...validateParameter( 'GARLIC', garlic, "чеснока" ) );
-  errors.push( ...validateParameter( 'TOMATO_PASTE', tomatoPaste, "томатной пасты" ) );
-  errors.push( ...validateParameter( 'VEGETABLE_OIL', vegetableOil, "растительного масла" ) );
-
-  
-  errors.push( ...validateQuantity( 'SMOKED_MEAT', smokedMeat, "копченого мяса" ) );
-  errors.push( ...validateQuantity( 'OTHER_MEAT', otherMeat, "мясных деликатесов" ) );
-  let meatProduct = smokedMeat + otherMeat;
-
-  errors.push( ...validateMaxLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
-  errors.push( ...validateMinLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
-
-  errors.push( ...validateOptionalParam( 'SALT', salt_, 'соли' ) );
-  errors.push( ...validateOptionalParam( 'PEPPER', pepper_, 'перца' ) );
-  errors.push( ...validateOptionalParam( 'HERBS', herbs_, 'зелени' ) );
-  errors.push( ...validateOptionalParam( 'SUGAR', sugar_, 'сахара' ) );
-  errors.push( ...validateOptionalParam( 'LEMON', lemon_, 'лимона' ) );
-  errors.push( ...validateOptionalParam( 'SOUR_CREAM', sourCream_, 'сметаны' ) );
-
-  return errors;
-}
-
 /**
+ * ENTRY POINT
  * Returns Solyanka;
  * @param {number} meat - мясо (grams)
  * @param {number} smokedMeat - копчености (grams)
@@ -315,6 +87,237 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   console.log( 'СОЛЯНКА ГОТОВА!');
   return result;
 }
+
+const UNITS = {
+  SPOON : "ст. лож.",
+  PIECE : "шт.",
+  SLICE : "дол.",
+  GRAM  : "гр.",
+  CLOVE : "зуб."
+};
+
+const LIMITS = {
+  WATER : { min: 1700, max:2000 },
+  MEAT : { min: 450, max:450 },
+  MEAT_PROD : { min: 300, max:300 },
+  GARLIC : { min: 2, max: 4 },
+  PICKLES : { min: 2, max: 4 }, //oгурцы
+  OLIVES : { min: 4, max: 15 },
+  TOMATO_PASTE : { min: 1, max: 1 },
+  ONION : { min: 1, max: 1 },
+  VEGETABLE_OIL : { min: 2, max: 2 },
+}
+
+const INGR_UNIT_MAP = {
+  "вода"                  : UNITS.GRAM,
+  "курица"                : UNITS.GRAM,
+  "говядина"              : UNITS.GRAM,
+  "свинина"               : UNITS.GRAM,
+  "мясо"                  : UNITS.GRAM, // свинина, говядина, курица
+
+  "ветчина"               : UNITS.GRAM,
+  "колбаса"               : UNITS.GRAM,
+  "копчености"            : UNITS.GRAM,
+  "мясные изделия"        : UNITS.GRAM, // колбаса, ветчина, копчености: 
+
+  "растительное масло"    : UNITS.SPOON,
+  "чеснок"                : UNITS.CLOVE,
+  "луковица"              : UNITS.PIECE,
+  "томатная паста"        : UNITS.SPOON,
+  "маринованные огурчики" : UNITS.PIECE,
+  "маслины"               : UNITS.PIECE , // any positive integer
+  "cоль"                  : UNITS.GRAM, // any positive integer
+  "сахар"                 : UNITS.GRAM, // any positive integer
+  "перец"                 : UNITS.GRAM , // any positive integer
+  "специи"                : UNITS.GRAM , // any positive integer
+  "зелень"                : UNITS.GRAM , // any positive integer
+  "сметана"               : UNITS.SPOON, // any positive integer
+  "лимон"                 : UNITS.SLICE, // any positive integer
+  "лавровый лист"         : UNITS.PIECE // any positive integer
+};
+
+const INGREDIENTS = {
+  WATER         : "вода",
+  PORK          : "свинина", //свинина
+  BEEF          : "говядина", //говядина
+  CHICKEN       : "курица",
+  MEAT          : "мясо",
+  HAM           : "ветчина",
+  SALAMI        : "колбаса",
+  SMOKED_MEAT   : "копчености",
+  MEAT_PROD     : "мясные изделия",
+  PICKLES       : "маринованные огурчики", // Маринованные огурцы
+  TOMATO_PASTE  : "томатная паста",
+  GARLIC        : "чеснок",  //чеснок
+  ONION         : "луковица",
+  VEGETABLE_OIL : "растительное масло",
+  OLIVES        : "маслины",  //маслины
+  SALT          : "cоль",
+  PEPPER        : "перец",
+  SUGAR         : "сахар",
+  SPICE         : "специи",
+  HERBS         : "зелень",
+  LEMON         : "лимон",
+  SOUR_CREAM    : "сметана", // сметана
+  BAY_LEAF      : "лавровый лист"  // лавровый лист
+}
+
+// call example;
+// makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
+
+const TYPES = {
+  STRING : getType( '' ),
+  NUMBER : getType( 0 ),
+  ARRAY  : getType( [] ),
+  OBJECT : getType( {} )
+};
+
+// CHECKS
+const Check = (function( typeOf, types ) {
+  const createCheck = function( expectedType, errorText ) {
+    return function( item ) {
+      if ( !typeOf( item ) === expectedType ) {
+        throw new Error( errorText );
+      }
+    }
+  };
+
+  return {
+    isNumber: createCheck( types.STRING, 'Value must be a number' ),
+    isString: createCheck( types.STRING, 'Value must be a string' ),
+    isArray : createCheck( types.ARRAY, 'Value must be an array' ),
+    isObject: createCheck( types.OBJECT, 'Value must be an object' )
+  };
+})( getType, TYPES );
+
+
+// HELPERS 
+function getType( item ) {
+  return Object.prototype.toString.call( item );
+}
+
+function isValidStr( value ) {
+  return getType( value ) === TYPES.STRING && value.trim() !== '';
+}
+
+function isValidNum( value ) {
+  return getType( value ) === TYPES.NUMBER;
+}
+
+function capitalize( str ) {
+  Check.isString( str );
+  return str[0].toUpperCase() + str.slice(1);
+}
+
+function randBetween( min, max ) {
+  return Math.floor( Math.random() * ( max - min ) + min );
+}
+
+// EXTERNAL PROCESSES
+function wash( ingredient ) {
+  Check.isObject( ingredient );
+  ingredient.attr.isWashed = true;
+  return ingredient;
+}
+
+function clean( ingredient ) {
+  Check.isObject( ingredient );
+  ingredient.attr.isCleaned = true;
+  return ingredient;
+}
+
+function blend( ingredient ) {
+  Check.isObject( ingredient );
+  ingredient.attr.isBlended = true;
+  return ingredient;
+}
+
+function delaySync( minutes, delayText ) {
+  let i = minutes * 1e7;
+  console.log( delayText );
+  let j = 0;
+  while( i-- ) {
+    j++;
+  }
+}
+
+
+// VALIDATION
+
+function validateParameter( type, value, vName ) {
+  let errors = [];
+  validateQuantity( type, value, vName );
+  validateMinLimit( type, value, vName );
+  validateMaxLimit( type, value, vName );
+  return errors;
+}
+
+function validateOptionalParam( type, value, vName ) {
+  let errors = [];
+  const name = INGREDIENTS[type];
+  if ( value != null && !( isValidNum( value ) && value >= 0 ) ) {
+    errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
+  }
+  return errors;
+}
+
+function validateQuantity( type, value, vName ) {
+  let errors = [];
+  const name = INGREDIENTS[type];
+  if ( !isValidNum( value ) ) {
+    errors.push( `Количество ${vName} должно быть числом в ${INGR_UNIT_MAP[name]}` );
+  }
+  return errors;
+}
+
+function validateMinLimit( type, value, vName ) {
+  let errors = [];
+  const capName = capitalize( vName );
+  if ( value < LIMITS[type].max ){
+    errors.push( `${capName} слишком мало!` );
+  }
+  return errors;
+}
+
+function validateMaxLimit( type, value, vName ) {
+  let errors = [];
+  const capName = capitalize( vName );
+  if ( value > LIMITS[type].max ){
+    errors.push( `${capName} слишком много!` );
+  }
+  return errors;
+}
+
+function validate( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ ) {
+  let errors = [];
+
+  errors.push( ...validateParameter( 'MEAT', meat, "мяса" ) );
+  errors.push( ...validateParameter( 'WATER', water, "воды" ) );
+  errors.push( ...validateParameter( 'PICKLES', pickles, "маринованных огурчиков" ) );
+  errors.push( ...validateParameter( 'OLIVES', olives, "маслин" ) );
+  errors.push( ...validateParameter( 'ONION', onion, "луковиц" ) );
+  errors.push( ...validateParameter( 'GARLIC', garlic, "чеснока" ) );
+  errors.push( ...validateParameter( 'TOMATO_PASTE', tomatoPaste, "томатной пасты" ) );
+  errors.push( ...validateParameter( 'VEGETABLE_OIL', vegetableOil, "растительного масла" ) );
+
+  
+  errors.push( ...validateQuantity( 'SMOKED_MEAT', smokedMeat, "копченого мяса" ) );
+  errors.push( ...validateQuantity( 'OTHER_MEAT', otherMeat, "мясных деликатесов" ) );
+  let meatProduct = smokedMeat + otherMeat;
+
+  errors.push( ...validateMaxLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
+  errors.push( ...validateMinLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
+
+  errors.push( ...validateOptionalParam( 'SALT', salt_, 'соли' ) );
+  errors.push( ...validateOptionalParam( 'PEPPER', pepper_, 'перца' ) );
+  errors.push( ...validateOptionalParam( 'HERBS', herbs_, 'зелени' ) );
+  errors.push( ...validateOptionalParam( 'SUGAR', sugar_, 'сахара' ) );
+  errors.push( ...validateOptionalParam( 'LEMON', lemon_, 'лимона' ) );
+  errors.push( ...validateOptionalParam( 'SOUR_CREAM', sourCream_, 'сметаны' ) );
+
+  return errors;
+}
+
 
 
 // OBJECT CREATORS
@@ -437,6 +440,7 @@ function createPan( panName ) {
 
 
 // IMPLEMENTATION ROUTINES
+// mutable
 
   function washAndBoilMeat( pan, meat, smokedMeat, water ) {
     Check.isObject( pan );
@@ -530,8 +534,6 @@ function createPan( panName ) {
     let powerToFryGarlicOnion = 'high';
     pan.fry( minutesToFryGarlicOnion, powerToFryGarlicOnion );
   
-    // waitBoilStop( otherPan ); //minutes
-
     pan.put( tomatoPaste );
     return pan;
   }
@@ -572,12 +574,9 @@ function createPan( panName ) {
     Check.isObject( pan );
     Check.isArray( items );
 
-    // let sauceItems = otherPan.getAll();
-    // pan.put( ...sauceItems );
-    pan.put( ...items );
-
     let minutesToCompleteSolyanka = randBetween( 5, 7 ); 
     let powerToCompleteSolyanka = 'low'; 
+    pan.put( ...items );
     pan.boil( minutesToCompleteSolyanka, powerToCompleteSolyanka );
     return pan;
   }
