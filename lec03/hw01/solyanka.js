@@ -108,7 +108,8 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   // CHECK PARAMETERS
   const errors = validate( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ )
   if ( errors.length > 0 ) {
-    console.warn( errors.join( '\n')); //print to document???
+    // console.warn( errors.join( '\n' )); //print to document???
+    alert( errors.join( '\n' ) );
     return ;
   }
 
