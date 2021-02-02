@@ -44,24 +44,6 @@
 <body>
     <div class="container">
         <div class="setup">
-            <!-- <div>Мясо<input type="number" id="meat" placeholder="450"></div>
-            <div>Мясо<input type="number" id="smokedMeat"></div>
-            <div>Мясо<input type="number" id="water"></div>
-            <div>Мясо<input type="number" id="otherMeat"></div>
-            <div>Мясо<input type="number" id="pickles"></div>
-            <div>Мясо<input type="number" id="olives"></div>
-            <div>Мясо<input type="number" id="onion"></div>
-            <div>Мясо<input type="number" id="garlic"></div>
-            <div>Мясо<input type="number" id="tomatoPaste"></div>
-            <div>Мясо<input type="number" id="vegetableOil"></div>
-            <div>Мясо<input type="number" id="salt"></div>
-            <div>Мясо<input type="number" id="pepper"></div>
-            <div>Мясо<input type="number" id="herbs"></div>
-            <div>Мясо<input type="number" id="sugar"></div>
-            <div>Мясо<input type="number" id="lemon"></div>
-            <div>Мясо<input type="number" id="sourCream"></div> -->
-
-            <!-- <div>Мясо:</div><input onkeyup="this.value=this.value.replace(/[^\d]+/g,'');return false;" type="number" id="meat" placeholder="450(гр.)"> -->
             <div>Мясо:</div>                 <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="meat" placeholder="450(гр.)">
             <div>Копчености:</div>           <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="smokedMeat" placeholder="Копчености + мясные делик. <= 300(гр.)">
             <div>Вода:</div>                 <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="water" placeholder="1700-2000(гр.)">
@@ -86,26 +68,5 @@
             <pre class="logger"></pre>
         </div>
     </div>
-    <script>
-// function allowInteger(event){
-//     debugger;
-//   var theEvent = evt || window.event;
-
-//   // Handle paste
-//   if (theEvent.type === 'paste') {
-//       key = event.clipboardData.getData('text/plain');
-//   } else {
-//   // Handle key press
-//       var key = theEvent.keyCode || theEvent.which;
-//       key = String.fromCharCode(key);
-//   }
-//   var regex = /[0-9]|\./;
-//   if( !regex.test(key) ) {
-//     theEvent.returnValue = false;
-//     if(theEvent.preventDefault) theEvent.preventDefault();
-//   }
-// }
-        
-    </script>
 </body>
 </html>
