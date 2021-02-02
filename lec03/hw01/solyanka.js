@@ -1,16 +1,75 @@
 // RECEPT :https://povar.ru/recipes/sup-solyanka_klassicheskii_recept-54159.html
 
+// DEBUGGING
+function inflateTestValues() {
+  const vals = [ 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 ];
+  const test = [ meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream ]
+  test.forEach( (input, index)=>{
+    input.value = vals[index];
+  });
+
+}
+
+function allowInteger(event){
+  const isNumber = event.keyCode > 47 && event.keyCode < 58; 
+  if ( !isNumber ) {
+    event.returnValue = false;
+    event.preventDefault();
+  }
+}
+
+function pasteInteger(event) {
+  const reInteger = /^\d+$/;
+  const paste = (event.clipboardData || window.clipboardData).getData('text');
+  if( !reInteger.test(paste) ) {
+    event.returnValue = false;
+    event.preventDefault();
+  }
+}
+
+// function validateInput() {
+//   const test = { meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream }
+//   let errros = [];
+//   const reInteger = /^\d+$/;
+//   args.forEach( value => {
+//     const text = value.trim();
+//     if ( value ) {}
+//   })
+// }
+// test = { meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream }
+// test = {
+//   meat,
+//   smokedMeat,
+//   water,
+//   otherMeat,
+//   pickles,
+//   olives,
+//   onion,
+//   garlic,
+//   tomatoPaste,
+//   vegetableOil,
+//   salt,
+//   pepper,
+//   herbs,
+//   sugar,
+//   lemon,
+//   sourCream
+// };
+
+
+
+
 // usage example;
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
 function pushMessage( text ) {
-  const elem = document.querySelectorAll( 'body>pre' )[0];
+  const elem = document.querySelectorAll( 'pre.logger' )[0];
   const node = document.createTextNode( text + '\n' );
   elem.appendChild(node);
 }
 
 function cleanMessages() {
-  const elem = document.querySelectorAll( 'body>pre' )[0];
+  const elem = document.querySelectorAll( 'pre.logger' )[0];
   while( elem.hasChildNodes() ){
     elem.removeChild(elem.firstChild);
   }
@@ -66,7 +125,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let myTomatoPaste = createIngredient( 'TOMATO_PASTE', tomatoPaste );
   let myVegetableOil = createIngredient( 'VEGETABLE_OIL', vegetableOil );
 
-  cleanMessages( 'Берем кастрюлю ' );
+  cleanMessages();
   // START COOKING
   pushMessage( 'Берем кастрюлю ' );
   let pan = createPan( 'кастрюля' );
