@@ -5,7 +5,14 @@ function inflateTestValues() {
   const vals = [ 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 ];
   const test = [ meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream ]
   test.forEach( (input, index)=>{
-    input.value = vals[index];
+    let val = vals[index];
+    if ( val ) {
+      input.value = val;
+    }
+    else {
+      input.value = '';
+    }
+
   });
 
 }
