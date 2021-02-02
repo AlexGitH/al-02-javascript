@@ -330,9 +330,9 @@ function delaySync( minutes, delayText ) {
 
 function validateParameter( type, value, vName ) {
   let errors = [];
-  validateQuantity( type, value, vName );
-  validateMinLimit( type, value, vName );
-  validateMaxLimit( type, value, vName );
+  errors.push( ...validateQuantity( type, value, vName ) );
+  errors.push( ...validateMinLimit( type, value, vName ) );
+  errors.push( ...validateMaxLimit( type, value, vName ) );
   return errors;
 }
 
@@ -357,7 +357,7 @@ function validateQuantity( type, value, vName ) {
 function validateMinLimit( type, value, vName ) {
   let errors = [];
   const capName = capitalize( vName );
-  if ( value < LIMITS[type].max ){
+  if ( value < LIMITS[type].min ){
     errors.push( `${capName} слишком мало!` );
   }
   return errors;
