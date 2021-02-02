@@ -34,6 +34,24 @@ function pasteInteger(event) {
   }
 }
 
+function cookSolyanka() {
+
+  const inputs = [ meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream ]
+  const args = inputs.map( el=>{
+    let val = el.value.trim();
+    let result = null;
+    if ( val !== '' ) {
+      result = parseInt(val);
+    }
+    return result;
+  });
+
+  makeSolyanka( ...args );
+
+
+  
+}
+
 // function validateInput() {
 //   const test = { meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream }
 //   let errros = [];
