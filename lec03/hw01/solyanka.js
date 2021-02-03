@@ -154,88 +154,101 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   cleanMessages();
   // START COOKING
   Promise.resolve()
-  .then(()=>{
-  pushMessage( 'Берем кастрюлю...' );
-  let pan = createPan( 'кастрюля' );
-    return pan;
+  .then( ()=>{
+    pushMessage( 'Берем кастрюлю...' );
+    let pan = createPan( 'кастрюля' );
+    console.log( '0', pan )
+    return next( pan );
   })
-  .then((pan)=>{
+  .then( ( pan )=>{
+    console.log( '1', pan )
     pushMessage( 'Моем мясо и складываем с копченостями в кастрюлю с водой. Варим на медленном огне...' );
-    pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
-    return pan;
-
+    pan = washAndPutIntoPan( pan, myMeat, mySmokedMeat, myWater );
+    pan.startBoil();
+    return next( pan, 2000 );
   })
-  .then((pan)=>{
+  .then(( pan )=>{
+    console.log( '1.1', pan )
+    let minutesToBoilMeat = 120;
+    let powerToBoilMeat = POWER_GRADE.LOW;
+    pan.stopBoil( minutesToBoilMeat, powerToBoilMeat );
+    return next( pan );
+  })
+  .then( ( pan )=>{
+    console.log( '2', pan )
     pushMessage( 'Вылавливаем все мясо и измельчаем. Отцеживаем бульон и заливаем в кастрюлю с измельченным мясом...' );
     pan = refineBouillonAndBlendBoiledMeat( pan );
-    return pan;
-
-
+    return next( pan );
   })
-  .then((pan)=>{
+  .then( ( pan )=>{
+    console.log( '3', pan )
     pushMessage( 'Измельчаем мясные деликатесы и складываем в кастрюлю...' );
     pan = addBlendedMeatProds( pan, myMeatProd );
-    return pan;
-
+    return next( pan );
   })
-  .then((pan)=>{
+  .then( ( pan )=>{
+    console.log( '4', pan )
     pushMessage( 'Измельчаем маслины и маринованные огурчики и складываем в кастрюлю...' );
     pan = addBlendedPicklesAndOlives( pan, myPickles, myOlives );
-    return pan;
-
+    return next( pan );
   })
-  .then((pan)=>{
+  .then( ( pan )=>{
+    console.log( '5', pan )
     pushMessage( 'Ставим кастрюльку на медленный огонь и параллельно приступаем к заправке...' );
     pan.startBoil();
-    return pan;
-
+    return next( pan );
   })
-  .then( (pan) => {
+  .then( ( pan ) => {
+    console.log( '6', pan )
     pushMessage( 'Берем сковороду...' );
     let otherPan = createPan( 'сковорода' );
-    return { pan, otherPan };
+    return next( { pan, otherPan } );
   })
-  .then( (pans) => {
+  .then( ( pans ) => {
+    console.log( '7', pans )
     const minutesToMakeSauce = 3;
     pushMessage( 'Чистим лук и чеснок, измельчаем, добавляем растительного масла и обжариваем на большом огне...')
     pans.otherPan = makeSauce( pans.otherPan, minutesToMakeSauce, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
-    return {pans,minutesToMakeSauce};
+    return next({pans,minutesToMakeSauce});
   })
-  .then( (config) => {
+  .then( ( config ) => {
+    console.log( '8', config )
     pushMessage( 'Добавляем томатную пасту. Также добавляем соли, сахара, перца и зелени по вкусу' );
     const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
     const minutesToCorrectSauceTaste = 5;
     config.pans.otherPan = correctSauceTaste( config.pans.otherPan, minutesToCorrectSauceTaste, tasteItems );
-
-    return {...config, minutesToCorrectSauceTaste};
+    return next({...config, minutesToCorrectSauceTaste});
   })
-  .then( (config) =>{
+  .then( ( config ) =>{
+    console.log( '9', config )
     let { pans, minutesToMakeSauce, minutesToCorrectSauceTaste } = config;
     const elapsedMinutes = minutesToMakeSauce + minutesToCorrectSauceTaste;
     pans.pan.stopBoil( elapsedMinutes, POWER_GRADE.LOW );
-    return pans;
+    return next( pans );
   })
-  .then( (pans) =>{
+  .then( ( pans ) =>{
+    console.log( '10', pans )
     pushMessage( 'Пересыпаем заправку со сковородки в кастрюлю и варим еще 5-7 минут' );
     let sauceItems = pans.otherPan.getAll();
-    return mixSauceWithSolyanka( pans.pan, sauceItems );
-    // return pans;
+    return next( mixSauceWithSolyanka( pans.pan, sauceItems ) );
   })
-  .then( (pan) =>{
+  .then( ( pan ) =>{
     //SOLYANKA IS ALMOST READY!!!
-    const finalItems = createFinalItems( lemon, sourCream );
-    
+    console.log( '11', pan );
     pushMessage( 'Оставляем настояться 30 минут...');
-
-    let result = completeSolyanka( pan, finalItems );
-    pushMessage( 'СОЛЯНКА ГОТОВА!');
-    return result;
+    let result = completeSolyanka( pan );
+    return next( result,1000 );
   })
   // NOTE ADD CALLBACK FOR FURTHER ACTIONS WITH SOLYANKA
-  .then( (solyanka) =>{
+  .then( ( solyanka ) => {
+    pushMessage( 'Добавляем лимон и сметану по вкусу...' );
+    const finalItems = createFinalItems( lemon, sourCream );
+    solyanka.put( ...finalItems );
+    pushMessage( 'СОЛЯНКА ГОТОВА!');
+    window.solyanka = solyanka; 
     console.log( 'solyanka', solyanka );
   })
-  .catch((error)=>{
+  .catch(( error )=>{
     throw new Error( error );
   });
 }
@@ -368,6 +381,15 @@ function randBetween( min, max ) {
   return Math.floor( Math.random() * ( max - min ) + min );
 }
 
+function next( result, delay = 500 ){
+  return new Promise( resolve => {
+    setTimeout( ()=>{
+      resolve( result );
+    }, delay );
+  });
+}
+
+
 // EXTERNAL PROCESSES
 function wash( ingredient ) {
   Check.isObject( ingredient );
@@ -385,15 +407,6 @@ function blend( ingredient ) {
   Check.isObject( ingredient );
   ingredient.attr.isBlended = true;
   return ingredient;
-}
-
-function delaySync( minutes, delayText ) {
-  let i = minutes * 1e7;
-  pushMessage( delayText );
-  let j = 0;
-  while( i-- ) {
-    j++;
-  }
 }
 
 
@@ -586,7 +599,7 @@ function createPan( panName ) {
     },
 
     fry: function( minutes, power ) {
-      delaySync( minutes, `${panName} жарит...`);
+      pushMessage( `${panName} жарит...` );
       items.forEach( function( item ) {
         item.attr.isFried = true;
         item.attr.fryDetails.push( { [power] : minutes } );
@@ -595,7 +608,7 @@ function createPan( panName ) {
     },
 
     boil: function( minutes, power ) {
-      delaySync( minutes, `${panName} варит...`);
+      this.startBoil();
       this.stopBoil( minutes, power );
     }
   };
@@ -605,7 +618,7 @@ function createPan( panName ) {
 // IMPLEMENTATION ROUTINES
 // mutable
 
-function washAndBoilMeat( pan, meat, smokedMeat, water ) {
+function washAndPutIntoPan( pan, meat, smokedMeat, water ) {
   Check.isObject( pan );
   Check.isObject( meat );
   Check.isObject( smokedMeat );
@@ -613,9 +626,6 @@ function washAndBoilMeat( pan, meat, smokedMeat, water ) {
 
   let washedMeat = wash( meat );
   pan.put( washedMeat, water, smokedMeat );
-  let minutesToBoilMeat = 120;
-  let powerToBoilMeat = POWER_GRADE.LOW;
-  pan.boil( minutesToBoilMeat, powerToBoilMeat );
   return pan;
 }
 
@@ -694,7 +704,7 @@ function makeSauce( pan, minutesToFryGarlicOnion, onion, garlic, tomatoPaste, ve
   let blendedGarlic = blend( cleanedGarlic );
 
   pan.put( blendedGarlic, blendedOnion, vegetableOil );
-  const powerToFryGarlicOnion = 'high';
+  const powerToFryGarlicOnion = POWER_GRADE.HIG;
   pan.fry( minutesToFryGarlicOnion, powerToFryGarlicOnion );
 
   pan.put( tomatoPaste );
@@ -733,7 +743,6 @@ function createSauceTasteItems( salt, pepper, sugar, herbs ) {
 }
 
 function mixSauceWithSolyanka( pan, items ) {
-  //8.
   Check.isObject( pan );
   Check.isArray( items );
 
@@ -757,15 +766,9 @@ function createFinalItems( lemon, sourCream ) {
   return items;
 }
 
-function completeSolyanka( pan, items ) {
+function completeSolyanka( pan ) {
   Check.isObject( pan );
-  Check.isArray( items );
-  //9. 
   let solyanka = createSolyanka();
   solyanka.put( ...pan.getAll() );
-
-  delaySync( 30, 'Ожидаем...' );
-  pushMessage( 'Добавляем лимон и сметану по вкусу...' );
-  solyanka.put( ...items );
   return solyanka;
 }
