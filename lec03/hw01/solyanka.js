@@ -153,46 +153,91 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   cleanMessages();
   // START COOKING
+  Promise.resolve()
+  .then(()=>{
   pushMessage( 'Берем кастрюлю...' );
   let pan = createPan( 'кастрюля' );
-  pushMessage( 'Моем мясо и складываем с копченостями в кастрюлю с водой. Варим на медленном огне...' );
-  pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
-  pushMessage( 'Вылавливаем все мясо и измельчаем. Отцеживаем бульон и заливаем в кастрюлю с измельченным мясом...' );
-  pan = refineBouillonAndBlendBoiledMeat( pan );
-  pushMessage( 'Измельчаем мясные деликатесы и складываем в кастрюлю...' );
-  pan = addBlendedMeatProds( pan, myMeatProd );
-  pushMessage( 'Измельчаем маслины и маринованные огурчики и складываем в кастрюлю...' );
-  pan = addBlendedPicklesAndOlives( pan, myPickles, myOlives )
+    return pan;
+  })
+  .then((pan)=>{
+    pushMessage( 'Моем мясо и складываем с копченостями в кастрюлю с водой. Варим на медленном огне...' );
+    pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
+    return pan;
 
-  pushMessage( 'Ставим кастрюльку на медленный огонь и параллельно приступаем к заправке...' );
-  pan.startBoil();
+  })
+  .then((pan)=>{
+    pushMessage( 'Вылавливаем все мясо и измельчаем. Отцеживаем бульон и заливаем в кастрюлю с измельченным мясом...' );
+    pan = refineBouillonAndBlendBoiledMeat( pan );
+    return pan;
 
-  pushMessage( 'Берем сковороду...' );
-  let otherPan = createPan( 'сковорода' );
-  const minutesToMakeSauce = 3;
-  pushMessage( 'Чистим лук и чеснок, измельчаем, добавляем растительного масла и обжариваем на большом огне...')
-  otherPan = makeSauce( otherPan, minutesToMakeSauce, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
 
-  pushMessage( 'Добавляем томатную пасту. Также добавляем соли, сахара, перца и зелени по вкусу' );
-  const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
-  const minutesToCorrectSauceTaste = 5;
-  otherPan = correctSauceTaste( otherPan, minutesToCorrectSauceTaste, tasteItems );
+  })
+  .then((pan)=>{
+    pushMessage( 'Измельчаем мясные деликатесы и складываем в кастрюлю...' );
+    pan = addBlendedMeatProds( pan, myMeatProd );
+    return pan;
 
-  const elapsedMinutes = minutesToMakeSauce + minutesToCorrectSauceTaste;
-  pan.stopBoil( elapsedMinutes, POWER_GRADE.LOW );
-  
-  pushMessage( 'Пересыпаем заправку со сковородки в кастрюлю и варим еще 5-7 минут' );
-  let sauceItems = otherPan.getAll();
-  mixSauceWithSolyanka( pan, sauceItems );
+  })
+  .then((pan)=>{
+    pushMessage( 'Измельчаем маслины и маринованные огурчики и складываем в кастрюлю...' );
+    pan = addBlendedPicklesAndOlives( pan, myPickles, myOlives );
+    return pan;
 
-  //SOLYANKA IS READY!!!
-  const finalItems = createFinalItems( lemon, sourCream );
-  
-  pushMessage( 'Оставляем настояться 30 минут...');
-  
-  let result = completeSolyanka( pan, finalItems );
-  pushMessage( 'СОЛЯНКА ГОТОВА!');
-  return result;
+  })
+  .then((pan)=>{
+    pushMessage( 'Ставим кастрюльку на медленный огонь и параллельно приступаем к заправке...' );
+    pan.startBoil();
+    return pan;
+
+  })
+  .then( (pan) => {
+    pushMessage( 'Берем сковороду...' );
+    let otherPan = createPan( 'сковорода' );
+    return { pan, otherPan };
+  })
+  .then( (pans) => {
+    const minutesToMakeSauce = 3;
+    pushMessage( 'Чистим лук и чеснок, измельчаем, добавляем растительного масла и обжариваем на большом огне...')
+    pans.otherPan = makeSauce( pans.otherPan, minutesToMakeSauce, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
+    return {pans,minutesToMakeSauce};
+  })
+  .then( (config) => {
+    pushMessage( 'Добавляем томатную пасту. Также добавляем соли, сахара, перца и зелени по вкусу' );
+    const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
+    const minutesToCorrectSauceTaste = 5;
+    config.pans.otherPan = correctSauceTaste( config.pans.otherPan, minutesToCorrectSauceTaste, tasteItems );
+
+    return {...config, minutesToCorrectSauceTaste};
+  })
+  .then( (config) =>{
+    let { pans, minutesToMakeSauce, minutesToCorrectSauceTaste } = config;
+    const elapsedMinutes = minutesToMakeSauce + minutesToCorrectSauceTaste;
+    pans.pan.stopBoil( elapsedMinutes, POWER_GRADE.LOW );
+    return pans;
+  })
+  .then( (pans) =>{
+    pushMessage( 'Пересыпаем заправку со сковородки в кастрюлю и варим еще 5-7 минут' );
+    let sauceItems = pans.otherPan.getAll();
+    return mixSauceWithSolyanka( pans.pan, sauceItems );
+    // return pans;
+  })
+  .then( (pan) =>{
+    //SOLYANKA IS ALMOST READY!!!
+    const finalItems = createFinalItems( lemon, sourCream );
+    
+    pushMessage( 'Оставляем настояться 30 минут...');
+
+    let result = completeSolyanka( pan, finalItems );
+    pushMessage( 'СОЛЯНКА ГОТОВА!');
+    return result;
+  })
+  // NOTE ADD CALLBACK FOR FURTHER ACTIONS WITH SOLYANKA
+  .then( (solyanka) =>{
+    console.log( 'solyanka', solyanka );
+  })
+  .catch((error)=>{
+    throw new Error( error );
+  });
 }
 
 const POWER_GRADE = {
