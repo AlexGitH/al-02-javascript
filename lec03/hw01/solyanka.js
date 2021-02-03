@@ -32,14 +32,20 @@ function cookSolyanka() {
 // usage example;
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
+function getLoggerEl() {
+  return document.querySelectorAll( '.logger' )[0];
+}
+
 function pushMessage( text ) {
-  const elem = document.querySelectorAll( 'pre.logger' )[0];
-  const node = document.createTextNode( text + '\n' );
-  elem.appendChild(node);
+  const elem = getLoggerEl();
+  const node = document.createTextNode( text );
+  const p = document.createElement( 'p' );
+  p.appendChild( node );
+  elem.appendChild( p );
 }
 
 function cleanMessages() {
-  const elem = document.querySelectorAll( 'pre.logger' )[0];
+  const elem = getLoggerEl();
   while( elem.hasChildNodes() ){
     elem.removeChild(elem.firstChild);
   }
