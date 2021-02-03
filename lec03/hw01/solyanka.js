@@ -1,5 +1,8 @@
 // RECEPT :https://povar.ru/recipes/sup-solyanka_klassicheskii_recept-54159.html
 
+// usage example( console );
+// makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
+
 // DEBUGGING
 function inflateTestValues() {
   const vals = [ 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 ];
@@ -28,27 +31,6 @@ function cookSolyanka() {
     return result;
   });
   makeSolyanka( ...args );
-}
-// usage example;
-// makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
-
-function getLoggerEl() {
-  return document.querySelectorAll( '.logger' )[0];
-}
-
-function pushMessage( text ) {
-  const elem = getLoggerEl();
-  const node = document.createTextNode( text );
-  const p = document.createElement( 'p' );
-  p.appendChild( node );
-  elem.appendChild( p );
-}
-
-function cleanMessages() {
-  const elem = getLoggerEl();
-  while( elem.hasChildNodes() ){
-    elem.removeChild(elem.firstChild);
-  }
 }
 
 /**
@@ -340,7 +322,6 @@ function next( result, delay = 500 ){
   });
 }
 
-
 // EXTERNAL PROCESSES
 function wash( ingredient ) {
   Check.isObject( ingredient );
@@ -565,25 +546,6 @@ function createPan( panName ) {
   };
 }
 
-// HANDLERS
-
-function allowInteger(event){
-  const isNumber = event.keyCode > 47 && event.keyCode < 58; 
-  if ( !isNumber ) {
-    event.returnValue = false;
-    event.preventDefault();
-  }
-}
-
-function pasteInteger(event) {
-  const reInteger = /^\d+$/;
-  const paste = (event.clipboardData || window.clipboardData).getData('text');
-  if( !reInteger.test(paste) ) {
-    event.returnValue = false;
-    event.preventDefault();
-  }
-}
-
 
 // IMPLEMENTATION ROUTINES
 // mutable
@@ -741,4 +703,43 @@ function completeSolyanka( pan ) {
   let solyanka = createSolyanka();
   solyanka.put( ...pan.getAll() );
   return solyanka;
+}
+
+// DOM HELPERS
+function getLoggerEl() {
+  return document.querySelectorAll( '.logger' )[0];
+}
+
+function pushMessage( text ) {
+  const elem = getLoggerEl();
+  const node = document.createTextNode( text );
+  const p = document.createElement( 'p' );
+  p.appendChild( node );
+  elem.appendChild( p );
+}
+
+function cleanMessages() {
+  const elem = getLoggerEl();
+  while( elem.hasChildNodes() ){
+    elem.removeChild(elem.firstChild);
+  }
+}
+
+// HANDLERS
+
+function allowInteger(event){
+  const isNumber = event.keyCode > 47 && event.keyCode < 58; 
+  if ( !isNumber ) {
+    event.returnValue = false;
+    event.preventDefault();
+  }
+}
+
+function pasteInteger(event) {
+  const reInteger = /^\d+$/;
+  const paste = (event.clipboardData || window.clipboardData).getData('text');
+  if( !reInteger.test(paste) ) {
+    event.returnValue = false;
+    event.preventDefault();
+  }
 }
