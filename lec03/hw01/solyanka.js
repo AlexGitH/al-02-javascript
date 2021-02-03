@@ -157,7 +157,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   let pan = createPan( 'кастрюля' );
   pushMessage( 'Моем мясо и складываем с копченостями в кастрюлю с водой. Варим на медленном огне...' );
   pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
-  pushMessage( 'Вылавливаем все мясо и измельчаем. Отцеживаем бульйон и заливаем в кастрюлю с измельченым мясом...' );
+  pushMessage( 'Вылавливаем все мясо и измельчаем. Отцеживаем бульон и заливаем в кастрюлю с измельченным мясом...' );
   pan = refineBouillonAndBlendBoiledMeat( pan );
   pushMessage( 'Измельчаем мясные деликатесы и складываем в кастрюлю...' );
   pan = addBlendedMeatProds( pan, myMeatProd );
@@ -214,7 +214,7 @@ const LIMITS = {
   MEAT : { min: 450, max:450 },
   MEAT_PROD : { min: 300, max:300 },
   GARLIC : { min: 2, max: 4 },
-  PICKLES : { min: 2, max: 4 }, //oгурцы
+  PICKLES : { min: 2, max: 4 }, //огурцы
   OLIVES : { min: 4, max: 15 },
   TOMATO_PASTE : { min: 1, max: 1 },
   ONION : { min: 1, max: 1 },
@@ -239,7 +239,7 @@ const INGR_UNIT_MAP = {
   "томатная паста"        : UNITS.SPOON,
   "маринованные огурчики" : UNITS.PIECE,
   "маслины"               : UNITS.PIECE , // any positive integer
-  "cоль"                  : UNITS.GRAM, // any positive integer
+  "соль"                  : UNITS.GRAM, // any positive integer
   "сахар"                 : UNITS.GRAM, // any positive integer
   "перец"                 : UNITS.GRAM , // any positive integer
   "специи"                : UNITS.GRAM , // any positive integer
@@ -592,25 +592,25 @@ function extractSmokedMeat( pan ) {
   return extractSingleItem( pan, INGREDIENTS.SMOKED_MEAT );
 }
 
-function extractBoulion( pan ) {
+function extractBouillon( pan ) {
   return extractSingleItem( pan, INGREDIENTS.WATER );
 }
 
-function refineBoulion( boulion ) {
-  Check.isObject( boulion );
-  if ( INGREDIENTS[boulion.type] !== INGREDIENTS.WATER ) {
+function refineBouillon( bouillon ) {
+  Check.isObject( bouillon );
+  if ( INGREDIENTS[bouillon.type] !== INGREDIENTS.WATER ) {
     throw new Error( 'Expected water ingredient' );
   }
-  boulion.attr.isRefinedBoulion = true;
-  return boulion;
+  bouillon.attr.isRefinedBouillon = true;
+  return bouillon;
 }
 
 function refineBouillonAndBlendBoiledMeat( pan ) {
   Check.isObject( pan );
   let boiledMeat = extractMeat( pan );
   let boiledSmokedMeat = extractSmokedMeat( pan );
-  let boulion = extractBoulion( pan );
-  let refinedBouillon = refineBoulion( boulion );
+  let bouillon = extractBouillon( pan );
+  let refinedBouillon = refineBouillon( bouillon );
   let blendedMeat = blend( boiledMeat );
   let blendedSmokedMeat = blend( boiledSmokedMeat );
   pan.put( blendedMeat, blendedSmokedMeat, refinedBouillon );
