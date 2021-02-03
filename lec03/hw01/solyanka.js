@@ -153,7 +153,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
 
   cleanMessages();
   // START COOKING
-  pushMessage( 'Берем кастрюлю ' );
+  pushMessage( 'Берем кастрюлю...' );
   let pan = createPan( 'кастрюля' );
   pushMessage( 'Моем мясо и складываем с копченостями в кастрюлю с водой. Варим на медленном огне...' );
   pan = washAndBoilMeat( pan, myMeat, mySmokedMeat, myWater );
