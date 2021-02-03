@@ -17,25 +17,7 @@ function inflateTestValues() {
 
 }
 
-function allowInteger(event){
-  const isNumber = event.keyCode > 47 && event.keyCode < 58; 
-  if ( !isNumber ) {
-    event.returnValue = false;
-    event.preventDefault();
-  }
-}
-
-function pasteInteger(event) {
-  const reInteger = /^\d+$/;
-  const paste = (event.clipboardData || window.clipboardData).getData('text');
-  if( !reInteger.test(paste) ) {
-    event.returnValue = false;
-    event.preventDefault();
-  }
-}
-
 function cookSolyanka() {
-
   const inputs = [ meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream ]
   const args = inputs.map( el=>{
     let val = el.value.trim();
@@ -45,45 +27,8 @@ function cookSolyanka() {
     }
     return result;
   });
-
   makeSolyanka( ...args );
-
-
-  
 }
-
-// function validateInput() {
-//   const test = { meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream }
-//   let errros = [];
-//   const reInteger = /^\d+$/;
-//   args.forEach( value => {
-//     const text = value.trim();
-//     if ( value ) {}
-//   })
-// }
-// test = { meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream }
-// test = {
-//   meat,
-//   smokedMeat,
-//   water,
-//   otherMeat,
-//   pickles,
-//   olives,
-//   onion,
-//   garlic,
-//   tomatoPaste,
-//   vegetableOil,
-//   salt,
-//   pepper,
-//   herbs,
-//   sugar,
-//   lemon,
-//   sourCream
-// };
-
-
-
-
 // usage example;
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
@@ -612,6 +557,25 @@ function createPan( panName ) {
       this.stopBoil( minutes, power );
     }
   };
+}
+
+// HANDLERS
+
+function allowInteger(event){
+  const isNumber = event.keyCode > 47 && event.keyCode < 58; 
+  if ( !isNumber ) {
+    event.returnValue = false;
+    event.preventDefault();
+  }
+}
+
+function pasteInteger(event) {
+  const reInteger = /^\d+$/;
+  const paste = (event.clipboardData || window.clipboardData).getData('text');
+  if( !reInteger.test(paste) ) {
+    event.returnValue = false;
+    event.preventDefault();
+  }
 }
 
 
