@@ -15,9 +15,7 @@ function inflateTestValues() {
     else {
       input.value = '';
     }
-
   });
-
 }
 
 function cookSolyanka() {
@@ -59,7 +57,6 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   // CHECK PARAMETERS
   const errors = validate( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ )
   if ( errors.length > 0 ) {
-    // console.warn( errors.join( '\n' )); //print to document???
     alert( errors.join( '\n' ) );
     return ;
   }
@@ -180,6 +177,7 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     pushMessage( 'СОЛЯНКА ГОТОВА!');
     window.solyanka = solyanka; 
     console.log( 'solyanka', solyanka );
+    solyanka.inspectItems();
   })
   .catch(( error )=>{
     throw new Error( error );
@@ -256,7 +254,7 @@ const INGREDIENTS = {
   ONION         : "луковица",
   VEGETABLE_OIL : "растительное масло",
   OLIVES        : "маслины",  //маслины
-  SALT          : "cоль",
+  SALT          : "соль",
   PEPPER        : "перец",
   SUGAR         : "сахар",
   SPICE         : "специи",
@@ -451,6 +449,19 @@ function createIngredient( type_, value ) {
 
 function createSolyanka() {
   let items = [];
+  const getDetails = function (item, prop, text) {
+    const minutes = item[prop].reduce((r, x) => {
+      return r + Object.keys(x).reduce((ry, y) => ry + x[y], 0)
+    }, 0);
+    return `${text} ${minutes} минут`;
+  };
+  const getBoiledInfo = function (attr) {
+    return getDetails(attr, 'boilDetails', 'варился');
+  };
+  const getFriedInfo = function (attr) {
+    return getDetails(attr, 'fryDetails', 'жарился');
+  };
+
   return {
     put: function(...args) {
       items.push( ...args );
@@ -461,8 +472,30 @@ function createSolyanka() {
       items = [];
       return result;
     },
-    inspectItems: function() {
-      return JSON.stringify( items, null, 2 );
+    inspectItems: function () {
+      let result = items.reduce((res, item, idx ) => {
+        let pref = `${idx+1}) ${capitalize( item.name )} ${item.value} ${item.unit}.. Состояние ингридиента:`;
+        let attr = item.attr;
+        let status = Object.keys(attr).map(x => {
+          switch (x) {
+            case 'isBoiled': return getBoiledInfo(attr);
+            case 'isFried': return getFriedInfo(attr);
+            case 'isWashed': return 'вымыт';
+            case 'isCleaned': return 'очищен';
+            case 'isBlended': return 'измельчен';
+            case 'isRefined': return 'процежен';
+          }
+        }).filter(x => x != null);
+        res.push(`${pref} ${status.join(', ')}`);
+        return res;
+      }, [] );
+      result.unshift( `Всего в солянке ${items.length} ингридиентов:` );
+      Promise.resolve()
+      .then( next( null, 1500 ) )
+      // .then( next( cleanMessages(), 1500 ) )
+      .then( next( pushMessage( '<hr>' ) ) )
+      .then( next( pushMessage( result ) ) )
+      .catch( error => {throw new Error( 'solyanka errorr: '+ error ) ;});
     },
     showContent: function() {
       return items.map( x => `${x.name}:${x.value} ${x.unit}` );
@@ -588,7 +621,7 @@ function refineBouillon( bouillon ) {
   if ( INGREDIENTS[bouillon.type] !== INGREDIENTS.WATER ) {
     throw new Error( 'Expected water ingredient' );
   }
-  bouillon.attr.isRefinedBouillon = true;
+  bouillon.attr.isRefined = true;
   return bouillon;
 }
 
@@ -710,12 +743,26 @@ function getLoggerEl() {
   return document.querySelectorAll( '.logger' )[0];
 }
 
-function pushMessage( text ) {
+function pushMessage( message ) {
   const elem = getLoggerEl();
-  const node = document.createTextNode( text );
-  const p = document.createElement( 'p' );
-  p.appendChild( node );
-  elem.appendChild( p );
+  const makeP = function( text ) {
+    const p = document.createElement( 'p' );
+    p.innerHTML = text;
+    elem.appendChild( p );
+    elem.scrollTop = elem.scrollHeight;
+  }
+
+  if ( getType( message ) === TYPES.ARRAY ) {
+    message.forEach( line => {
+      makeP( line );
+    });
+  }
+  else if ( getType( message ) === TYPES.STRING ){
+    makeP( message );
+  }
+  else {
+    throw new Error( 'Message must be a string or array');
+  }
 }
 
 function cleanMessages() {
