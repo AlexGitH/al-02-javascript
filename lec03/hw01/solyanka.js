@@ -210,16 +210,17 @@ const LIMITS = {
   VEGETABLE_OIL : { min: 2, max: 2 },
 }
 
+// TODO: identify item's group by similar items lookup realization;
 const INGR_UNIT_MAP = {
   'вода'                  : UNITS.GRAM,
-  'курица'                : UNITS.GRAM,
-  'говядина'              : UNITS.GRAM,
-  'свинина'               : UNITS.GRAM,
+  // 'курица'                : UNITS.GRAM,
+  // 'говядина'              : UNITS.GRAM,
+  // 'свинина'               : UNITS.GRAM,
   'мясо'                  : UNITS.GRAM, // свинина, говядина, курица
 
-  'ветчина'               : UNITS.GRAM,
-  'колбаса'               : UNITS.GRAM,
-  'копчености'            : UNITS.GRAM,
+  // 'ветчина'               : UNITS.GRAM,
+  // 'колбаса'               : UNITS.GRAM,
+  // 'копчености'            : UNITS.GRAM,
   'мясные изделия'        : UNITS.GRAM, // колбаса, ветчина, копчености: 
 
   'растительное масло'    : UNITS.SPOON,
