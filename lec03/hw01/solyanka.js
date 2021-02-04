@@ -191,11 +191,11 @@ const POWER_GRADE = {
 };
 
 const UNITS = {
-  SPOON : "ст. лож.",
-  PIECE : "шт.",
-  SLICE : "дол.",
-  GRAM  : "гр.",
-  CLOVE : "зуб."
+  SPOON : 'ст. лож.',
+  PIECE : 'шт.',
+  SLICE : 'дол.',
+  GRAM  : 'гр.',
+  CLOVE : 'зуб.'
 };
 
 const LIMITS = {
@@ -211,57 +211,57 @@ const LIMITS = {
 }
 
 const INGR_UNIT_MAP = {
-  "вода"                  : UNITS.GRAM,
-  "курица"                : UNITS.GRAM,
-  "говядина"              : UNITS.GRAM,
-  "свинина"               : UNITS.GRAM,
-  "мясо"                  : UNITS.GRAM, // свинина, говядина, курица
+  'вода'                  : UNITS.GRAM,
+  'курица'                : UNITS.GRAM,
+  'говядина'              : UNITS.GRAM,
+  'свинина'               : UNITS.GRAM,
+  'мясо'                  : UNITS.GRAM, // свинина, говядина, курица
 
-  "ветчина"               : UNITS.GRAM,
-  "колбаса"               : UNITS.GRAM,
-  "копчености"            : UNITS.GRAM,
-  "мясные изделия"        : UNITS.GRAM, // колбаса, ветчина, копчености: 
+  'ветчина'               : UNITS.GRAM,
+  'колбаса'               : UNITS.GRAM,
+  'копчености'            : UNITS.GRAM,
+  'мясные изделия'        : UNITS.GRAM, // колбаса, ветчина, копчености: 
 
-  "растительное масло"    : UNITS.SPOON,
-  "чеснок"                : UNITS.CLOVE,
-  "луковица"              : UNITS.PIECE,
-  "томатная паста"        : UNITS.SPOON,
-  "маринованные огурчики" : UNITS.PIECE,
-  "маслины"               : UNITS.PIECE , // any positive integer
-  "соль"                  : UNITS.GRAM, // any positive integer
-  "сахар"                 : UNITS.GRAM, // any positive integer
-  "перец"                 : UNITS.GRAM , // any positive integer
-  "специи"                : UNITS.GRAM , // any positive integer
-  "зелень"                : UNITS.GRAM , // any positive integer
-  "сметана"               : UNITS.SPOON, // any positive integer
-  "лимон"                 : UNITS.SLICE, // any positive integer
-  "лавровый лист"         : UNITS.PIECE // any positive integer
+  'растительное масло'    : UNITS.SPOON,
+  'чеснок'                : UNITS.CLOVE,
+  'луковица'              : UNITS.PIECE,
+  'томатная паста'        : UNITS.SPOON,
+  'маринованные огурчики' : UNITS.PIECE,
+  'маслины'               : UNITS.PIECE , // any positive integer
+  'соль'                  : UNITS.GRAM, // any positive integer
+  'сахар'                 : UNITS.GRAM, // any positive integer
+  'перец'                 : UNITS.GRAM , // any positive integer
+  'специи'                : UNITS.GRAM , // any positive integer
+  'зелень'                : UNITS.GRAM , // any positive integer
+  'сметана'               : UNITS.SPOON, // any positive integer
+  'лимон'                 : UNITS.SLICE, // any positive integer
+  'лавровый лист'         : UNITS.PIECE // any positive integer
 };
 
 const INGREDIENTS = {
-  WATER         : "вода",
-  PORK          : "свинина", //свинина
-  BEEF          : "говядина", //говядина
-  CHICKEN       : "курица",
-  MEAT          : "мясо",
-  HAM           : "ветчина",
-  SALAMI        : "колбаса",
-  SMOKED_MEAT   : "копчености",
-  MEAT_PROD     : "мясные изделия",
-  PICKLES       : "маринованные огурчики", // Маринованные огурцы
-  TOMATO_PASTE  : "томатная паста",
-  GARLIC        : "чеснок",  //чеснок
-  ONION         : "луковица",
-  VEGETABLE_OIL : "растительное масло",
-  OLIVES        : "маслины",  //маслины
-  SALT          : "соль",
-  PEPPER        : "перец",
-  SUGAR         : "сахар",
-  SPICE         : "специи",
-  HERBS         : "зелень",
-  LEMON         : "лимон",
-  SOUR_CREAM    : "сметана", // сметана
-  BAY_LEAF      : "лавровый лист"  // лавровый лист
+  WATER         : 'вода',
+  PORK          : 'свинина', //свинина
+  BEEF          : 'говядина', //говядина
+  CHICKEN       : 'курица',
+  MEAT          : 'мясо',
+  HAM           : 'ветчина',
+  SALAMI        : 'колбаса',
+  SMOKED_MEAT   : 'копчености',
+  MEAT_PROD     : 'мясные изделия',
+  PICKLES       : 'маринованные огурчики', // Маринованные огурцы
+  TOMATO_PASTE  : 'томатная паста',
+  GARLIC        : 'чеснок',  //чеснок
+  ONION         : 'луковица',
+  VEGETABLE_OIL : 'растительное масло',
+  OLIVES        : 'маслины',  //маслины
+  SALT          : 'соль',
+  PEPPER        : 'перец',
+  SUGAR         : 'сахар',
+  SPICE         : 'специи',
+  HERBS         : 'зелень',
+  LEMON         : 'лимон',
+  SOUR_CREAM    : 'сметана', // сметана
+  BAY_LEAF      : 'лавровый лист'  // лавровый лист
 }
 
 const TYPES = {
@@ -389,22 +389,22 @@ function validateMaxLimit( type, value, vName ) {
 function validate( meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt_, pepper_, herbs_, sugar_, lemon_, sourCream_ ) {
   let errors = [];
 
-  errors.push( ...validateParameter( 'MEAT', meat, "мяса" ) );
-  errors.push( ...validateParameter( 'WATER', water, "воды" ) );
-  errors.push( ...validateParameter( 'PICKLES', pickles, "маринованных огурчиков" ) );
-  errors.push( ...validateParameter( 'OLIVES', olives, "маслин" ) );
-  errors.push( ...validateParameter( 'ONION', onion, "луковиц" ) );
-  errors.push( ...validateParameter( 'GARLIC', garlic, "чеснока" ) );
-  errors.push( ...validateParameter( 'TOMATO_PASTE', tomatoPaste, "томатной пасты" ) );
-  errors.push( ...validateParameter( 'VEGETABLE_OIL', vegetableOil, "растительного масла" ) );
+  errors.push( ...validateParameter( 'MEAT', meat, 'мяса' ) );
+  errors.push( ...validateParameter( 'WATER', water, 'воды' ) );
+  errors.push( ...validateParameter( 'PICKLES', pickles, 'маринованных огурчиков' ) );
+  errors.push( ...validateParameter( 'OLIVES', olives, 'маслин' ) );
+  errors.push( ...validateParameter( 'ONION', onion, 'луковиц' ) );
+  errors.push( ...validateParameter( 'GARLIC', garlic, 'чеснока' ) );
+  errors.push( ...validateParameter( 'TOMATO_PASTE', tomatoPaste, 'томатной пасты' ) );
+  errors.push( ...validateParameter( 'VEGETABLE_OIL', vegetableOil, 'растительного масла' ) );
 
   
-  errors.push( ...validateQuantity( 'SMOKED_MEAT', smokedMeat, "копченого мяса" ) );
-  errors.push( ...validateQuantity( 'OTHER_MEAT', otherMeat, "мясных деликатесов" ) );
+  errors.push( ...validateQuantity( 'SMOKED_MEAT', smokedMeat, 'копченого мяса' ) );
+  errors.push( ...validateQuantity( 'OTHER_MEAT', otherMeat, 'мясных деликатесов' ) );
   let meatProduct = smokedMeat + otherMeat;
 
-  errors.push( ...validateMaxLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
-  errors.push( ...validateMinLimit( 'MEAT_PROD', meatProduct, "мясных изделий" ) );
+  errors.push( ...validateMaxLimit( 'MEAT_PROD', meatProduct, 'мясных изделий' ) );
+  errors.push( ...validateMinLimit( 'MEAT_PROD', meatProduct, 'мясных изделий' ) );
 
   errors.push( ...validateOptionalParam( 'SALT', salt_, 'соли' ) );
   errors.push( ...validateOptionalParam( 'PEPPER', pepper_, 'перца' ) );
