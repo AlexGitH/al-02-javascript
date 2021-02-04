@@ -475,7 +475,7 @@ function createSolyanka() {
     },
     inspectItems: function () {
       let result = items.reduce((res, item, idx ) => {
-        let pref = `${idx+1}) ${capitalize( item.name )} ${item.value} ${item.unit}.. Состояние ингридиента:`;
+        let pref = `${idx+1}) ${capitalize( item.name )} ${item.value} ${item.unit}.. Состояние ингредиента:`;
         let attr = item.attr;
         let status = Object.keys(attr).map(x => {
           switch (x) {
@@ -490,13 +490,13 @@ function createSolyanka() {
         res.push(`${pref} ${status.join(', ')}`);
         return res;
       }, [] );
-      result.unshift( `Всего в солянке ${items.length} ингридиентов:` );
+      result.unshift( `Всего в солянке ${items.length} ингредиентов:` );
       Promise.resolve()
       .then( next( null, 1500 ) )
       // .then( next( cleanMessages(), 1500 ) )
       .then( next( pushMessage( '<hr>' ) ) )
       .then( next( pushMessage( result ) ) )
-      .catch( error => {throw new Error( 'solyanka errorr: '+ error ) ;});
+      .catch( error => {throw new Error( 'solyanka error: '+ error ) ;});
     },
     showContent: function() {
       return items.map( x => `${x.name}:${x.value} ${x.unit}` );
