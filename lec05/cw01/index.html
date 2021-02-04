@@ -5,13 +5,23 @@
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Login Form</title>
     <script src="./formValidation.js"></script>
+    <style>
+        .setup {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            grid-gap: 5px;
+            padding: 5px;
+        }
+    </style>
 </head>
 <body>
-    <form action="return false;">
+    <div class="setup" >
         <label for="fld-user" >Username: </label><input id="fld-user" name="username" type="text" placeholder="username">
         <label for="fld-email" >Email: </label><input id="fld-email" name="email" type="text" placeholder="Email">
         <label for="fld-password" >Password: </label><input id="fld-password" name="password" type="password" placeholder="Password">
-        <button>Submit</button>
-    </form>
+        <button onclick="validate()">Test</button>
+    </div>
+    <span id="form-validation"></span>
 </body>
 </html>
