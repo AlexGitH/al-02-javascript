@@ -6,6 +6,9 @@
     <title>Login Form</title>
     <script src="./formValidation.js"></script>
     <style>
+        main {
+            width: 200px;
+        }
         .setup {
             display: grid;
             grid-template-columns: auto 1fr;
@@ -13,15 +16,23 @@
             grid-gap: 5px;
             padding: 5px;
         }
+        .valid-info {
+            color:red;
+        }
+        .green {
+            color: green;
+        }
     </style>
 </head>
 <body>
-    <div class="setup" >
-        <label for="fld-user" >Username: </label><input id="fld-user" name="username" type="text" placeholder="username">
-        <label for="fld-email" >Email: </label><input id="fld-email" name="email" type="text" placeholder="Email">
-        <label for="fld-password" >Password: </label><input id="fld-password" name="password" type="password" placeholder="Password">
-        <button onclick="validate()">Test</button>
-    </div>
-    <span id="form-validation"></span>
+    <main>
+        <div class="setup">
+            <label for="fld-user">Username: </label><input id="fld-user" name="username" type="text" placeholder="Username">
+            <label for="fld-email">Email: </label><input id="fld-email" name="email" type="text" placeholder="Email">
+            <label for="fld-password">Password: </label><input id="fld-password" name="password" type="password" placeholder="Password">
+            <button onclick="validate()">Test</button>
+        </div>
+        <span class="valid-info" id="form-validation"></span>
+    </main>
 </body>
 </html>
