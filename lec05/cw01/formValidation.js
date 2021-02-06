@@ -16,7 +16,7 @@ function validate() {
 
   refreshInfo( errors );
   if ( errors.length === 0 ) {
-    resetData();
+    window.login.reset();
   }
 }
 
@@ -69,13 +69,6 @@ function validateEmail( email ) {
     return 'Email must have leading at least one "." character after "@"';
   }
   return null;
-}
-
-function resetData() {
-  const inputs = document.querySelectorAll( '.setup input' );
-  for ( const field of inputs ) {
-    field.value = '';
-  }
 }
 
 function extractData() {
