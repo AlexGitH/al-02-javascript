@@ -3,16 +3,33 @@
 // Login must be a valid email
 // Password must be at least 6 character
 function validate(){
-  
   const data = extractData();
-  console.log( validateEmail( data.email ) );
-  console.log( validatePassword( data.password ) );
+  let errors = [];
+  const emailValidMessage = validateEmail( data.email );
+  const passwordValidMessage = validatePassword( data.password ); 
+  if ( emailValidMessage != null ) {
+    errors.push( emailValidMessage );
+  }
+  if ( passwordValidMessage != null ) {
+    errors.push( passwordValidMessage );
+  }
 
-  console.log('validate', data );
+  refreshInfo( errors );
+  if ( errors.length === 0 ) {
+    resetData();
+  }
+}
+
+function refreshInfo( messages ) {
+  let el = document.querySelector( 'div.valid-info' );
+  let result = `<span class="valid">Successfully submitted!</span>`;
+  if ( messages.length > 0 ) {
+    result = `<div class="invalid">Resolve validation errors:<ul>${messages.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  }
+  el.innerHTML = result;
 }
 
 function validatePassword( password ) {
-  console.log('+', password)
   if ( password.length < 6 ) {
     return 'Password must be at least 6 characters long';
   }
@@ -56,6 +73,13 @@ function validateEmail(email) {
     return 'Email must have leading at least one "." character after "@"';
   }
   return null;
+}
+
+function resetData() {
+  const inputs = document.querySelectorAll( '.setup input' );
+  for ( const field of inputs ) {
+    field.value = '';
+  }
 }
 
 function extractData() {
