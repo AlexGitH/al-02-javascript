@@ -7,7 +7,7 @@
     <script src="./formValidation.js"></script>
     <style>
         main {
-            width: 200px;
+            width: 350px;
         }
         .setup {
             display: grid;
@@ -16,10 +16,10 @@
             grid-gap: 5px;
             padding: 5px;
         }
-        .valid-info {
+        .invalid {
             color:red;
         }
-        .green {
+        .valid {
             color: green;
         }
     </style>
@@ -29,9 +29,10 @@
         <div class="setup">
             <label for="fld-login">Login: </label><input id="fld-login" name="email" type="text" placeholder="user@example.com">
             <label for="fld-password">Password: </label><input id="fld-password" name="password" type="password" placeholder="minimum 6 characters">
-            <button onclick="validate()">Test</button>
+            <button type="button" onclick="validate()">Submit</button>
         </div>
-        <span class="valid-info" id="form-validation"></span>
+        <div class="valid-info"></div>
+        <!-- <span class="valid-info" id="form-validation"></span> -->
     </main>
 </body>
 </html>
