@@ -1,3 +1,7 @@
+// TASK REQUIREMENTS
+// Login field validation must be without regex
+// Login must be a valid email
+// Password must be at least 6 character
 function validate(){
   
   console.log('validate', extractData() );
