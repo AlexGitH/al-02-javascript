@@ -5,9 +5,18 @@
 function validate(){
   
   const data = extractData();
-  console.log( validateEmail( data.email ) )
+  console.log( validateEmail( data.email ) );
+  console.log( validatePassword( data.password ) );
 
   console.log('validate', data );
+}
+
+function validatePassword( password ) {
+  console.log('+', password)
+  if ( password.length < 6 ) {
+    return 'Password must be at least 6 characters long';
+  }
+  return null;
 }
 
 function getValueOfInput( id ) {
