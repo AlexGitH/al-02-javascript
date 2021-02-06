@@ -37,10 +37,10 @@ function validatePassword( password ) {
 }
 
 function validateEmail( email ) {
-  var lastIndex = email.length - 1;
-  var at = email.indexOf( '@' );
-  var atLast = email.lastIndexOf( '@' );
-  var dot = email.lastIndexOf( '.' );
+  const lastIndex = email.length - 1;
+  const at = email.indexOf( '@' );
+  const atLast = email.lastIndexOf( '@' );
+  const dot = email.lastIndexOf( '.' );
   for( const char of email ) {
     const code = char.charCodeAt( 0 );
     if ( code !== 46 && code !== 64 &&
