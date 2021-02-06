@@ -53,7 +53,7 @@ function extractData() {
   const inputs = document.querySelectorAll( '.setup input' );
   let result = {};
   for ( const field of inputs ) {
-    result[field.name] = field.value;
+    result[field.name] = field.value.trim();
   }
   return result;
 }
