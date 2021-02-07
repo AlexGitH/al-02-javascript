@@ -4,8 +4,23 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>JS Registration Form</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./formCreation.js"></script>
 </head>
 <body>
-    
+    <div class="entry">
+        <div class="form-toggle">
+            <button class="sign-up">Sign Up</button>
+            <button class="log-in">Log In</button>
+        </div>
+        <div class="forms">
+            <form name="signUp" class="sign-up">
+                <div class="field-container">
+                    <label for="firstName"><input id="firstName" type="text"></label>
+                    <div class="valid-info"><span></span></div>
+                </div>
+            </form>
+        </div>
+    </div>
 </body>
 </html>
