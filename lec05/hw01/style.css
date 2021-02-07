@@ -86,6 +86,7 @@ h1 {
 
 .valid-info {
   color : red;
+  font-size: 16px;
 }
 
 input {
