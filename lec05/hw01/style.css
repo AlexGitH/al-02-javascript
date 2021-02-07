@@ -11,13 +11,48 @@ body {
   height: 100vh;
   justify-content: center;
   align-items: center;
+  font-family: 'Franklin Gothic Medium', 'Arial Narrow', Arial, sans-serif;
 }
 
-span,div,form, label {
+.frm-sign-up {
+  display: flex;
+  flex-flow: row wrap;
+  justify-content: space-around;
+}
+
+.field-container {
+  display: flex;
+  flex: 1 1 46%;
+  flex-flow: column nowrap;
+  margin: 5px;
+}
+
+.field-container.long {
+  /* min-width: 100%; */
+  flex: 1 1 100%;
+}
+
+.entry {
+  width: 500px;
+}
+
+/* input placeholder text: */
+/* #99a2ab */
+
+/* border: */
+/* #a2afb8 */
+h1 {
+  font-weight: normal;
+  text-align: center;
+  color: white;
+  line-height: 56px;
+}
+
+/* span,div,form, label {
   border: 1px solid #000;
   margin: 1px;
   padding: 1px;
-}
+} */
 
 .form-toggle {
   display: flex;
@@ -25,16 +60,21 @@ span,div,form, label {
   height: 48px;
 }
 
+.valid-info {
+  color : red;
+}
+
 input {
-  border: 1px solid #0816d8;
+  border: 1px solid #a2afb8;
+  line-height: 32px;
+  background-color: transparent;
+  color: white;
+  padding: 0 5px;
 }
 
 button {
   border: none;
-  /* padding: 15px 32px; */
-  /* text-align: center; */
   text-decoration: none;
-  /* display: inline-block; */
   font-size: 16px;
   cursor: pointer;
   display: flex;
@@ -50,4 +90,11 @@ button.sign-up {
 button.log-in {
   background-color: #435259;
   color : #999;
+}
+
+form>button {
+  font-size: 26px;
+  font-weight: bold;
+  flex: 1 1 100%;
+  height: 60px;
 }
