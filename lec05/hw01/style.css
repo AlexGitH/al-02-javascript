@@ -5,6 +5,7 @@
 }
 
 body {
+  background-color: #24303c;
   display: flex;
   flex-flow: column nowrap;
   height: 100vh;
@@ -18,6 +19,35 @@ span,div,form, label {
   padding: 1px;
 }
 
+.form-toggle {
+  display: flex;
+  flex-flow: row nowrap;
+  height: 48px;
+}
+
 input {
   border: 1px solid #0816d8;
+}
+
+button {
+  border: none;
+  /* padding: 15px 32px; */
+  /* text-align: center; */
+  text-decoration: none;
+  /* display: inline-block; */
+  font-size: 16px;
+  cursor: pointer;
+  display: flex;
+  align-items: center;
+  justify-content: center;
+  flex: 1 1 50%;
+}
+
+button.sign-up {
+  background-color: #1ab188; /* Green */
+  color: white;
+}
+button.log-in {
+  background-color: #435259;
+  color : #999;
 }
