@@ -41,6 +41,7 @@ function createLayout() {
   form.append( submit );
   entry.append( formToggle, heading, form );
   document.body.append( entry );
+  submit.addEventListener( 'click', validate );
 }
 
 function createMainEl() {
@@ -116,4 +117,129 @@ function createEl( name, config ) {
   return el;
 }
 
-// TODO: add event listeners and validation functions
+
+// VALIDATION
+
+function validate() {
+  const data = extractData();
+  console.log( data );
+  const firstNameValidMessage = validateName( data.firstName.value );
+  const lastNameValidMessage = validateName( data.lastName.value );
+  const emailValidMessage = validateEmail( data.email.value );
+  const passwordValidMessage = validatePassword( data.password.value );
+    data.firstName.errElm.innerHTML = firstNameValidMessage;
+    data.lastName.errElm.innerHTML = lastNameValidMessage;
+    data.email.errElm.innerHTML = emailValidMessage;
+    data.password.errElm.innerHTML = passwordValidMessage;
+  // refreshInfo( errors );
+  // if ( errors.length === 0 ) {
+  //   window.login.reset();
+  // }
+}
+
+function refreshInfo( messages ) {
+  let el = document.querySelector( 'div.valid-info' );
+  let result = `<span class="valid">Successfully submitted!</span>`;
+  if ( messages.length > 0 ) {
+    result = `<div class="invalid">Resolve validation errors:<ul>${messages.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+  }
+  el.innerHTML = result;
+}
+
+function validateName( name ) {
+  if ( name === '' ) {
+    return 'This field is mandatory';
+  }
+  for( const char of name ) {
+    const code = char.charCodeAt( 0 );
+    if ( code >= 48 && code <= 57 ) {
+      return 'Numbers are not allowed';
+    }
+  }
+  if ( name.indexOf( ' ' ) >= 0 || name.indexOf( '\t' ) >= 0) {
+    return 'Spaces are not allowed';
+  }
+  return null;
+}
+
+function validatePassword( password ) {
+  let hasNumbers, hasLetters;
+  for( const char of password ) {
+    const code = char.charCodeAt( 0 );
+    if ( code >= 48 && code <= 57 ) {
+      hasNumbers = true;
+    }
+    if ( code >= 64 && code <= 90 ) {
+      hasLetters = true;
+    }
+    if ( code >= 97 && code <= 122 ) {
+      hasLetters = true;
+    }
+  }
+  if ( !hasLetters || !hasNumbers ) {
+    return 'Password must have english letters and numbers';
+  }
+  if ( password.length < 6 ) {
+    return 'Password must be at least 6 characters long';
+  }
+  return null;
+}
+
+function validateEmail( email ) {
+  const lastIndex = email.length - 1;
+  const at = email.indexOf( '@' );
+  const atLast = email.lastIndexOf( '@' );
+  const dot = email.lastIndexOf( '.' );
+  for( const char of email ) {
+    const code = char.charCodeAt( 0 );
+    if ( code !== 46 && code !== 64 &&
+         ( code < 48 || code > 57 ) &&
+         ( code < 64 || code > 90 ) &&
+         ( code < 97 || code > 122 ) ) {
+      return 'Email must have only english letters, numbers, "." and "@" characters';
+    }
+  }
+  if ( email.length <= 0 ) {
+    return 'Email field is mandatory';
+  }
+  if ( at <= 0 && at === atLast ) {
+    return 'Email must have only one "@" character';
+  }
+  if ( email.indexOf( '@.' ) >= 0 || email.indexOf( '.@' ) >= 0 || email.indexOf( '..' ) >= 0 ) {
+    return 'Email must not have "@.", ".@" or ".." character combinations';
+  }
+  if ( dot === lastIndex || at === lastIndex ) {
+    return 'Email must not have trailing "." or "@" characters';
+  }
+  if ( at < 1 || email.indexOf( '.' ) < 1 ) {
+    return 'Email must not have leading "@" or "." characters';
+  }
+  if ( atLast > dot ) {
+    return 'Email must have leading at least one "." character after "@"';
+  }
+  if ( email.indexOf( '@gmail.com' ) < 0 ) {
+    return 'Email must be registered at "@gmail.com"';
+  }
+  return null;
+}
+
+function extractData() {
+  const els = document.querySelectorAll( 'form>.field-container' );
+  let result = {};
+  for ( const el of els ) {
+    const field = el.firstChild;
+    if ( field.type !== 'password' ) {
+      result[field.name] = {
+        value : field.value.trim(),
+        errElm : el.lastChild
+      };
+    }
+    else {
+      result[field.name] = {
+        value : field.value,
+        errElm : el.lastChild
+      };
+    }
+  }
+  return result;
+}
