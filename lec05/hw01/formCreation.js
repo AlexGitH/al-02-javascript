@@ -98,6 +98,8 @@ function createFieldContainer( name, type, placeholder, isLong ) {
     type : type,
     placeholder: placeholder
   });
+
+  // TODO: label needed to customize input placeholder with double text color;
   let label = createEl( 'label', {
     for : name
   });
