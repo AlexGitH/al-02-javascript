@@ -2,7 +2,7 @@ window.onload = function() {
   createLayout();
 }
 
-const fieldContainers = [{
+const FIELD_CONFIGS = [{
   name : 'firstName',
   type : 'text',
   placeholder: 'First Name *',
@@ -32,7 +32,7 @@ function createLayout() {
   formToggle.append( signUp, logIn );
   const heading = createHeader( 'Sign Up for Free' );
   let form = createForm();
-  for( const config of fieldContainers ) {
+  for( const config of FIELD_CONFIGS ) {
     const { name, type, placeholder, isLong } = config;
     const field = createFieldContainer( name, type, placeholder, isLong );
     form.append( field );
@@ -89,7 +89,7 @@ function createForm() {
 function createFieldContainer( name, type, placeholder, isLong ) {
 
   let container = createEl( 'div', {
-    class : `field-container ${isLong === true ? ' long' : ''}`
+    class : `field-container${isLong === true ? ' long' : ''}`
   });
   let input = createEl( 'input', {
     id : name,
