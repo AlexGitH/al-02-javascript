@@ -127,10 +127,10 @@ function validate() {
   const lastNameValidMessage = validateName( data.lastName.value );
   const emailValidMessage = validateEmail( data.email.value );
   const passwordValidMessage = validatePassword( data.password.value );
-    data.firstName.errElm.innerHTML = firstNameValidMessage;
-    data.lastName.errElm.innerHTML = lastNameValidMessage;
-    data.email.errElm.innerHTML = emailValidMessage;
-    data.password.errElm.innerHTML = passwordValidMessage;
+  data.firstName.errElm.innerHTML = firstNameValidMessage;
+  data.lastName.errElm.innerHTML = lastNameValidMessage;
+  data.email.errElm.innerHTML = emailValidMessage;
+  data.password.errElm.innerHTML = passwordValidMessage;
   // refreshInfo( errors );
   // if ( errors.length === 0 ) {
   //   window.login.reset();
