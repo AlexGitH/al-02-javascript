@@ -133,10 +133,16 @@ function validate() {
   data.lastName.errElm.innerHTML = lastNameValidMessage;
   data.email.errElm.innerHTML = emailValidMessage;
   data.password.errElm.innerHTML = passwordValidMessage;
-  // refreshInfo( errors );
-  // if ( errors.length === 0 ) {
-  //   window.login.reset();
-  // }
+  // simulate successful submission;
+  if ( !firstNameValidMessage &&
+       !lastNameValidMessage &&
+       !emailValidMessage &&
+       !passwordValidMessage ) {
+
+    window.signUp.reset();
+    alert( 'Successfully registered!');
+  }
+
 }
 
 function refreshInfo( messages ) {
