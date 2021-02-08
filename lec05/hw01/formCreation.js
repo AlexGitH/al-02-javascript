@@ -100,7 +100,7 @@ function createFieldContainer( name, type, placeholder, isLong ) {
   let label = createEl( 'label', {
     for : name
   });
-  let div = createEl( 'label', {
+  let div = createEl( 'div', {
     class : 'valid-info'
   });
 
