@@ -111,7 +111,6 @@ function createFieldContainer( name, type, placeholder, isLong ) {
     required : true
   });
 
-  // TODO: label needed to customize input placeholder with double text color;
   const span = '<span class="mandatory">*</span>';
   let label = createEl( 'label', {
     for : name
@@ -132,7 +131,6 @@ function createEl( name, config ) {
   }
   return el;
 }
-
 
 // VALIDATION
 
