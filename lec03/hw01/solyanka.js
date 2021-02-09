@@ -186,17 +186,9 @@ const makeSolyanka = (function (win) {
     VEGETABLE_OIL : { min: 2, max: 2 },
   }
 
-  // TODO: identify item's group by similar items lookup realization;
   const INGR_UNIT_MAP = {
     'вода'                  : UNITS.GRAM,
-    // 'курица'                : UNITS.GRAM,
-    // 'говядина'              : UNITS.GRAM,
-    // 'свинина'               : UNITS.GRAM,
     'мясо'                  : UNITS.GRAM, // свинина, говядина, курица
-
-    // 'ветчина'               : UNITS.GRAM,
-    // 'колбаса'               : UNITS.GRAM,
-    // 'копчености'            : UNITS.GRAM,
     'мясные изделия'        : UNITS.GRAM, // колбаса, ветчина, копчености: 
 
     'растительное масло'    : UNITS.SPOON,
@@ -469,7 +461,6 @@ const makeSolyanka = (function (win) {
         result.unshift( `Всего в солянке ${items.length} ингредиентов:` );
         Promise.resolve()
         .then( next( null, 1500 ) )
-        // .then( next( cleanMessages(), 1500 ) )
         .then( next( pushMessage( '<hr>' ) ) )
         .then( next( pushMessage( result ) ) )
         .catch( error => {throw new Error( 'solyanka error: '+ error ) ;});
@@ -558,7 +549,7 @@ const makeSolyanka = (function (win) {
 
 
   // IMPLEMENTATION ROUTINES
-  // mutable
+  // not pure
 
   function washAndPutIntoPan( pan, meat, smokedMeat, water ) {
     Check.isObject( pan );
