@@ -108,13 +108,15 @@ function createFieldContainer( name, type, placeholder, isLong ) {
     id : name,
     name : name,
     type : type,
-    placeholder: placeholder
+    required : true
+    // placeholder: placeholder
   });
 
   // TODO: label needed to customize input placeholder with double text color;
   let label = createEl( 'label', {
     for : name
   });
+  label.innerHTML = `${placeholder.replace( '*', '' ).trim()} <span style="mandatory">*</span>`;
   let div = createEl( 'div', {
     class : 'valid-info'
   });
