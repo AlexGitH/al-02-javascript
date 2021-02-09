@@ -3,21 +3,6 @@
 // usage example( console );
 // makeSolyanka( 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 );
 
-// DEBUGGING
-function inflateTestValues() {
-  const vals = [ 450, 150, 2000, 150, 3, 5, 1, 3, 1, 2, 10, 10, 0, 1, 2 ];
-  const test = [ meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream ]
-  test.forEach( (input, index)=>{
-    let val = vals[index];
-    if ( val ) {
-      input.value = val;
-    }
-    else {
-      input.value = '';
-    }
-  });
-}
-
 function cookSolyanka() {
   const inputs = [ meat, smokedMeat, water, otherMeat, pickles, olives, onion, garlic, tomatoPaste, vegetableOil, salt, pepper, herbs, sugar, lemon, sourCream ]
   const args = inputs.map( el=>{
@@ -87,62 +72,52 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
   .then( ()=>{
     pushMessage( 'Берем кастрюлю...' );
     let pan = createPan( 'кастрюля' );
-    console.log( '0', pan )
     return next( pan );
   })
   .then( ( pan )=>{
-    console.log( '1', pan )
     pushMessage( 'Моем мясо и складываем с копченостями в кастрюлю с водой. Варим на медленном огне...' );
     pan = washAndPutIntoPan( pan, myMeat, mySmokedMeat, myWater );
     pan.startBoil();
     return next( pan, 2000 );
   })
   .then(( pan )=>{
-    console.log( '1.1', pan )
     let minutesToBoilMeat = 120;
     let powerToBoilMeat = POWER_GRADE.LOW;
     pan.stopBoil( minutesToBoilMeat, powerToBoilMeat );
     return next( pan );
   })
   .then( ( pan )=>{
-    console.log( '2', pan )
     pushMessage( 'Вылавливаем все мясо и измельчаем. Отцеживаем бульон и заливаем в кастрюлю с измельченным мясом...' );
     pan = refineBouillonAndBlendBoiledMeat( pan );
     return next( pan );
   })
   .then( ( pan )=>{
-    console.log( '3', pan )
     pushMessage( 'Измельчаем мясные деликатесы и складываем в кастрюлю...' );
     pan = addBlendedMeatProds( pan, myMeatProd );
     return next( pan );
   })
   .then( ( pan )=>{
-    console.log( '4', pan )
     pushMessage( 'Измельчаем маслины и маринованные огурчики и складываем в кастрюлю...' );
     pan = addBlendedPicklesAndOlives( pan, myPickles, myOlives );
     return next( pan );
   })
   .then( ( pan )=>{
-    console.log( '5', pan )
     pushMessage( 'Ставим кастрюльку на медленный огонь и параллельно приступаем к заправке...' );
     pan.startBoil();
     return next( pan );
   })
   .then( ( pan ) => {
-    console.log( '6', pan )
     pushMessage( 'Берем сковороду...' );
     let otherPan = createPan( 'сковорода' );
     return next( { pan, otherPan } );
   })
   .then( ( pans ) => {
-    console.log( '7', pans )
     const minutesToMakeSauce = 3;
     pushMessage( 'Чистим лук и чеснок, измельчаем, добавляем растительного масла и обжариваем на большом огне...')
     pans.otherPan = makeSauce( pans.otherPan, minutesToMakeSauce, myOnion, myGarlic, myTomatoPaste, myVegetableOil );
     return next({pans,minutesToMakeSauce});
   })
   .then( ( config ) => {
-    console.log( '8', config )
     pushMessage( 'Добавляем томатную пасту. Также добавляем соли, сахара, перца и зелени по вкусу' );
     const tasteItems = createSauceTasteItems( salt, pepper, sugar, herbs );
     const minutesToCorrectSauceTaste = 5;
@@ -150,21 +125,18 @@ function makeSolyanka( meat, smokedMeat, water, otherMeat, pickles, olives, onio
     return next({...config, minutesToCorrectSauceTaste});
   })
   .then( ( config ) =>{
-    console.log( '9', config )
     let { pans, minutesToMakeSauce, minutesToCorrectSauceTaste } = config;
     const elapsedMinutes = minutesToMakeSauce + minutesToCorrectSauceTaste;
     pans.pan.stopBoil( elapsedMinutes, POWER_GRADE.LOW );
     return next( pans );
   })
   .then( ( pans ) =>{
-    console.log( '10', pans )
     pushMessage( 'Пересыпаем заправку со сковородки в кастрюлю и варим еще 5-7 минут' );
     let sauceItems = pans.otherPan.getAll();
     return next( mixSauceWithSolyanka( pans.pan, sauceItems ) );
   })
   .then( ( pan ) =>{
     //SOLYANKA IS ALMOST READY!!!
-    console.log( '11', pan );
     pushMessage( 'Оставляем настояться 30 минут...');
     let result = completeSolyanka( pan );
     return next( result,1000 );
