@@ -1,3 +1,15 @@
+// Домашне завдання:
+// на понеділок створити форму виключено засобами JS.
+// Вимоги:
+// Пароль не менше 6 симолів, мають бути присутні букви і цифри
+// Ім"я має бути без пробілів.
+// Емейл має бути зареєстрований на gmail.com.
+// всі поля обовязкові.
+// При помилковому введенні висвічувати текст з розшифровкою помилки
+
+// Additional Task Restrictions:
+// - don't use RegEx;
+// - don't use "email" input type;
 window.onload = function() {
   createLayout();
 }
@@ -5,22 +17,22 @@ window.onload = function() {
 const FIELD_CONFIGS = [{
   name : 'firstName',
   type : 'text',
-  placeholder: 'First Name *',
+  placeholder: 'First Name',
   isLong : false
 },{
   name : 'lastName',
   type : 'text',
-  placeholder: 'Last Name *',
+  placeholder: 'Last Name',
   isLong : false
 },{
   name : 'email',
   type : 'text',
-  placeholder: 'Email Address *',
+  placeholder: 'Email Address',
   isLong : true
 },{
   name : 'password',
   type : 'password',
-  placeholder: 'Set A Password *',
+  placeholder: 'Set A Password',
   isLong : true
 }];
 
@@ -96,13 +108,14 @@ function createFieldContainer( name, type, placeholder, isLong ) {
     id : name,
     name : name,
     type : type,
-    placeholder: placeholder
+    required : true
   });
 
-  // TODO: label needed to customize input placeholder with double text color;
+  const span = '<span class="mandatory">*</span>';
   let label = createEl( 'label', {
     for : name
   });
+  label.innerHTML = `${placeholder} ${span}`;
   let div = createEl( 'div', {
     class : 'valid-info'
   });
@@ -119,7 +132,6 @@ function createEl( name, config ) {
   return el;
 }
 
-
 // VALIDATION
 
 function validate() {
@@ -133,17 +145,24 @@ function validate() {
   data.lastName.errElm.innerHTML = lastNameValidMessage;
   data.email.errElm.innerHTML = emailValidMessage;
   data.password.errElm.innerHTML = passwordValidMessage;
-  // refreshInfo( errors );
-  // if ( errors.length === 0 ) {
-  //   window.login.reset();
-  // }
+  // simulate successful submission;
+  if ( !firstNameValidMessage &&
+       !lastNameValidMessage &&
+       !emailValidMessage &&
+       !passwordValidMessage ) {
+
+    window.signUp.reset();
+    alert( 'Successfully registered!');
+  }
+
 }
 
 function refreshInfo( messages ) {
   let el = document.querySelector( 'div.valid-info' );
   let result = `<span class="valid">Successfully submitted!</span>`;
+  const list = messages.map(x=>`<li>${x}</li>`).join('');
   if ( messages.length > 0 ) {
-    result = `<div class="invalid">Resolve validation errors:<ul>${messages.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+    result = `<div class="invalid">Resolve validation errors:<ul>${list}</ul></div>`;
   }
   el.innerHTML = result;
 }
@@ -204,7 +223,7 @@ function validateEmail( email ) {
   if ( email.length <= 0 ) {
     return 'Email field is mandatory';
   }
-  if ( at <= 0 && at === atLast ) {
+  if ( at <= 0  ||  at !== atLast ) {
     return 'Email must have only one "@" character';
   }
   if ( email.indexOf( '@.' ) >= 0 || email.indexOf( '.@' ) >= 0 || email.indexOf( '..' ) >= 0 ) {
@@ -219,7 +238,8 @@ function validateEmail( email ) {
   if ( atLast > dot ) {
     return 'Email must have leading at least one "." character after "@"';
   }
-  if ( email.indexOf( '@gmail.com' ) < 0 ) {
+  const gmail = email.split( '@gmail.com' );
+  if ( gmail.length !== 2 || gmail[1] !== '' ) {
     return 'Email must be registered at "@gmail.com"';
   }
   return null;

@@ -60,11 +60,6 @@ form>button {
   width: 600px;
 }
 
-/* input placeholder text: */
-/* #99a2ab */
-
-/* border: */
-/* #a2afb8 */
 h1 {
   font-weight: 300;
   text-align: center;
@@ -73,11 +68,6 @@ h1 {
   line-height: 130px;
 }
 
-/* span,div,form, label {
-  border: 1px solid #000;
-  margin: 1px;
-  padding: 1px;
-} */
 .form-toggle {
   display: flex;
   flex-flow: row nowrap;
@@ -86,7 +76,7 @@ h1 {
 
 .valid-info {
   color : red;
-  font-size: 16px;
+  font-size: 17px;
   height: 30px;
 }
 
@@ -114,15 +104,22 @@ button {
   flex: 1 1 50%;
   font-weight: 300;
   font-family: 'Titillium Web', Arial, sans-serif;
-}
-
-button.sign-up {
+  transition: all .3s ease-in-out;
   background-color: #1ab188; /* Green */
   color: white;
 }
+
+button:hover {
+  background-color: #0cd6a0; /* Green */
+}
+
 button.log-in {
   background-color: #435259;
   color : #999;
+}
+
+button.log-in:hover {
+  background-color: #506065;
 }
 
 form>button {
@@ -131,4 +128,32 @@ form>button {
   height: 100px;
   font-weight: 600;
   letter-spacing: 3px;
+}
+
+form>div {
+  position: relative;
+}
+
+input[required]+label {
+  color: #999;
+  font-size: 21px;
+  position: absolute;
+  left : 10px;
+  top : 8px;
+}
+
+input:invalid{
+  box-shadow: none;
+}
+
+input[required]:invalid+label {
+  display: inline-block;
+}
+
+input[required]:valid+label {
+  display: none;
+}
+
+.mandatory{
+  color : #1ab188;
 }
