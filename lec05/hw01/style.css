@@ -129,3 +129,27 @@ form>button {
   font-weight: 600;
   letter-spacing: 3px;
 }
+
+form>div {
+  position: relative;
+}
+
+input[required]+label {
+  color: #999;
+  font-size: 21px;
+  position: absolute;
+  left : 10px;
+  top : 8px;
+}
+
+input[required]:invalid+label {
+  display: inline-block;
+}
+
+input[required]:valid+label {
+  display: none;
+}
+
+.mandatory{
+  color : #1ab188;
+}
