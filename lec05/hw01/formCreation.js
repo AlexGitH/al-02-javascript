@@ -225,7 +225,7 @@ function validateEmail( email ) {
   if ( email.length <= 0 ) {
     return 'Email field is mandatory';
   }
-  if ( at <= 0 && at === atLast ) {
+  if ( at <= 0  ||  at !== atLast ) {
     return 'Email must have only one "@" character';
   }
   if ( email.indexOf( '@.' ) >= 0 || email.indexOf( '.@' ) >= 0 || email.indexOf( '..' ) >= 0 ) {
@@ -240,7 +240,8 @@ function validateEmail( email ) {
   if ( atLast > dot ) {
     return 'Email must have leading at least one "." character after "@"';
   }
-  if ( email.indexOf( '@gmail.com' ) < 0 ) {
+  const gmail = email.split( '@gmail.com' );
+  if ( gmail.length !== 2 || gmail[1] !== '' ) {
     return 'Email must be registered at "@gmail.com"';
   }
   return null;
