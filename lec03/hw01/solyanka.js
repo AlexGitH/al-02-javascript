@@ -755,11 +755,12 @@ function allowInteger(event){
   }
 }
 
-function pasteInteger(event) {
-  const reInteger = /^\d+$/;
-  const paste = (event.clipboardData || window.clipboardData).getData('text');
-  if( !reInteger.test(paste) ) {
-    event.returnValue = false;
-    event.preventDefault();
+const pasteInteger = (function( reInteger ) {
+  return function (event) {
+    const paste = (event.clipboardData || window.clipboardData).getData('text');
+    if( !reInteger.test(paste) ) {
+      event.returnValue = false;
+      event.preventDefault();
+    }
   }
-}
+})(/^\d+$/);
