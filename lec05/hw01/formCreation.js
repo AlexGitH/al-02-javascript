@@ -17,22 +17,22 @@ window.onload = function() {
 const FIELD_CONFIGS = [{
   name : 'firstName',
   type : 'text',
-  placeholder: 'First Name *',
+  placeholder: 'First Name',
   isLong : false
 },{
   name : 'lastName',
   type : 'text',
-  placeholder: 'Last Name *',
+  placeholder: 'Last Name',
   isLong : false
 },{
   name : 'email',
   type : 'text',
-  placeholder: 'Email Address *',
+  placeholder: 'Email Address',
   isLong : true
 },{
   name : 'password',
   type : 'password',
-  placeholder: 'Set A Password *',
+  placeholder: 'Set A Password',
   isLong : true
 }];
 
