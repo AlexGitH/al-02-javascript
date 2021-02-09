@@ -142,6 +142,10 @@ input[required]+label {
   top : 8px;
 }
 
+input:invalid{
+  box-shadow: none;
+}
+
 input[required]:invalid+label {
   display: inline-block;
 }
