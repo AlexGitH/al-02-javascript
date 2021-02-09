@@ -109,14 +109,14 @@ function createFieldContainer( name, type, placeholder, isLong ) {
     name : name,
     type : type,
     required : true
-    // placeholder: placeholder
   });
 
   // TODO: label needed to customize input placeholder with double text color;
+  const span = '<span class="mandatory">*</span>';
   let label = createEl( 'label', {
     for : name
   });
-  label.innerHTML = `${placeholder.replace( '*', '' ).trim()} <span style="mandatory">*</span>`;
+  label.innerHTML = `${placeholder} ${span}`;
   let div = createEl( 'div', {
     class : 'valid-info'
   });
@@ -162,8 +162,9 @@ function validate() {
 function refreshInfo( messages ) {
   let el = document.querySelector( 'div.valid-info' );
   let result = `<span class="valid">Successfully submitted!</span>`;
+  const list = messages.map(x=>`<li>${x}</li>`).join('');
   if ( messages.length > 0 ) {
-    result = `<div class="invalid">Resolve validation errors:<ul>${messages.map(x=>`<li>${x}</li>`).join('')}</ul></div>`;
+    result = `<div class="invalid">Resolve validation errors:<ul>${list}</ul></div>`;
   }
   el.innerHTML = result;
 }
