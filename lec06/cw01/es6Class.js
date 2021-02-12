@@ -1,32 +1,29 @@
 class ArrayOfNumbers extends Array {
-	constructor(...args) {
-    const isNumber = args.every( x => Object.prototype.toString.call( x ) === "[object Number]");
-    if ( !isNumber ) {
-      throw new Error( 'All arguments must be a numbers' );
+  constructor(...args) {
+    const isNumber = args.every(x => Object.prototype.toString.call(x) === "[object Number]");
+    if(!isNumber) {
+      throw new Error('All arguments must be a numbers');
     }
-  	super(...args);
-    return new Proxy( this, {
+    super(...args);
+    return new Proxy(this, {
       set(target, prop, val) {
- 			    // console.log( '--', val );
-  
-        const isNumber = Object.prototype.toString.call( val ) === "[object Number]";
-	    if ( isNumber ) {
-         target[prop] = val;
-	      return true;
-  			} else {
-    			throw new Error( "Expecting a number");
-    			return false;
-  			}
-			}
-	});
+        const isNumber = Object.prototype.toString.call(val) === "[object Number]";
+        if(isNumber) {
+          target[prop] = val;
+          return true;
+        } else {
+          throw new Error("Expecting a number");
+        }
+      }
+    });
   }
-  isNumbers(...args){
-    return args.every( x => Object.prototype.toString.call( x ) === "[object Number]");
+  isNumbers(...args) {
+    return args.every(x => Object.prototype.toString.call(x) === "[object Number]");
   }
   push(...args) {
-    const isNumber = args.every( x => Object.prototype.toString.call( x ) === "[object Number]");
-    if ( !isNumber ) {
-      throw new Error( 'All arguments must be a numbers' );
+    const isNumber = args.every(x => Object.prototype.toString.call(x) === "[object Number]");
+    if(!isNumber) {
+      throw new Error('All arguments must be a numbers');
     }
     return super.push(...args);
   }
