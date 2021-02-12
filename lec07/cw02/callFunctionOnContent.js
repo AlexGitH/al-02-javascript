@@ -8,8 +8,8 @@ function boundedEnum(context){
       });
     }
     if ( argType === getType( {} ) ) {
-      Object.keys( arg ).forEach( k=> {
-        console.log( `${argIdx}-- ${k}: ${arg[k]}`);
+      [].forEach.call( Object.entries( arg ), ([k,v])=> {
+        console.log( `${argIdx}-- ${k}: ${v}`);
       });
         
     }
