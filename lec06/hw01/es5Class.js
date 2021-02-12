@@ -7,12 +7,12 @@ function ArrayOfNumbers() {
       throw new Error( 'Each arguments must be a number' );
     }
   }
-  checkArgs( arguments )
-  if ( args.length === 1 ) {
-    this.length = args[0];
+  checkArgs( arguments );
+  if ( arguments.length === 1 ) {
+    this.length = arguments[0];
   }
   else {
-    this.push.apply( this, args );
+    this.push.apply( this, arguments );
   }
 
   this.push = function(){
@@ -30,7 +30,7 @@ ArrayOfNumbers.prototype.constructor = ArrayOfNumbers;
 console.log('new ArrayOfNumbers() is Array instance', new ArrayOfNumbers(1, 1) instanceof Array);
 console.log('new ArrayOfNumbers() is ArrayOfNumbers instance', (new ArrayOfNumbers(1, 1)) instanceof ArrayOfNumbers);
 var a = new ArrayOfNumbers(1, 2, 3);
-console.log('=', a);
+console.log('create array', a);
 
 try {
   var b = new ArrayOfNumbers(1, 'e', 3);
@@ -42,6 +42,6 @@ try {
 } catch (e) {
   console.warn('!!!! ', e);
 }
-console.log('=', a)
+console.log('check for changes', a);
 a.push(1, 3);
-console.log('=', a);
+console.log('add 1,3 ', a);
