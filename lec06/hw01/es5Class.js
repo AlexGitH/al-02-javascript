@@ -1,6 +1,6 @@
 function ArrayOfNumbers() {
   var checkArgs = function( argObj ) {
-    var args = Array.prototype.slice.apply( arObj );
+    var args = Array.prototype.slice.apply( argObj );
     var isNumber = function( x ) { return Object.prototype.toString.call( x ) === "[object Number]"; };
     var isNumberArgs = args.every( isNumber );
     if ( !isNumberArgs ) {
