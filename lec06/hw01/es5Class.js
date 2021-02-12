@@ -18,7 +18,7 @@ function ArrayOfNumbers() {
   this.push = function(){
     checkArgs( arguments );
     Array.prototype.push.apply( this, arguments );
-  }
+  };
 }
 
 ArrayOfNumbers.prototype = Object.create( Array.prototype );
