@@ -29,19 +29,19 @@ ArrayOfNumbers.prototype.constructor = ArrayOfNumbers;
 
 console.log('new ArrayOfNumbers() is Array instance', new ArrayOfNumbers(1, 1) instanceof Array);
 console.log('new ArrayOfNumbers() is ArrayOfNumbers instance', (new ArrayOfNumbers(1, 1)) instanceof ArrayOfNumbers);
-var a = new ArrayOfNumbers(1, 2, 3)
-console.log('=', a)
+var a = new ArrayOfNumbers(1, 2, 3);
+console.log('=', a);
 
 try {
   var b = new ArrayOfNumbers(1, 'e', 3);
 } catch (e) {
-  console.warn('???', e)
+  console.warn('???', e);
 }
 try {
   a.push('a1');
 } catch (e) {
-  console.warn('!!!! ', e)
+  console.warn('!!!! ', e);
 }
 console.log('=', a)
-a.push(1, 3)
-console.log('=', a)
+a.push(1, 3);
+console.log('=', a);
