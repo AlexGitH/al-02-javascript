@@ -1,0 +1,41 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Solyanka</title>
+    <link rel="stylesheet" href="./style.css">
+    <script src="./solyanka.js"></script>
+</head>
+<body>
+    <div class="container">
+        <div class="left">
+            <h1>Готовим Солянку</h1>
+            <div class="setup">
+                <div>1) Мясо:</div>                 <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="meat" placeholder="450(гр.)">
+                <div>2) Копчености:</div>           <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="smokedMeat" placeholder="(2) + (4) = 300(гр.)">
+                <div>3) Вода:</div>                 <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="water" placeholder="1700-2000(гр.)">
+                <div>4) Мясные деликатесы:</div>    <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="otherMeat" placeholder="(2) + (4) = 300(гр.)">
+                <div>5) Маринованные огурчики:</div><input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="pickles" placeholder="2-4(шт.)">
+                <div>6) Маслины:</div>              <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="olives" placeholder="4-15(шт.)">
+                <div>7) Луковица:</div>             <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="onion" placeholder="1(шт.)">
+                <div>8) Чеснок:</div>               <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="garlic" placeholder="2-4(зуб.)">
+                <div>9) Томатная паста:</div>       <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="tomatoPaste" placeholder="1(ст.лож.)">
+                <div>10) Растительное масло:</div>  <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="vegetableOil" placeholder="2(ст.лож.)">
+                <div>11) Соль:</div>                <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="salt" placeholder="по вкусу(гр.)">
+                <div>12) Перец:</div>               <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="pepper" placeholder="по вкусу(гр.)">
+                <div>13) Зелень:</div>              <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="herbs" placeholder="по вкусу(гр.)">
+                <div>14) Сахар:</div>               <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="sugar" placeholder="по вкусу(гр.)">
+                <div>15) Лимон:</div>               <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="lemon" placeholder="по вкусу(дол.)">
+                <div>16) Сметана:</div>             <input onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" type="number" id="sourCream" placeholder="по вкусу(ст.лож.)">
+        
+                <button onclick='cookSolyanka();'>Приготовить солянку</button>
+            </div>
+        </div>
+        <div class="output">
+            <div class="logger"></div>
+        </div>
+    </div>
+</body>
+</html>
