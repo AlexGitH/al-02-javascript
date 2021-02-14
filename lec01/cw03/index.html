@@ -1,0 +1,61 @@
+<!DOCTYPE html>
+<html lang="en">
+
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <meta http-equiv="X-UA-Compatible" content="ie=edge">
+    <title>Complex Calculator</title>
+    <script src="./ComplexCalculator.js"></script>
+</head>
+
+<body>
+
+    <header>
+        <h1>Complex Calculator</h1>
+    </header>
+
+    <main>
+        <h3>Supported operations:</h3>
+
+        <ul>
+            <li>Addition</li>
+            <li>Subtraction</li>
+            <li>Multiplication</li>
+            <li>Division</li>
+            <li>Power</li>
+        </ul>
+
+        <h3>Features</h3>
+
+        <ul>
+            <li>Automatic update on input</li>
+            <li>Operation with floating point numbers</li>
+            <li>Correct sequence of calculations</li>
+            <li>Primitive on-the-fly input validation</li>
+        </ul>
+
+
+        <h3>Possible improvements in the future</h3>
+        <ul>
+            <li>Operate negative numbers</li>
+            <li>Grouping by round brackets "()"</li>
+            <li>Filtering out invalid characters on input</li>
+            <li>Support other number types</li>
+            <li>Add binary, octal and hexadecimal numeral systems</li>
+        </ul>
+
+        <input type="text" name="calculator" id="input">
+        <div id="result"></div>
+    </main>
+
+    <script>
+        document.getElementById('input').addEventListener('input', function(e) {
+            var result = document.getElementById('result');
+            var value = e.target.value;
+            result.innerText = calcComplexExpr(value);
+        });
+    </script>
+</body>
+
+</html>
