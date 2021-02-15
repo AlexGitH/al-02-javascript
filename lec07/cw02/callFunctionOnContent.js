@@ -14,11 +14,11 @@ function boundedEnum(context){
         
     }
     if ( arg instanceof Set ) {
-      arg.forEach( (v,i)=> {
+      Set.prototype.forEach.call( arg, (v,i)=> {
         console.log( `${argIdx}-- ${i}: ${v}`);
       });
     }
-  })
+  });
 };
 
 /// UNCHANGABLE CODE
