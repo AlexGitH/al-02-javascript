@@ -1,0 +1,37 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Login Form</title>
+    <script src="./formValidation.js"></script>
+    <style>
+        main {
+            width: 350px;
+        }
+        .setup {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            grid-gap: 5px;
+            padding: 5px;
+        }
+        .invalid {
+            color:#a70303;
+        }
+        .valid {
+            color: #03a803;
+        }
+    </style>
+</head>
+<body>
+    <main>
+        <form class="setup" name="login" action="#">
+            <label for="fld-login">Login: </label><input id="fld-login" name="email" type="text" placeholder="user@example.com">
+            <label for="fld-password">Password: </label><input id="fld-password" name="password" type="password" placeholder="minimum 6 characters">
+            <button type="button" onclick="validate()">Submit</button>
+        </form>
+        <div class="valid-info"></div>
+    </main>
+</body>
+</html>
