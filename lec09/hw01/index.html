@@ -48,9 +48,20 @@
         input {
             width: 170px;
         }
+        th, td {
+            padding: 2px 20px;
+        }
+        td>button {
+            width: 30px;
+            padding: 0;
+            text-align: center;
+        }
+        td>button:last-child {
+            color: red;
+        }
     </style>
 </head>
-<body style="height: 100vh;background-color: #00ff88;">
+<body>
     <header>
         <div id="fields">
                     <!-- onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" -->
