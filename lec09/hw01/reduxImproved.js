@@ -22,13 +22,14 @@ function createStore(reducer) {
 
 const cartReducer = (state={}, {type, id, amount=1}) => {
   if (type === 'ADD') return {...state, [id]: amount + (state[id] || 0)}
+  if (type === 'DEC') return {...state, [id]: (state[id] || 0) - amount}
+  if (type === 'DEL') {let result = {...state}; delete result[id]; return result;}
 
   return state
 }
 
 let store = createStore(cartReducer)
 
-const actionAdd = (id, amount=1) => ({type: 'ADD', id, amount})
 function onAddItem() {
   store.dispatch(actionAdd( itemKey.value, parseFloat(itemVal.value) ) )
   itemKey.value = null;
@@ -38,17 +39,23 @@ function onAddItem() {
 let unsubscribe = store.subscribe( ()=>{
   cart.innerHTML = `<h2>${Object.entries(store.getState()).length}</h2>`;
   tableContainer.innerHTML = `<table>${Object.entries(store.getState())
-                                                        .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td></tr>`)
+                                                        .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td><td><button onclick="onInc('${id}')" type="button">Inc</button></td><td><button onclick="onDec('${id}')" type="button">Dec</button></td><td><button onclick="onDel('${id}')" type="button">Del</button></td></tr>`)
                                                         .join('\n')}</table>`;
 
 })
-// const actionInc = id => ({type: 'ADD', id})
-// const actionAdd = (id, amount=1) => ({type: 'ADD', id, amount})
 
-// let store = createStore(cartReducer)
-// let unsubscribe = store.subscribe(() => console.log(store.getState()))
-// document.body.onclick = () => store.dispatch(actionAdd(prompt('товар'), +prompt('количество')))
-// store.subscribe(() => document.body.innerHTML = `<table>${Object.entries(store.getState())
-//                                                         .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td></tr>`)
-//                                                         .join('\n')}</table><h1>${Object.entries(store.getState()).length}</h1>`)
+const actionAdd = (id, amount=1) => ({type: 'ADD', id, amount})
+const actionDec = (id, amount=1) => ({type: 'DEC', id, amount})
+const actionDel = (id) => ({type: 'DEL', id})
+
+function onInc(id) {
+  store.dispatch( actionAdd(id, 1) );
+}
+function onDec(id) {
+  store.dispatch( actionDec(id, 1) );
+}
+function onDel(id) {
+  store.dispatch( actionDel(id) );
+}
+
 //setTimeout(() => unsubscribe(), 10000)
