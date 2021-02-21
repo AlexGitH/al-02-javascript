@@ -29,20 +29,6 @@ const cartReducer = (state={}, {type, id, amount=1}) => {
 
 let store = createStore(cartReducer)
 
-function onAddItem() {
-  const name = itemKey.value.trim();
-  const number = toPositiveInt( itemVal.value );
-
-  const errors = validateInput( name, number );
-  if ( errors.length > 0 ) {
-    alert( `Errors:\n- ${errors.join('\n- ')}`);
-    return ;
-  }
-  store.dispatch(actionAdd( itemKey.value, parseInt(itemVal.value) ) )
-  itemKey.value = null;
-  itemVal.value = null;
-}
-
 let unsubscribe = store.subscribe( ()=>{
   const len = Object.entries(store.getState()).length;
   cart.innerHTML = !len ? '' : `<h2>${len}</h2>`;
@@ -75,5 +61,38 @@ function toPositiveInt(str){
   }
   return num;
 }
+
+function onAddItem() {
+  const name = itemKey.value.trim();
+  const number = toPositiveInt( itemVal.value );
+
+  const errors = validateInput( name, number );
+  if ( errors.length > 0 ) {
+    alert( `Errors:\n- ${errors.join('\n- ')}`);
+    return ;
+  }
+  store.dispatch(actionAdd( name, number ) )
+  cleanInputs();
+}
+
+function onDelItem() {
+  const name = itemKey.value.trim();
+  const errors = validateInput( name, 1 );
+  if ( !store.getState()[name] ) errors.push( `No item with name: ${name}` );
+  if ( errors.length > 0 ) {
+    alert( `Errors:\n- ${errors.join('\n- ')}`);
+    return ;
+  }
+  store.dispatch(actionDel( name ) );
+  if ( confirm(`"${name}" successfully removed from the list!\nDo you want to reset fields?`) ) {
+    cleanInputs();
+  }
+}
+
+function cleanInputs() {
+  itemKey.value = null;
+  itemVal.value = null;
+}
+
 
 //setTimeout(() => unsubscribe(), 10000)
