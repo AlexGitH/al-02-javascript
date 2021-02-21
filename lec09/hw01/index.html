@@ -4,12 +4,73 @@
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
     <title>Redux Homework</title>
+    <style>
+        header {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+        }
+
+        #fields {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            grid-gap: 5px;
+            padding: 5px;
+        }
+        #fields>div {
+            width: 105px;
+            /* font-size: 20px; */
+        }
+        #cart {
+            width: 100px;
+            height: 100px;
+            border: 1px solid #000;
+            background-image: url('./cart.svg');
+            background-size: contain;
+            background-repeat: no-repeat;
+            background-position: center;
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: flex-end;
+            align-items: flex-start;
+        }
+        #cart > h2 {
+            border-radius: 50%;
+            margin: 0;
+            background: #0281f1d4;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input {
+            width: 170px;
+        }
+    </style>
 </head>
 <body style="height: 100vh;background-color: #00ff88;">
-    <div class="tableContainer">
-
-    </div>
+    <header>
+        <div id="fields">
+                    <!-- onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" -->
+                    <div>Name:</div>    <input type="text" id="itemKey" placeholder="set name">
+                    <div>Number:</div>  <input type="number" id="itemVal" placeholder="set number">
+                    <button id="addItem" onclick="onAddItem()" type="button">Add</button>
+        </div>
     
+        <div id="cart">
+            <!-- <h2>
+                3
+            </h2> -->
+        </div>
+
+    </header>
+    <main>
+        <div id="tableContainer">
+
+        </div>
+    </main>
 </body>
 <script src="./reduxImproved.js"></script>
 </html>
