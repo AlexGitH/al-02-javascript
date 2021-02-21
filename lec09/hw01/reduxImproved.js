@@ -29,6 +29,7 @@ const cartReducer = (state={}, {type, id, amount=1}) => {
 
 let store = createStore(cartReducer)
 
+// NOTE: unsubscribe is not used for now
 let unsubscribe = store.subscribe( ()=>{
   const len = Object.entries(store.getState()).length;
   cart.innerHTML = !len ? '' : `<h2>${len}</h2>`;
