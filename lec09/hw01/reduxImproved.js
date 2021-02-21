@@ -37,9 +37,10 @@ function onAddItem() {
 }
 
 let unsubscribe = store.subscribe( ()=>{
-  cart.innerHTML = `<h2>${Object.entries(store.getState()).length}</h2>`;
+  const len = Object.entries(store.getState()).length;
+  cart.innerHTML = !len ? '' : `<h2>${len}</h2>`;
   tableContainer.innerHTML = `<table>${Object.entries(store.getState())
-                                                        .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td><td><button onclick="onInc('${id}')" type="button">Inc</button></td><td><button onclick="onDec('${id}')" type="button">Dec</button></td><td><button onclick="onDel('${id}')" type="button">Del</button></td></tr>`)
+                                                        .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td><td><button onclick="onInc('${id}')" type="button">+</button><button onclick="onDec('${id}')" type="button">-</button><button onclick="onDel('${id}')" type="button">X</button></td></tr>`)
                                                         .join('\n')}</table>`;
 
 })
