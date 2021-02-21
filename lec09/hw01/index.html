@@ -19,8 +19,7 @@
             padding: 5px;
         }
         #fields>div {
-            width: 105px;
-            /* font-size: 20px; */
+            width: 75px;
         }
         #cart {
             width: 100px;
@@ -31,6 +30,7 @@
             background-position: left bottom;
             display: flex;
             flex-flow: row nowrap;
+            flex-shrink: 0;
             justify-content: flex-end;
             align-items: flex-start;
         }
@@ -63,23 +63,14 @@
 <body>
     <header>
         <div id="fields">
-                    <!-- onpaste="pasteInteger(event)" onkeypress="allowInteger(event)" -->
-                    <div>Name:</div>    <input type="text" id="itemKey" placeholder="set name">
-                    <div>Number:</div>  <input type="number" id="itemVal" placeholder="set number">
-                    <button id="addItem" onclick="onAddItem()" type="button">Add</button>
+            <div>Name:</div>    <input type="text" id="itemKey" placeholder="set name">
+            <div>Number:</div>  <input type="number" id="itemVal" placeholder="set number">
+            <button id="addItem" onclick="onAddItem()" type="button">Add</button>
         </div>
-    
-        <div id="cart">
-            <!-- <h2>
-                3
-            </h2> -->
-        </div>
-
+        <div id="cart"></div>
     </header>
     <main>
-        <div id="tableContainer">
-
-        </div>
+        <div id="tableContainer"></div>
     </main>
 </body>
 <script src="./reduxImproved.js"></script>
