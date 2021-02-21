@@ -19,7 +19,6 @@ function createStore(reducer) {
   }
 }
 
-
 const cartReducer = (state={}, {type, id, amount=1}) => {
   if (type === 'ADD') return {...state, [id]: amount + (state[id] || 0)}
   if (type === 'DEC') return {...state, [id]: (state[id] || 0) - amount}
@@ -31,7 +30,15 @@ const cartReducer = (state={}, {type, id, amount=1}) => {
 let store = createStore(cartReducer)
 
 function onAddItem() {
-  store.dispatch(actionAdd( itemKey.value, parseFloat(itemVal.value) ) )
+  const name = itemKey.value.trim();
+  const number = toPositiveInt( itemVal.value );
+
+  const errors = validateInput( name, number );
+  if ( errors.length > 0 ) {
+    alert( `Errors:\n- ${errors.join('\n- ')}`);
+    return ;
+  }
+  store.dispatch(actionAdd( itemKey.value, parseInt(itemVal.value) ) )
   itemKey.value = null;
   itemVal.value = null;
 }
@@ -40,23 +47,33 @@ let unsubscribe = store.subscribe( ()=>{
   const len = Object.entries(store.getState()).length;
   cart.innerHTML = !len ? '' : `<h2>${len}</h2>`;
   tableContainer.innerHTML = `<table>${Object.entries(store.getState())
-                                                        .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td><td><button onclick="onInc('${id}')" type="button">+</button><button onclick="onDec('${id}')" type="button">-</button><button onclick="onDel('${id}')" type="button">X</button></td></tr>`)
+                                                        .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td><td><button onclick="onInc('${id}')" type="button">+</button><button ${count<2&&"disabled"} onclick="onDec('${id}')" type="button">-</button><button onclick="onDel('${id}')" type="button"><b>X</b></button></td></tr>`)
                                                         .join('\n')}</table>`;
-
 })
 
-const actionAdd = (id, amount=1) => ({type: 'ADD', id, amount})
-const actionDec = (id, amount=1) => ({type: 'DEC', id, amount})
-const actionDel = (id) => ({type: 'DEL', id})
+const actionAdd = (id, amount=1) => ({type: 'ADD', id, amount});
+const actionDec = (id, amount=1) => ({type: 'DEC', id, amount});
+const actionDel = (id) => ({type: 'DEL', id});
 
-function onInc(id) {
-  store.dispatch( actionAdd(id, 1) );
+function onInc(id) { store.dispatch( actionAdd(id, 1) ); }
+function onDec(id) { store.dispatch( actionDec(id, 1) ); }
+function onDel(id) { store.dispatch( actionDel(id) ); }
+
+function validateInput( name, number ) {
+  const errors = [];
+  if ( name.length <= 0 ) errors.push( 'Item name must not be empty' );
+  if ( !/\p{L}+/u.test(name) ) errors.push( 'Item name must have at least 1 letter' );
+  if ( isNaN( number ) || number <= 0 ) errors.push( 'Number of items must be a positive integer value greater then 0')
+  return errors;
 }
-function onDec(id) {
-  store.dispatch( actionDec(id, 1) );
-}
-function onDel(id) {
-  store.dispatch( actionDel(id) );
+
+function toPositiveInt(str){
+  const re = /^\d+$/;
+  const num = parseInt( str );
+  if ( !re.test(str) || num === NaN || num < 0 ) {
+    return NaN;
+  }
+  return num;
 }
 
 //setTimeout(() => unsubscribe(), 10000)
