@@ -26,13 +26,29 @@ const cartReducer = (state={}, {type, id, amount=1}) => {
   return state
 }
 
-const actionInc = id => ({type: 'ADD', id})
-const actionAdd = (id, amount=1) => ({type: 'ADD', id, amount})
-
 let store = createStore(cartReducer)
-let unsubscribe = store.subscribe(() => console.log(store.getState()))
-document.body.onclick = () => store.dispatch(actionAdd(prompt('товар'), +prompt('количество')))
-store.subscribe(() => document.body.innerHTML = `<table>${Object.entries(store.getState())
+
+const actionAdd = (id, amount=1) => ({type: 'ADD', id, amount})
+function onAddItem() {
+  store.dispatch(actionAdd( itemKey.value, parseFloat(itemVal.value) ) )
+  itemKey.value = null;
+  itemVal.value = null;
+}
+
+let unsubscribe = store.subscribe( ()=>{
+  cart.innerHTML = `<h2>${Object.entries(store.getState()).length}</h2>`;
+  tableContainer.innerHTML = `<table>${Object.entries(store.getState())
                                                         .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td></tr>`)
-                                                        .join('\n')}</table><h1>${Object.entries(store.getState()).length}</h1>`)
+                                                        .join('\n')}</table>`;
+
+})
+// const actionInc = id => ({type: 'ADD', id})
+// const actionAdd = (id, amount=1) => ({type: 'ADD', id, amount})
+
+// let store = createStore(cartReducer)
+// let unsubscribe = store.subscribe(() => console.log(store.getState()))
+// document.body.onclick = () => store.dispatch(actionAdd(prompt('товар'), +prompt('количество')))
+// store.subscribe(() => document.body.innerHTML = `<table>${Object.entries(store.getState())
+//                                                         .map(([id, count]) => `<tr><th>${id}</th><td>${count}</td></tr>`)
+//                                                         .join('\n')}</table><h1>${Object.entries(store.getState()).length}</h1>`)
 //setTimeout(() => unsubscribe(), 10000)
