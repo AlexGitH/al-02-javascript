@@ -50,7 +50,7 @@ function validateInput( name, number ) {
   const errors = [];
   if ( name.length <= 0 ) errors.push( 'Item name must not be empty' );
   if ( !/\p{L}+/u.test(name) ) errors.push( 'Item name must have at least 1 letter' );
-  if ( isNaN( number ) || number <= 0 ) errors.push( 'Number of items must be a positive integer value greater then 0')
+  if ( isNaN( number ) || number <= 0 ) errors.push( 'Number of items must be a positive integer value greater than 0')
   return errors;
 }
 
