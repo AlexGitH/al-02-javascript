@@ -1,0 +1,78 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Redux Homework</title>
+    <style>
+        header {
+            display: flex;
+            flex-flow: row nowrap;
+            justify-content: space-between;
+        }
+
+        #fields {
+            display: grid;
+            grid-template-columns: auto 1fr;
+            align-items: center;
+            grid-gap: 5px;
+            padding: 5px;
+        }
+        #fields>div {
+            width: 75px;
+        }
+        #cart {
+            width: 100px;
+            height: 100px;
+            background-image: url('./cart.svg');
+            background-size: 85px;
+            background-repeat: no-repeat;
+            background-position: left bottom;
+            display: flex;
+            flex-flow: row nowrap;
+            flex-shrink: 0;
+            justify-content: flex-end;
+            align-items: flex-start;
+        }
+        #cart > h2 {
+            border-radius: 50%;
+            margin: 0;
+            background: #02f11c73;
+            width: 50px;
+            height: 50px;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+        }
+        input {
+            width: 170px;
+        }
+        th, td {
+            padding: 2px 20px;
+        }
+        td>button {
+            width: 30px;
+            padding: 0;
+            text-align: center;
+        }
+        td>button:last-child {
+            color: red;
+        }
+    </style>
+</head>
+<body>
+    <header>
+        <div id="fields">
+            <div>Name:</div>    <input type="text" id="itemKey" placeholder="set name">
+            <div>Number:</div>  <input type="number" id="itemVal" placeholder="set number">
+            <button id="addItem" onclick="onAddItem()" type="button">Add</button>
+            <button id="delItem" onclick="onDelItem()" type="button">Delete</button>
+        </div>
+        <div id="cart"></div>
+    </header>
+    <main>
+        <div id="tableContainer"></div>
+    </main>
+</body>
+<script src="./reduxImproved.js"></script>
+</html>
